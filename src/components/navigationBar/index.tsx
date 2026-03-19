@@ -1,7 +1,6 @@
-'use client';
-import { Button } from '@heroui/react';
+import GoalFormBottomSheet from '../modals/GoalFormBottomSheet';
 import NavItem from './components/NavItem';
-import { IoAdd } from 'react-icons/io5';
+
 import { STYLE } from '@/constants';
 
 export default function NavigationBar() {
@@ -16,9 +15,7 @@ export default function NavigationBar() {
       >
         <NavItem type="home" href="/" />
         <NavItem type="goals" href="/goals" />
-        <Button radius="full" isIconOnly>
-          <IoAdd size={28} />
-        </Button>
+        <GoalFormBottomSheet />
         <NavItem type="community" href="/community" />
         <NavItem type="profile" href="/me" />
       </nav>
