@@ -5,7 +5,7 @@ export default function GoalInfoForm() {
   const { name, description, setName, setDescription } =
     useCreateGoalFormStore();
   return (
-    <section className="flex flex-col gap-3 min-w-full">
+    <section className="flex flex-col shrink-0 gap-3 min-w-full">
       <Input
         isRequired
         isClearable

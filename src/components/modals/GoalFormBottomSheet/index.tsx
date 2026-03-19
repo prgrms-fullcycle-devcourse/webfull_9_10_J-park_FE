@@ -10,6 +10,8 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@heroui/react';
+import { FaChevronLeft } from 'react-icons/fa6';
+
 import { useCallback, useState } from 'react';
 
 import { IoAdd } from 'react-icons/io5';
@@ -19,6 +21,7 @@ import GoalCategoryForm from './components/GoalCategoryForm';
 import GoalDateForm from './components/GoalDateForm';
 
 const MAX_STEPS = 2;
+const modalTitles = ['정보 입력', '총량 설정', '기한 설정'];
 
 export default function GoalFormBottomSheet() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -44,6 +47,9 @@ export default function GoalFormBottomSheet() {
   const onReset = () => {
     setCurrentStep(0);
   };
+  const onSubmit = () => {
+    console.log('submit');
+  };
 
   return (
     <>
@@ -59,16 +65,31 @@ export default function GoalFormBottomSheet() {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex justify-between">
-                <span>목표 생성하기: 정보 입력</span>
+              <ModalHeader className="flex justify-between items-center">
+                <span>
+                  {currentStep > 0 && (
+                    <Button
+                      isIconOnly
+                      variant="light"
+                      size="sm"
+                      onPress={onPrev}
+                    >
+                      <FaChevronLeft size={16} />
+                    </Button>
+                  )}
+                  <span>목표 생성하기: {modalTitles[currentStep]}</span>
+                </span>
                 <span className="text-sm text-gray-400">
                   {currentStep + 1}/{MAX_STEPS + 1}
                 </span>
               </ModalHeader>
               <ModalBody>
                 <Form
-                  className="relative flex flex-row transition-transform duration-500 ease-in-out  scrollbar-hide"
-                  style={{ transform: `translateX(${-currentStep * 100}%)` }}
+                  className="relative flex flex-row gap-6 transition-transform duration-500 ease-in-out scrollbar-hide"
+                  style={{
+                    transform: `translateX(calc(${-currentStep * 100}% - (${currentStep} * 1.5rem)))`,
+                  }}
+                  onSubmit={onSubmit}
                 >
                   <GoalInfoForm />
                   <GoalCategoryForm />
@@ -76,9 +97,15 @@ export default function GoalFormBottomSheet() {
                 </Form>
               </ModalBody>
               <ModalFooter className="flex flex-col">
-                <Button color="primary" size="lg" onPress={onNext} fullWidth>
-                  {currentStep === MAX_STEPS ? '생성하기' : '다음으로'}
-                </Button>
+                {currentStep < MAX_STEPS ? (
+                  <Button color="primary" size="lg" onPress={onNext} fullWidth>
+                    다음으로
+                  </Button>
+                ) : (
+                  <Button color="primary" size="lg" type="submit" fullWidth>
+                    생성하기
+                  </Button>
+                )}
                 <Button
                   className="bg-inherit text-gray-400"
                   size="sm"
