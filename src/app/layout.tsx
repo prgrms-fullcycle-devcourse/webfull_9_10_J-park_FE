@@ -4,6 +4,7 @@ import { Providers } from './providers';
 import './globals.css';
 import { headers } from 'next/headers';
 import { userAgent } from 'next/server';
+import NavigationBar from '@/components/navigationBar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
