@@ -14,15 +14,20 @@ interface GoalFormState {
   setCategory: (payload: string) => void;
   setStartDate: (payload: CalendarDate | null) => void;
   setDueDate: (payload: CalendarDate | null) => void;
+  reset: () => void;
 }
 
-export const useCreateGoalFormStore = create<GoalFormState>()((set) => ({
+const initialState = {
   name: '',
   description: undefined,
   category: 'book',
   totalAmount: '0',
   startDate: null,
   dueDate: null,
+};
+
+export const useCreateGoalFormStore = create<GoalFormState>()((set) => ({
+  ...initialState,
   setName: (payload: string) => set(() => ({ name: payload })),
   setDescription: (payload: string) => set(() => ({ description: payload })),
   setTotalAmount: (payload: string) => set(() => ({ totalAmount: payload })),
@@ -31,4 +36,8 @@ export const useCreateGoalFormStore = create<GoalFormState>()((set) => ({
     set(() => ({ startDate: payload })),
   setDueDate: (payload: CalendarDate | null) =>
     set(() => ({ dueDate: payload })),
+  reset: () =>
+    set(() => ({
+      ...initialState,
+    })),
 }));
