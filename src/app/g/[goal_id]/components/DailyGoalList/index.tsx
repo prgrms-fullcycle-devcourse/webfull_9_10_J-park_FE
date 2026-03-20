@@ -26,20 +26,20 @@ interface Props {
 export default function DailyGoalList({ dailyProgress }: Props) {
   const todayRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (todayRef.current) {
-      todayRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (todayRef.current) {
+  //     todayRef.current.scrollIntoView({
+  //       behavior: 'smooth',
+  //       block: 'center',
+  //     });
+  //   }
+  // }, []);
 
   return (
     <Card fullWidth>
-      <CardHeader>할당량 목록</CardHeader>
+      <CardHeader className="font-bold">할당량 리스트</CardHeader>
       <CardBody>
-        <div className="flex flex-col max-h-100 gap-4 overflow-auto scrollbar-hide">
+        <div className="flex flex-col max-h-100 gap-4 overflow-auto scrollbar-hide shadow-[inset_0_10px_10px_-15px_rgba(0,0,0,0.3),inset_0_-10px_10px_-15px_rgba(0,0,0,0.3)]">
           {dailyProgress.map(
             ({
               date,

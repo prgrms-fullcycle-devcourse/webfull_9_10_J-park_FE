@@ -169,17 +169,16 @@ const sampleData = {
 };
 
 export default function GoalDetail() {
-  const averageQuota = Math.round(
-    sampleData.dailyProgress.reduce((a, b) => (a += b.targetAmount), 0) /
-      sampleData.dailyProgress.length,
-  );
   return (
     <main className="flex w-dvw min-h-screen flex-col items-center justify-center gap-6 p-8">
+      <h1 className="flex w-full font-bold text-2xl -mb-4">목표 정보</h1>
       <GoalDetailInformation
         title={sampleData.title}
         description={sampleData.description}
         category={sampleData.category}
-        averageQuota={averageQuota}
+        totalAmount={sampleData.progress.targetAmount}
+        startDate={sampleData.period.startDate}
+        endDate={sampleData.period.endDate}
       />
       <GoalProgression
         progress={sampleData.progress}
@@ -189,7 +188,6 @@ export default function GoalDetail() {
        * 목표 총 공부시간
        */}
       <DailyGoalList dailyProgress={sampleData.dailyProgress} />
-      목표 상세페이지
     </main>
   );
 }
