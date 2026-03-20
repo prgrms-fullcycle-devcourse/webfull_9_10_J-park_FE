@@ -4,16 +4,16 @@ Next.js 기반 프론트엔드 프로젝트 템플릿입니다.
 
 ## 기술 스택
 
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| [Next.js](https://nextjs.org/) | 15.x | 프레임워크 (App Router) |
-| [React](https://react.dev/) | 19.x | UI (TypeScript) |
-| [TailwindCSS](https://tailwindcss.com/) | 4.x | 스타일링 |
-| [HeroUI](https://heroui.com/) | 2.x | UI 컴포넌트 라이브러리 |
-| [Zustand](https://zustand.docs.pmnd.rs/) | 5.x | 전역 상태관리 |
-| [TanStack Query](https://tanstack.com/query) | 5.x | 서버 상태관리 |
-| [day.js](https://day.js.org/) | 1.x | 날짜 관리 |
-| [Axios](https://axios-http.com/) | 1.x | HTTP 통신 |
+| 기술                                         | 버전 | 용도                    |
+| -------------------------------------------- | ---- | ----------------------- |
+| [Next.js](https://nextjs.org/)               | 15.x | 프레임워크 (App Router) |
+| [React](https://react.dev/)                  | 19.x | UI (TypeScript)         |
+| [TailwindCSS](https://tailwindcss.com/)      | 4.x  | 스타일링                |
+| [HeroUI](https://heroui.com/)                | 2.x  | UI 컴포넌트 라이브러리  |
+| [Zustand](https://zustand.docs.pmnd.rs/)     | 5.x  | 전역 상태관리           |
+| [TanStack Query](https://tanstack.com/query) | 5.x  | 서버 상태관리           |
+| [day.js](https://day.js.org/)                | 1.x  | 날짜 관리               |
+| [Axios](https://axios-http.com/)             | 1.x  | HTTP 통신               |
 
 ## 시작하기
 
@@ -28,7 +28,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-`http://localhost:3000` 에서 확인할 수 있습니다.
+`http://localhost:7263` 에서 확인할 수 있습니다.
 
 ## 폴더 구조
 
@@ -56,14 +56,14 @@ src/
 
 ### 파일 네이밍
 
-| 종류 | 규칙 | 예시 |
-|------|------|------|
-| 컴포넌트 | PascalCase | `UserCard.tsx` |
-| 훅 | camelCase (use 접두사) | `use-auth.ts` |
-| 스토어 | camelCase (use 접두사) | `use-auth-store.ts` |
-| 유틸리티 | camelCase | `format-date.ts` |
-| 타입 | camelCase | `user.ts` |
-| 상수 | camelCase | `api-routes.ts` |
+| 종류     | 규칙                   | 예시                |
+| -------- | ---------------------- | ------------------- |
+| 컴포넌트 | PascalCase             | `UserCard.tsx`      |
+| 훅       | camelCase (use 접두사) | `use-auth.ts`       |
+| 스토어   | camelCase (use 접두사) | `use-auth-store.ts` |
+| 유틸리티 | camelCase              | `format-date.ts`    |
+| 타입     | camelCase              | `user.ts`           |
+| 상수     | camelCase              | `api-routes.ts`     |
 
 ### 상태관리 가이드
 
@@ -119,16 +119,16 @@ const user = await api.post<ApiResponse<User>>('/users', { name: '홍길동' });
 import dayjs from '@/lib/dayjs';
 
 // 한국어 로케일이 기본 적용됨
-dayjs().format('YYYY년 M월 D일');     // '2025년 1월 1일'
-dayjs('2025-01-01').fromNow();        // '1달 전'
+dayjs().format('YYYY년 M월 D일'); // '2025년 1월 1일'
+dayjs('2025-01-01').fromNow(); // '1달 전'
 ```
 
 ## 환경변수
 
-| 변수명 | 설명 | 기본값 |
-|--------|------|--------|
-| `NEXT_PUBLIC_API_URL` | API 서버 URL | `http://localhost:8080/api` |
-| `NEXT_PUBLIC_APP_URL` | 앱 URL | `http://localhost:3000` |
+| 변수명                | 설명         | 기본값                                  |
+| --------------------- | ------------ | --------------------------------------- |
+| `NEXT_PUBLIC_API_URL` | API 서버 URL | `https://lampfire-backend.onrender.com` |
+| `NEXT_PUBLIC_APP_URL` | 앱 URL       | `http://localhost:7263`                 |
 
 ## 스크립트
 
