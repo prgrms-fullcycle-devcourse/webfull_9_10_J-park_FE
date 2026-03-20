@@ -1,8 +1,38 @@
 'use client';
 
 import { useNavigate } from 'react-router';
-import { useTodayGoals } from '@/hooks/queries/use-today-goals';
-import { TodayGoal } from '@/types/goal';
+import { Card } from '@heroui/react';
+
+// =====================================================================
+// 더미 데이터 시작
+const DUMMY_GOALS = [
+  {
+    id: 1,
+    title: '목표 1',
+    currentAmount: 0,
+    targetAmount: 10,
+    unit: '페이지',
+    completed: true,
+  },
+  {
+    id: 2,
+    title: '목표 2',
+    currentAmount: 5,
+    targetAmount: 10,
+    unit: '페이지',
+    completed: true,
+  },
+  {
+    id: 3,
+    title: '목표 3',
+    currentAmount: 2,
+    targetAmount: 10,
+    unit: '페이지',
+    completed: false,
+  },
+];
+// 더미 데이터 끝
+// =====================================================================
 
 const GOAL_COLORS = [
   'bg-red-500',
@@ -14,37 +44,41 @@ const GOAL_COLORS = [
 
 export default function TodayGoalDailyDetail() {
   const navigate = useNavigate();
-
-  const { data } = useTodayGoals();
-  const goals = data?.todayGoals;
+  const goals = DUMMY_GOALS;
 
   const handleGoalClick = (id: number) => {
     navigate(`/daily-detail/${id}`);
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <h2 className="text-lg font-bold mb-2">오늘의 목표</h2>
+    <div className="flex flex-col gap-3">
+      <h2 className="text-lg font-bold mb-1">오늘의 목표</h2>
 
-      {goals?.map((goal: TodayGoal, index: number) => {
+      {goals.map((goal, index) => {
         const colorClass = GOAL_COLORS[index % GOAL_COLORS.length];
 
         return (
-          <div
+          <Card
             key={goal.id}
-            onClick={() => handleGoalClick(goal.id)}
-            className="flex items-center bg-white border border-gray-200 rounded-md overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+            isPressable
+            onPress={() => handleGoalClick(goal.id)}
+            className="w-full overflow-hidden border-none bg-white shadow-sm"
+            radius="sm"
           >
-            <div className={`w-4 h-16 ${colorClass}`} />
+            <div className="flex w-full">
+              <div className={`w-3 ${colorClass}`} />
 
-            <div className="flex flex-col p-4">
-              <span className="font-bold text-black">{goal.title}</span>
-              <span className="text-sm text-gray-500 mt-1">
-                오늘 할당량 ({goal.currentAmount}/{goal.targetAmount}
-                {goal.unit})
-              </span>
+              <div className="flex flex-col items-start p-4">
+                <span className="text-base font-bold text-gray-800">
+                  {goal.title}
+                </span>
+                <span className="text-sm text-gray-500 mt-1">
+                  오늘 할당량 ({goal.currentAmount}/{goal.targetAmount}
+                  {goal.unit})
+                </span>
+              </div>
             </div>
-          </div>
+          </Card>
         );
       })}
     </div>
