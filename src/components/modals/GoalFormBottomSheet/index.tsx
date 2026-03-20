@@ -12,7 +12,7 @@ import {
 } from '@heroui/react';
 import { FaChevronLeft } from 'react-icons/fa6';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { IoAdd } from 'react-icons/io5';
 import { useCreateGoalFormStore } from './stores/useCreateGoalFormStore';
@@ -27,6 +27,7 @@ export default function GoalFormBottomSheet() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(0);
   const { reset } = useCreateGoalFormStore();
+
   const onNext = useCallback(() => {
     if (currentStep < MAX_STEPS) {
       setCurrentStep((prev) => prev + 1);
@@ -55,6 +56,7 @@ export default function GoalFormBottomSheet() {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         placement="bottom-center"
+        className="overflow-x-hidden"
       >
         <ModalContent>
           <ModalHeader className="flex justify-between items-center">

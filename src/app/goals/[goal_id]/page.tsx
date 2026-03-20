@@ -170,8 +170,8 @@ const sampleData = {
 
 export default function GoalDetail() {
   return (
-    <main className="flex w-dvw min-h-screen flex-col items-center justify-center gap-6 p-8">
-      <h1 className="flex w-full font-bold text-2xl -mb-4">목표 정보</h1>
+    <div className="flex flex-col p-6 gap-4">
+      <h1 className="flex w-full font-bold text-2xl">목표 정보</h1>
       <GoalDetailInformation
         title={sampleData.title}
         description={sampleData.description}
@@ -188,6 +188,6 @@ export default function GoalDetail() {
        * 목표 총 공부시간
        */}
       <DailyGoalList dailyProgress={sampleData.dailyProgress} />
-    </main>
+    </div>
   );
 }

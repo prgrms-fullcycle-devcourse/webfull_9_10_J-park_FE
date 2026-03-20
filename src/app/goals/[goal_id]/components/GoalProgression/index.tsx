@@ -1,13 +1,5 @@
 'use client';
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  DatePicker,
-  Input,
-  Progress,
-} from '@heroui/react';
+import { Card, CardBody, Progress } from '@heroui/react';
 import { useEffect, useState } from 'react';
 interface Props {
   progress: {
