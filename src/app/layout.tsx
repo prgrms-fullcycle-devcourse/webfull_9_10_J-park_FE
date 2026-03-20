@@ -1,20 +1,9 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import { Providers } from './providers';
-import './globals.css';
 import { headers } from 'next/headers';
 import { userAgent } from 'next/server';
-import NavigationBar from '@/components/navigationBar';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'My App',
@@ -37,9 +26,7 @@ export default async function RootLayout({
 
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className="font-notosan antialiased">
         <Providers>
           {isMobile ? (
             children

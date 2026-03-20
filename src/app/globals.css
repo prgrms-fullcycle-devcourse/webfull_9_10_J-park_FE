@@ -2,9 +2,9 @@
 @config "../../tailwind.config.ts";
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
   display: flex;
   min-height: 100dvh;
+  min-width: 100dvw;
   align-items: center;
   justify-content: center;
 }
