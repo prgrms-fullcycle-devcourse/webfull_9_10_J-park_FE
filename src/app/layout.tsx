@@ -4,6 +4,8 @@ import { headers } from 'next/headers';
 import { userAgent } from 'next/server';
 
 import './globals.css';
+import NavigationBar from '@/components/navigationBar';
+import { STYLE } from '@/constants';
 
 export const metadata: Metadata = {
   title: 'My App',
@@ -14,6 +16,11 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
 };
+
+const mobileClasses =
+  'relative flex w-dvw max-h-dvh min-h-dvh rounded-2xl flex-col';
+const desktopClasses =
+  'relative flex w-[430px] min-h-dvh max-h-dvh rounded-2xl flex-col';
 
 export default async function RootLayout({
   children,
@@ -29,10 +36,16 @@ export default async function RootLayout({
       <body className="font-notosan antialiased">
         <Providers>
           {isMobile ? (
-            children
+            <div className={mobileClasses}>
+              <main className={`overflow-y-auto scrollbar-hide`}>
+                {children}
+                <div style={{ minHeight: STYLE.NAVBAR_HEIGHT }}></div>
+              </main>
+              <NavigationBar />
+            </div>
           ) : (
-            <div className="flex flex-row ">
-              <div className="flex flex-col p-6 gap-3 max-w-[430px] content-center align-middle justify-center">
+            <div className="flex">
+              <div className="flex flex-col p-6 gap-3 max-w-[430px] max-h-dvh content-center align-middle justify-center">
                 <h1 className="text-6xl">
                   <b>등불</b> | 발등에 불
                 </h1>
@@ -44,7 +57,13 @@ export default async function RootLayout({
                   <p className="text-right">애리, 장현, 상호, 영식, 중훈</p>
                 </div>
               </div>
-              {children}
+              <div className={desktopClasses}>
+                <main className={`overflow-y-auto scrollbar-hide`}>
+                  {children}
+                  <div style={{ minHeight: STYLE.NAVBAR_HEIGHT }}></div>
+                </main>
+                <NavigationBar />
+              </div>
             </div>
           )}
         </Providers>
