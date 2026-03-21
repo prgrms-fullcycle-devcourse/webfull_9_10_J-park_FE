@@ -20,7 +20,7 @@ export const viewport: Viewport = {
 const mobileClasses =
   'relative flex w-dvw max-h-dvh min-h-dvh rounded-2xl flex-col';
 const desktopClasses =
-  'relative flex w-[430px] min-h-dvh max-h-dvh rounded-2xl flex-col';
+  'relative flex w-[430px] min-h-dvh max-h-dvh rounded-2xl flex-col shadow-2xl';
 
 export default async function RootLayout({
   children,
@@ -47,7 +47,7 @@ export default async function RootLayout({
             <div className="flex">
               <div className="flex flex-col p-6 gap-3 max-w-[430px] max-h-dvh content-center align-middle justify-center">
                 <h1 className="text-6xl">
-                  <b>등불</b> | 발등에 불
+                  <b className="text-success">등불</b> <b>|</b> 발등에 불
                 </h1>
                 <p className="text-2xl text-gray-500">
                   일정을 미루는 것을 막고 동기를 부여해주는 작은 비서!
