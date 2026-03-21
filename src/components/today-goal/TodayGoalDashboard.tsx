@@ -113,8 +113,8 @@ export default function TodayGoalDashboard() {
                       </span>
                     </div>
                     <span className="text-sm text-gray-500">
-                      오늘 할당량 ({goal.currentAmount}/{goal.targetAmount}
-                      {goal.unit})
+                      {goal.currentAmount} / {goal.targetAmount}
+                      {goal.unit}
                     </span>
                   </div>
 

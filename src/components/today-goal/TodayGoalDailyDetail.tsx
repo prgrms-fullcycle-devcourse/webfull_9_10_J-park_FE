@@ -101,8 +101,8 @@ export default function TodayGoalDailyDetail() {
                     {goal.title}
                   </span>
                   <span className="text-sm text-gray-500 mt-1">
-                    오늘 할당량 ({goal.currentAmount}/{goal.targetAmount}
-                    {goal.unit})
+                    {goal.currentAmount} / {goal.targetAmount}
+                    {goal.unit}
                   </span>
                 </div>
               </div>
