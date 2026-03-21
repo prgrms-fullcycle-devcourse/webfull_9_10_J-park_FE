@@ -50,7 +50,6 @@ const GOAL_COLORS = [
 
 export default function TodayGoalDashboard() {
   const navigate = useNavigate();
-
   const [goals, setGoals] = useState(DUMMY_GOALS);
 
   const dragItem = useRef<number | null>(null);
@@ -77,66 +76,66 @@ export default function TodayGoalDashboard() {
 
       setGoals(newGoals);
     }
-
     dragItem.current = null;
     dragOverItem.current = null;
   };
 
   return (
-    <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-bold mb-1">오늘의 목표</h2>
+    <Card className="w-full p-5 bg-white shadow-md border-none" radius="lg">
+      <h2 className="text-lg font-bold mb-4 text-gray-800">오늘의 목표</h2>
 
-      {goals.map((goal, index) => {
-        const colorClass = GOAL_COLORS[index % GOAL_COLORS.length];
+      <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
+        {goals.map((goal, index) => {
+          const colorClass = GOAL_COLORS[index % GOAL_COLORS.length];
 
-        return (
-          <Card
-            key={goal.id}
-            onClick={() => handleGoalClick(goal.id)}
-            className="w-full overflow-hidden border-none bg-white shadow-sm hover:scale-[1.01] transition-transform cursor-grab active:cursor-grabbing"
-            radius="sm"
-            draggable
-            onDragStart={(e) => handleDragStart(e, index)}
-            onDragEnter={(e) => handleDragEnter(e, index)}
-            onDragEnd={handleDragEnd}
-            onDragOver={(e) => e.preventDefault()}
-          >
-            <div className="flex w-full pointer-events-none">
-              <div className={`w-3 ${colorClass}`} />
+          return (
+            <div
+              key={goal.id}
+              onClick={() => handleGoalClick(goal.id)}
+              className="flex w-full bg-white border-b last:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors cursor-grab active:cursor-grabbing"
+              draggable
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragEnter={(e) => handleDragEnter(e, index)}
+              onDragEnd={handleDragEnd}
+              onDragOver={(e) => e.preventDefault()}
+            >
+              <div className="flex w-full pointer-events-none">
+                <div className={`w-3 ${colorClass}`} />
 
-              <div className="flex flex-1 items-center justify-between p-4">
-                <div className="flex flex-col items-start gap-1">
-                  <div className="flex items-center gap-3">
-                    <span className="text-base font-bold text-gray-800">
-                      {goal.title}
-                    </span>
-                    <span className="text-base font-bold text-gray-800">
-                      {formatMilliseconds(goal.studyTime)}
+                <div className="flex flex-1 items-center justify-between p-4">
+                  <div className="flex flex-col items-start gap-1">
+                    <div className="flex items-center gap-3">
+                      <span className="text-base font-bold text-gray-800">
+                        {goal.title}
+                      </span>
+                      <span className="text-base font-bold text-gray-800">
+                        {formatMilliseconds(goal.studyTime)}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      오늘 할당량 ({goal.currentAmount}/{goal.targetAmount}
+                      {goal.unit})
                     </span>
                   </div>
-                  <span className="text-sm text-gray-500">
-                    오늘 할당량 ({goal.currentAmount}/{goal.targetAmount}
-                    {goal.unit})
-                  </span>
-                </div>
 
-                <div className="flex items-center gap-3 pointer-events-auto">
-                  <Chip
-                    size="sm"
-                    color={goal.completed ? 'success' : 'warning'}
-                    variant="flat"
-                    className="font-bold"
-                  >
-                    {goal.completed ? '달성' : '미달성'}
-                  </Chip>
+                  <div className="flex items-center gap-3 pointer-events-auto">
+                    <Chip
+                      size="sm"
+                      color={goal.completed ? 'success' : 'warning'}
+                      variant="flat"
+                      className="font-bold"
+                    >
+                      {goal.completed ? '달성' : '미달성'}
+                    </Chip>
 
-                  <GoalPlayButton />
+                    <GoalPlayButton />
+                  </div>
                 </div>
               </div>
             </div>
-          </Card>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </Card>
   );
 }
