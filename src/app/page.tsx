@@ -11,16 +11,14 @@ const desktopClasses =
 
 export default async function Home() {
   return (
-    <main className={isMobile ? mobileClasses : desktopClasses}>
-      <ClientRouter>
-        <div className="flex-1 p-4 pb-24 flex flex-col gap-6">
-          {/* 페이스 다이얼 */}
-          {/* 오늘 총 공부시간 */}
-          {/* 오늘의 목표 달성률 */}
-          <TodayGoalDashboard />
-        </div>
-        <NavigationBar />
-      </ClientRouter>
-    </main>
+    <ClientRouter>
+      <div className="flex-1 p-4 pb-24 flex flex-col gap-6">
+        {/* 페이스 다이얼 */}
+        {/* 오늘 총 공부시간 */}
+        {/* 오늘의 목표 달성률 */}
+        <TodayGoalDashboard />
+      </div>
+      <NavigationBar />
+    </ClientRouter>
   );
 }
