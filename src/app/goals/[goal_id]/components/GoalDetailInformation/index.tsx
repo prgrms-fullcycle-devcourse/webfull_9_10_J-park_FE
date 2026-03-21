@@ -37,7 +37,7 @@ export default function GoalDetailInformation({
   const [newEndDate, setNewEndDate] = useState(endDate);
 
   return (
-    <Card fullWidth>
+    <Card fullWidth id="goal-information">
       <CardBody className="flex gap-4">
         <Input
           size="lg"

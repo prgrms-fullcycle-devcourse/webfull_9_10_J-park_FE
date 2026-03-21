@@ -29,7 +29,7 @@ export default function GoalProgression({ progress, period }: Props) {
   }, [rate]);
 
   return (
-    <Card fullWidth>
+    <Card fullWidth id="goal-progression">
       <CardBody className="pb-12">
         <div className="flex justify-between">
           <div>
