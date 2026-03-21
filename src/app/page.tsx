@@ -10,10 +10,6 @@ const desktopClasses =
   'relative flex max-w-[430px] min-w-[430px] max-h-[932px] min-h-[430px] rounded-2xl flex-col overflow-y-auto scrollbar-hide bg-amber-200';
 
 export default async function Home() {
-  const headerList = await headers();
-  const ua = userAgent({ headers: headerList });
-  const isMobile = ua.device.type === 'mobile';
-
   return (
     <main className={isMobile ? mobileClasses : desktopClasses}>
       <ClientRouter>

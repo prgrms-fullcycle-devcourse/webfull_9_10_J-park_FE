@@ -2,9 +2,8 @@
 @config "../../tailwind.config.ts";
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
   display: flex;
-  min-height: 100dvh;
   align-items: center;
   justify-content: center;
+  overscroll-behavior-y: none;
 }
