@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { Card } from '@heroui/react';
 
@@ -31,7 +32,6 @@ const DUMMY_GOALS = [
     completed: false,
   },
 ];
-// 더미 데이터 끝
 // =====================================================================
 
 const GOAL_COLORS = [
@@ -44,10 +44,34 @@ const GOAL_COLORS = [
 
 export default function TodayGoalDailyDetail() {
   const navigate = useNavigate();
-  const goals = DUMMY_GOALS;
+  const [goals, setGoals] = useState(DUMMY_GOALS);
+
+  const dragItem = useRef<number | null>(null);
+  const dragOverItem = useRef<number | null>(null);
 
   const handleGoalClick = (id: number) => {
     navigate(`/daily-detail/${id}`);
+  };
+
+  const handleDragStart = (e: React.DragEvent, position: number) => {
+    dragItem.current = position;
+  };
+
+  const handleDragEnter = (e: React.DragEvent, position: number) => {
+    dragOverItem.current = position;
+  };
+
+  const handleDragEnd = () => {
+    if (dragItem.current !== null && dragOverItem.current !== null) {
+      const newGoals = [...goals];
+      const draggingItemContent = newGoals[dragItem.current];
+      newGoals.splice(dragItem.current, 1);
+      newGoals.splice(dragOverItem.current, 0, draggingItemContent);
+
+      setGoals(newGoals);
+    }
+    dragItem.current = null;
+    dragOverItem.current = null;
   };
 
   return (
@@ -62,10 +86,14 @@ export default function TodayGoalDailyDetail() {
             <div
               key={goal.id}
               onClick={() => handleGoalClick(goal.id)}
-              className="flex w-full bg-white border-b last:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
+              className="flex w-full bg-white border-b last:border-b-0 border-gray-200 cursor-grab active:cursor-grabbing hover:bg-gray-50 transition-colors"
+              draggable
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragEnter={(e) => handleDragEnter(e, index)}
+              onDragEnd={handleDragEnd}
+              onDragOver={(e) => e.preventDefault()}
             >
               <div className="flex w-full pointer-events-none">
-                {/* 왼쪽 색상 띠 */}
                 <div className={`w-3 ${colorClass}`} />
 
                 <div className="flex flex-col items-start p-4">
