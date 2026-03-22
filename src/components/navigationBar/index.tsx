@@ -1,4 +1,3 @@
-'use client';
 import GoalFormBottomSheet from '../modals/GoalFormBottomSheet';
 import NavItem from './components/NavItem';
 
