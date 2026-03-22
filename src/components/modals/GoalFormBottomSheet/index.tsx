@@ -11,10 +11,10 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import { FaChevronLeft } from 'react-icons/fa6';
+import { FaPlus } from 'react-icons/fa6';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { IoAdd } from 'react-icons/io5';
 import { useCreateGoalFormStore } from './stores/useCreateGoalFormStore';
 import GoalInfoForm from './components/GoalInfoForm';
 import GoalCategoryForm from './components/GoalCategoryForm';
@@ -47,8 +47,14 @@ export default function GoalFormBottomSheet() {
 
   return (
     <>
-      <Button radius="full" onPress={onOpen} isIconOnly>
-        <IoAdd size={28} />
+      <Button
+        radius="full"
+        color="success"
+        className="text-white"
+        onPress={onOpen}
+        isIconOnly
+      >
+        <FaPlus size={24} />
       </Button>
       <Modal
         hideCloseButton
