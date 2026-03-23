@@ -11,7 +11,7 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import { FaChevronLeft } from 'react-icons/fa6';
-import { FaPlus } from 'react-icons/fa6';
+import { CgAddR } from 'react-icons/cg';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -48,13 +48,13 @@ export default function GoalFormBottomSheet() {
   return (
     <>
       <Button
-        radius="full"
-        color="success"
-        className="text-white"
+        radius="none"
+        className="[&>svg]:shrink-0 col-span-1 w-full h-full border-t-1 border-slate-200 text-success-400 "
         onPress={onOpen}
         isIconOnly
+        variant="light"
       >
-        <FaPlus size={24} />
+        <CgAddR size={28} />
       </Button>
       <Modal
         hideCloseButton
