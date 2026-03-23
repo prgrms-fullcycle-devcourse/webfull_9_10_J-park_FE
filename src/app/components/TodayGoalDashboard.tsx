@@ -2,9 +2,11 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, Chip, Link } from '@heroui/react';
-import GoalPlayButton from '../../components/GoalPlayButton';
+import { Card, Link } from '@heroui/react';
+import GoalPlayButton from '@/components/GoalPlayButton';
+import GoalStatusBadge from '@/components/GoalStatusBadge';
 import { formatMilliseconds } from '@/lib/utils';
+import { useTimerStore } from '@/stores/useTimerStore';
 
 const DUMMY_GOALS = [
   {
@@ -47,7 +49,7 @@ const GOAL_COLORS = [
 export default function TodayGoalDashboard() {
   const router = useRouter();
   const [goals, setGoals] = useState(DUMMY_GOALS);
-  const [playingId, setPlayingId] = useState<number | null>(null);
+  const { playingId, startTimer } = useTimerStore();
 
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
@@ -56,7 +58,7 @@ export default function TodayGoalDashboard() {
     e.preventDefault();
     e.stopPropagation();
 
-    setPlayingId(goalId);
+    startTimer(goalId);
     router.push(`/goals/${goalId}/daily-1`);
   };
 
@@ -120,14 +122,9 @@ export default function TodayGoalDashboard() {
                   </div>
 
                   <div className="flex items-center gap-3 pointer-events-auto">
-                    <Chip
-                      size="sm"
-                      color={goal.completed ? 'success' : 'warning'}
-                      variant="flat"
-                      className="font-bold"
-                    >
-                      {goal.completed ? '달성' : '미달성'}
-                    </Chip>
+                    <GoalStatusBadge
+                      status={goal.completed ? '달성' : '미달성'}
+                    />
 
                     <GoalPlayButton
                       isPlaying={isPlaying}
