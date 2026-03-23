@@ -7,7 +7,7 @@ import { FaRankingStar } from 'react-icons/fa6';
 import { FaUserCircle } from 'react-icons/fa';
 
 import { ROUTE, STYLE } from '@/constants';
-import GoalFormBottomSheet from '../modals/GoalFormBottomSheet';
+import GoalCreateFormModal from '../modals/GoalCreateFormModal';
 
 const selectedStyle = 'border-success-400 border-t-3 text-success-400';
 const notSelectedStyle = 'border-slate-200 border-t-1 text-slate-400';
@@ -36,7 +36,7 @@ export default function NavigationBar() {
       >
         <LuListTodo size={28} />
       </Button>
-      <GoalFormBottomSheet />
+      <GoalCreateFormModal />
       <Button
         className={`bg-transparent w-full h-full col-span-1 [&>svg]:shrink-0 ${pathname === ROUTE.COMMUNITY ? selectedStyle : notSelectedStyle}`}
         radius="none"
