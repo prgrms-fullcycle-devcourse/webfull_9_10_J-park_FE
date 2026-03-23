@@ -6,3 +6,10 @@ export const API = {
 export const STYLE = {
   NAVBAR_HEIGHT: '4rem',
 };
+
+export const ROUTE = {
+  HOME: '/',
+  GOALS: '/goals',
+  COMMUNITY: '/community',
+  ME: '/me',
+};
