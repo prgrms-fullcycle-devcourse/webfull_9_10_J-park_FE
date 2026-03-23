@@ -31,24 +31,29 @@ export default function DeleteConfirmationModal({ goalTitle, goalID }: Props) {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         size="sm"
+        placement="center"
         hideCloseButton
       >
         <ModalContent>
-          <ModalHeader>삭제하기</ModalHeader>
-          <ModalBody>
-            <span>
-              <b>&quot;{goalTitle}&quot;</b>
-              목표를 삭제하시겠습니까?
-            </span>
-          </ModalBody>
-          <ModalFooter className="flex flex-col">
-            <Button fullWidth variant="flat" color="danger">
-              삭제하기
-            </Button>
-            <Button fullWidth variant="light">
-              취소하기
-            </Button>
-          </ModalFooter>
+          {(onClose) => (
+            <>
+              <ModalHeader>삭제하기</ModalHeader>
+              <ModalBody>
+                <span>
+                  <b>&quot;{goalTitle}&quot;</b>
+                  목표를 삭제하시겠습니까?
+                </span>
+              </ModalBody>
+              <ModalFooter className="flex flex-col">
+                <Button fullWidth variant="flat" color="danger">
+                  삭제하기
+                </Button>
+                <Button fullWidth variant="light" onPress={onClose}>
+                  취소하기
+                </Button>
+              </ModalFooter>
+            </>
+          )}
         </ModalContent>
       </Modal>
     </>
