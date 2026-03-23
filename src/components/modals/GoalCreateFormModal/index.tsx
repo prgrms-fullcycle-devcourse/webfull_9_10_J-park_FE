@@ -23,7 +23,7 @@ import GoalDateForm from './components/GoalDateForm';
 const MAX_STEPS = 2;
 const modalTitles = ['정보 입력', '총량 설정', '기한 설정'];
 
-export default function GoalFormBottomSheet() {
+export default function GoalCreateFormModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(0);
   const { reset } = useCreateGoalFormStore();
