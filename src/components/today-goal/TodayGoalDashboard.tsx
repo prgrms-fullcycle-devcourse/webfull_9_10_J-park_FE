@@ -1,13 +1,11 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router';
-import { Card, Chip } from '@heroui/react';
+import { useRouter } from 'next/navigation';
+import { Card, Chip, Link } from '@heroui/react';
 import GoalPlayButton from './components/GoalPlayButton';
 import { formatMilliseconds } from '@/lib/utils';
 
-// =====================================================================
-// 더미 데이터 시작
 const DUMMY_GOALS = [
   {
     id: 1,
@@ -37,8 +35,6 @@ const DUMMY_GOALS = [
     completed: false,
   },
 ];
-// 더미 데이터 끝
-// =====================================================================
 
 const GOAL_COLORS = [
   'bg-red-500',
@@ -49,14 +45,19 @@ const GOAL_COLORS = [
 ];
 
 export default function TodayGoalDashboard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [goals, setGoals] = useState(DUMMY_GOALS);
+  const [playingId, setPlayingId] = useState<number | null>(null);
 
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
 
-  const handleGoalClick = (id: number) => {
-    navigate(`/daily-detail/${id}`);
+  const handlePlayClick = (e: React.MouseEvent, goalId: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setPlayingId(goalId);
+    router.push(`/goals/${goalId}/daily-1`);
   };
 
   const handleDragStart = (e: React.DragEvent, position: number) => {
@@ -73,7 +74,6 @@ export default function TodayGoalDashboard() {
       const draggingItemContent = newGoals[dragItem.current];
       newGoals.splice(dragItem.current, 1);
       newGoals.splice(dragOverItem.current, 0, draggingItemContent);
-
       setGoals(newGoals);
     }
     dragItem.current = null;
@@ -87,12 +87,13 @@ export default function TodayGoalDashboard() {
       <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
         {goals.map((goal, index) => {
           const colorClass = GOAL_COLORS[index % GOAL_COLORS.length];
+          const isPlaying = playingId === goal.id;
 
           return (
-            <div
+            <Link
               key={goal.id}
-              onClick={() => handleGoalClick(goal.id)}
-              className="flex w-full bg-white border-b last:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors cursor-grab active:cursor-grabbing"
+              href={`/goals/${goal.id}`}
+              className="flex w-full bg-white border-b last:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors cursor-grab active:cursor-grabbing text-foreground"
               draggable
               onDragStart={(e) => handleDragStart(e, index)}
               onDragEnter={(e) => handleDragEnter(e, index)}
@@ -128,11 +129,14 @@ export default function TodayGoalDashboard() {
                       {goal.completed ? '달성' : '미달성'}
                     </Chip>
 
-                    <GoalPlayButton />
+                    <GoalPlayButton
+                      isPlaying={isPlaying}
+                      onClick={(e) => handlePlayClick(e, goal.id)}
+                    />
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router';
-import { Card } from '@heroui/react';
+import { useRouter } from 'next/navigation';
+import { Card, Link } from '@heroui/react';
 
 // =====================================================================
 // 더미 데이터 시작
@@ -43,31 +43,24 @@ const GOAL_COLORS = [
 ];
 
 export default function TodayGoalDailyDetail() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [goals, setGoals] = useState(DUMMY_GOALS);
 
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
 
-  const handleGoalClick = (id: number) => {
-    navigate(`/daily-detail/${id}`);
-  };
-
   const handleDragStart = (e: React.DragEvent, position: number) => {
     dragItem.current = position;
   };
-
   const handleDragEnter = (e: React.DragEvent, position: number) => {
     dragOverItem.current = position;
   };
-
   const handleDragEnd = () => {
     if (dragItem.current !== null && dragOverItem.current !== null) {
       const newGoals = [...goals];
       const draggingItemContent = newGoals[dragItem.current];
       newGoals.splice(dragItem.current, 1);
       newGoals.splice(dragOverItem.current, 0, draggingItemContent);
-
       setGoals(newGoals);
     }
     dragItem.current = null;
@@ -83,10 +76,10 @@ export default function TodayGoalDailyDetail() {
           const colorClass = GOAL_COLORS[index % GOAL_COLORS.length];
 
           return (
-            <div
+            <Link
               key={goal.id}
-              onClick={() => handleGoalClick(goal.id)}
-              className="flex w-full bg-white border-b last:border-b-0 border-gray-200 cursor-grab active:cursor-grabbing hover:bg-gray-50 transition-colors"
+              href={`/goals/${goal.id}`}
+              className="flex w-full bg-white border-b last:border-b-0 border-gray-200 cursor-grab active:cursor-grabbing hover:bg-gray-50 transition-colors text-foreground"
               draggable
               onDragStart={(e) => handleDragStart(e, index)}
               onDragEnter={(e) => handleDragEnter(e, index)}
@@ -106,7 +99,7 @@ export default function TodayGoalDailyDetail() {
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
