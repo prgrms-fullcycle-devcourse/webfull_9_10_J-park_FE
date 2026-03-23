@@ -1,6 +1,6 @@
 'use client';
 
-import { IoPlaySharp, IoPauseSharp } from 'react-icons/io5';
+import { IoPlaySharp, IoStopSharp } from 'react-icons/io5';
 
 interface GoalPlayButtonProps {
   isPlaying: boolean;
@@ -21,7 +21,7 @@ export default function GoalPlayButton({
       }`}
     >
       {isPlaying ? (
-        <IoPauseSharp size={22} className="text-white" />
+        <IoStopSharp size={22} className="text-white" />
       ) : (
         <IoPlaySharp size={22} className="text-white" />
       )}
