@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useTimerStore } from '@/stores/useTimerStore';
 import { formatMilliseconds } from '@/lib/utils';
+import GoalPlayButton from '@/components/GoalPlayButton';
 
 interface DailyGoalTimerProps {
   goalId: number;
@@ -16,7 +17,6 @@ export default function DailyGoalTimer({
   quotaText,
 }: DailyGoalTimerProps) {
   const { playingId, startTime, stopTimer, startTimer } = useTimerStore();
-
   const [elapsedMs, setElapsedMs] = useState(0);
 
   const isPlaying = playingId === goalId;
@@ -35,17 +35,16 @@ export default function DailyGoalTimer({
     return () => clearInterval(interval);
   }, [isPlaying, startTime]);
 
-  const handleToggleTimer = async () => {
+  const handleToggleTimer = async (e: React.MouseEvent) => {
+    e.preventDefault();
     try {
       if (isPlaying) {
         console.log(
-          `[API] 백엔드로 전송 -> 목표 ${goalId} 타이머 정지! 누적: ${elapsedMs}ms`,
+          `[API] 백엔드로 전송 -> 목표 ${goalId} 정지! 누적: ${elapsedMs}ms`,
         );
-
         stopTimer();
       } else {
-        console.log(`[API] 백엔드로 전송 -> 목표 ${goalId} 타이머 시작!`);
-
+        console.log(`[API] 백엔드로 전송 -> 목표 ${goalId} 시작!`);
         startTimer(goalId);
       }
     } catch (error) {
@@ -64,18 +63,9 @@ export default function DailyGoalTimer({
         {formatMilliseconds(elapsedMs)}
       </div>
 
-      <button
-        onClick={handleToggleTimer}
-        className={`flex items-center justify-center w-14 h-14 rounded-full transition-transform hover:scale-105 shadow-md ${
-          isPlaying ? 'bg-[#f58d2c]' : 'bg-blue-500'
-        }`}
-      >
-        {isPlaying ? (
-          <div className="w-5 h-5 bg-[#dc2626] rounded-sm" />
-        ) : (
-          <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[16px] border-l-white border-b-[10px] border-b-transparent ml-1" />
-        )}
-      </button>
+      <div className="ml-4 scale-125 origin-right">
+        <GoalPlayButton isPlaying={isPlaying} onClick={handleToggleTimer} />
+      </div>
     </div>
   );
 }
