@@ -1,10 +1,8 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router';
-import { Card, Chip } from '@heroui/react';
-import GoalPlayButton from './components/GoalPlayButton';
-import { formatMilliseconds } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import { Card, Link } from '@heroui/react';
 
 // =====================================================================
 // 더미 데이터 시작
@@ -12,8 +10,7 @@ const DUMMY_GOALS = [
   {
     id: 1,
     title: '목표 1',
-    studyTime: 900000,
-    currentAmount: 10,
+    currentAmount: 0,
     targetAmount: 10,
     unit: '페이지',
     completed: true,
@@ -21,8 +18,7 @@ const DUMMY_GOALS = [
   {
     id: 2,
     title: '목표 2',
-    studyTime: 3600000,
-    currentAmount: 12,
+    currentAmount: 5,
     targetAmount: 10,
     unit: '페이지',
     completed: true,
@@ -30,14 +26,12 @@ const DUMMY_GOALS = [
   {
     id: 3,
     title: '목표 3',
-    studyTime: 1800000,
     currentAmount: 2,
     targetAmount: 10,
     unit: '페이지',
     completed: false,
   },
 ];
-// 더미 데이터 끝
 // =====================================================================
 
 const GOAL_COLORS = [
@@ -48,32 +42,25 @@ const GOAL_COLORS = [
   'bg-purple-400',
 ];
 
-export default function TodayGoalDashboard() {
-  const navigate = useNavigate();
+export default function TodayGoalDailyDetail() {
+  const router = useRouter();
   const [goals, setGoals] = useState(DUMMY_GOALS);
 
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
 
-  const handleGoalClick = (id: number) => {
-    navigate(`/daily-detail/${id}`);
-  };
-
   const handleDragStart = (e: React.DragEvent, position: number) => {
     dragItem.current = position;
   };
-
   const handleDragEnter = (e: React.DragEvent, position: number) => {
     dragOverItem.current = position;
   };
-
   const handleDragEnd = () => {
     if (dragItem.current !== null && dragOverItem.current !== null) {
       const newGoals = [...goals];
       const draggingItemContent = newGoals[dragItem.current];
       newGoals.splice(dragItem.current, 1);
       newGoals.splice(dragOverItem.current, 0, draggingItemContent);
-
       setGoals(newGoals);
     }
     dragItem.current = null;
@@ -89,10 +76,10 @@ export default function TodayGoalDashboard() {
           const colorClass = GOAL_COLORS[index % GOAL_COLORS.length];
 
           return (
-            <div
+            <Link
               key={goal.id}
-              onClick={() => handleGoalClick(goal.id)}
-              className="flex w-full bg-white border-b last:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors cursor-grab active:cursor-grabbing"
+              href={`/goals/${goal.id}`}
+              className="flex w-full bg-white border-b last:border-b-0 border-gray-200 cursor-grab active:cursor-grabbing hover:bg-gray-50 transition-colors text-foreground"
               draggable
               onDragStart={(e) => handleDragStart(e, index)}
               onDragEnter={(e) => handleDragEnter(e, index)}
@@ -102,37 +89,17 @@ export default function TodayGoalDashboard() {
               <div className="flex w-full pointer-events-none">
                 <div className={`w-3 ${colorClass}`} />
 
-                <div className="flex flex-1 items-center justify-between p-4">
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="flex items-center gap-3">
-                      <span className="text-base font-bold text-gray-800">
-                        {goal.title}
-                      </span>
-                      <span className="text-base font-bold text-gray-800">
-                        {formatMilliseconds(goal.studyTime)}
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-500">
-                      {goal.currentAmount} / {goal.targetAmount}
-                      {goal.unit}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3 pointer-events-auto">
-                    <Chip
-                      size="sm"
-                      color={goal.completed ? 'success' : 'warning'}
-                      variant="flat"
-                      className="font-bold"
-                    >
-                      {goal.completed ? '달성' : '미달성'}
-                    </Chip>
-
-                    <GoalPlayButton />
-                  </div>
+                <div className="flex flex-col items-start p-4">
+                  <span className="text-base font-bold text-gray-800">
+                    {goal.title}
+                  </span>
+                  <span className="text-sm text-gray-500 mt-1">
+                    {goal.currentAmount} / {goal.targetAmount}
+                    {goal.unit}
+                  </span>
                 </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>

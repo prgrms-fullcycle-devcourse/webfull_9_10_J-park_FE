@@ -1,19 +1,33 @@
 import NavigationBar from '@/components/navigationBar';
-import ClientRouter from '@/components/ClientRouter';
-import TodayGoalDailyDetail from '@/components/today-goal/TodayGoalDailyDetail';
+import DailyGoalTimer from './components/DailyGoalTimer';
+import TodayGoalDailyDetail from '@/app/goals/[goal_id]/[daily_id]/components/TodayGoalDailyDetail';
 
-export default function DailyGoalDetailPage() {
+export default async function DailyGoalDetailPage({
+  params,
+}: {
+  params: Promise<{ goal_id: string; daily_id: string }>;
+}) {
+  const resolvedParams = await params;
+
+  const currentGoalId = Number(resolvedParams.goal_id);
+
   return (
-    <ClientRouter>
+    <>
       <div className="flex-1 min-h-screen w-full overflow-y-auto scrollbar-hide bg-[#2c2c2c]">
         <div className="flex-1 p-4 pb-24 flex flex-col gap-6">
           <p className="text-white">데일리 목표 상세 페이지</p>
-          {/* 목표 정보(목표명, 할당량, 시간, 중지버튼 */}
-          {/* 오늘의 목표 달성률 */}
+
+          <DailyGoalTimer
+            goalId={currentGoalId}
+            goalTitle={`목표 ${currentGoalId}`}
+            quotaText="할당량"
+          />
+
+          {/* 오늘의 목표 달성률 (초록바 추후 추가해야함)*/}
           <TodayGoalDailyDetail />
         </div>
       </div>
       <NavigationBar />
-    </ClientRouter>
+    </>
   );
 }
