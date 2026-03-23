@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Chip, Link } from '@heroui/react';
-import GoalPlayButton from './components/GoalPlayButton';
+import GoalPlayButton from '../../components/GoalPlayButton';
 import { formatMilliseconds } from '@/lib/utils';
 
 const DUMMY_GOALS = [

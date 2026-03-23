@@ -1,5 +1,5 @@
 import NavigationBar from '@/components/navigationBar';
-import TodayGoalDailyDetail from '@/components/today-goal/TodayGoalDailyDetail';
+import TodayGoalDailyDetail from '@/app/goals/[goal_id]/[daily_id]/components/TodayGoalDailyDetail';
 
 export default function DailyGoalDetailPage() {
   return (

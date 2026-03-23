@@ -1,5 +1,5 @@
 import NavigationBar from '@/components/navigationBar';
-import TodayGoalDashboard from '@/components/today-goal/TodayGoalDashboard';
+import TodayGoalDashboard from '@/app/components/TodayGoalDashboard';
 
 export default async function Home() {
   return (
