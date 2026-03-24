@@ -2,11 +2,9 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, Link } from '@heroui/react';
-import GoalPlayButton from '@/components/GoalPlayButton';
-import GoalStatusBadge from '@/components/GoalStatusBadge';
-import { formatMilliseconds } from '@/lib/utils';
+import { Card } from '@heroui/react';
 import { useTimerStore } from '@/stores/useTimerStore';
+import TodayGoalItem from './TodayGoalItem';
 
 const DUMMY_GOALS = [
   {
@@ -57,7 +55,6 @@ export default function TodayGoalDashboard() {
   const handlePlayClick = (e: React.MouseEvent, goalId: number) => {
     e.preventDefault();
     e.stopPropagation();
-
     startTimer(goalId);
     router.push(`/goals/${goalId}/daily-1`);
   };
@@ -65,11 +62,9 @@ export default function TodayGoalDashboard() {
   const handleDragStart = (e: React.DragEvent, position: number) => {
     dragItem.current = position;
   };
-
   const handleDragEnter = (e: React.DragEvent, position: number) => {
     dragOverItem.current = position;
   };
-
   const handleDragEnd = () => {
     if (dragItem.current !== null && dragOverItem.current !== null) {
       const newGoals = [...goals];
@@ -88,52 +83,18 @@ export default function TodayGoalDashboard() {
 
       <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
         {goals.map((goal, index) => {
-          const colorClass = GOAL_COLORS[index % GOAL_COLORS.length];
-          const isPlaying = playingId === goal.id;
-
+          // 💡 2. 길었던 코드가 부품 하나로 아주 깔끔하게 정리되었습니다!
           return (
-            <Link
+            <TodayGoalItem
               key={goal.id}
-              href={`/goals/${goal.id}`}
-              className="flex w-full bg-white border-b last:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors cursor-grab active:cursor-grabbing text-foreground"
-              draggable
+              goal={goal}
+              colorClass={GOAL_COLORS[index % GOAL_COLORS.length]}
+              isPlaying={playingId === goal.id}
+              onPlayClick={handlePlayClick}
               onDragStart={(e) => handleDragStart(e, index)}
               onDragEnter={(e) => handleDragEnter(e, index)}
               onDragEnd={handleDragEnd}
-              onDragOver={(e) => e.preventDefault()}
-            >
-              <div className="flex w-full pointer-events-none">
-                <div className={`w-3 ${colorClass}`} />
-
-                <div className="flex flex-1 items-center justify-between p-4">
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="flex items-center gap-3">
-                      <span className="text-base font-bold text-gray-800">
-                        {goal.title}
-                      </span>
-                      <span className="text-base font-bold text-gray-800">
-                        {formatMilliseconds(goal.studyTime)}
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-500">
-                      {goal.currentAmount} / {goal.targetAmount}
-                      {goal.unit}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3 pointer-events-auto">
-                    <GoalStatusBadge
-                      status={goal.completed ? '달성' : '미달성'}
-                    />
-
-                    <GoalPlayButton
-                      isPlaying={isPlaying}
-                      onClick={(e) => handlePlayClick(e, goal.id)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </Link>
+            />
           );
         })}
       </div>
