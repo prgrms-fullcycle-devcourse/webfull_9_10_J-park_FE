@@ -9,15 +9,20 @@ interface DailyGoalTimerProps {
   goalId: number;
   goalTitle: string;
   quotaText: string;
+  initialStudyTime: number;
 }
 
 export default function DailyGoalTimer({
   goalId,
   goalTitle,
   quotaText,
+  initialStudyTime,
 }: DailyGoalTimerProps) {
-  const { playingId, startTime, stopTimer, startTimer } = useTimerStore();
-  const [elapsedMs, setElapsedMs] = useState(0);
+  const { playingId, startTime, stopTimer, startTimer, recordedTimes } =
+    useTimerStore();
+
+  const baseTime = initialStudyTime + (recordedTimes[goalId] || 0);
+  const [liveMs, setLiveMs] = useState(baseTime);
 
   const isPlaying = playingId === goalId;
 
@@ -26,29 +31,21 @@ export default function DailyGoalTimer({
 
     if (isPlaying && startTime) {
       interval = setInterval(() => {
-        setElapsedMs(Date.now() - startTime);
+        setLiveMs(baseTime + (Date.now() - startTime));
       }, 1000);
     } else {
-      setElapsedMs(0);
+      setLiveMs(baseTime);
     }
 
     return () => clearInterval(interval);
-  }, [isPlaying, startTime]);
+  }, [isPlaying, startTime, baseTime]);
 
   const handleToggleTimer = async (e: React.MouseEvent) => {
     e.preventDefault();
-    try {
-      if (isPlaying) {
-        console.log(
-          `[API] 백엔드로 전송 -> 목표 ${goalId} 정지! 누적: ${elapsedMs}ms`,
-        );
-        stopTimer();
-      } else {
-        console.log(`[API] 백엔드로 전송 -> 목표 ${goalId} 시작!`);
-        startTimer(goalId);
-      }
-    } catch (error) {
-      console.error('API 통신 에러:', error);
+    if (isPlaying) {
+      stopTimer();
+    } else {
+      startTimer(goalId);
     }
   };
 
@@ -60,7 +57,7 @@ export default function DailyGoalTimer({
       </div>
 
       <div className="text-3xl font-bold text-white tracking-wider">
-        {formatMilliseconds(elapsedMs)}
+        {formatMilliseconds(liveMs)}
       </div>
 
       <div className="ml-4 scale-125 origin-right">
