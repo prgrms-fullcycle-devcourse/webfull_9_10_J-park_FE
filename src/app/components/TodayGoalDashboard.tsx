@@ -83,7 +83,6 @@ export default function TodayGoalDashboard() {
 
       <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
         {goals.map((goal, index) => {
-          // 💡 2. 길었던 코드가 부품 하나로 아주 깔끔하게 정리되었습니다!
           return (
             <TodayGoalItem
               key={goal.id}

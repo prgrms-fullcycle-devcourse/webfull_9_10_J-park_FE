@@ -1,108 +1,42 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { Card, Link } from '@heroui/react';
+import { Progress } from '@heroui/react';
 
-// =====================================================================
-// 더미 데이터 시작
-const DUMMY_GOALS = [
-  {
-    id: 1,
-    title: '목표 1',
-    currentAmount: 0,
-    targetAmount: 10,
-    unit: '페이지',
-    completed: true,
-  },
-  {
-    id: 2,
-    title: '목표 2',
-    currentAmount: 5,
-    targetAmount: 10,
-    unit: '페이지',
-    completed: true,
-  },
-  {
-    id: 3,
-    title: '목표 3',
-    currentAmount: 2,
-    targetAmount: 10,
-    unit: '페이지',
-    completed: false,
-  },
-];
-// =====================================================================
+interface TodayGoalDailyDetailProps {
+  ratio: number;
+  completedGoals: number;
+  totalGoals: number;
+}
 
-const GOAL_COLORS = [
-  'bg-red-500',
-  'bg-orange-400',
-  'bg-green-400',
-  'bg-blue-400',
-  'bg-purple-400',
-];
-
-export default function TodayGoalDailyDetail() {
-  const router = useRouter();
-  const [goals, setGoals] = useState(DUMMY_GOALS);
-
-  const dragItem = useRef<number | null>(null);
-  const dragOverItem = useRef<number | null>(null);
-
-  const handleDragStart = (e: React.DragEvent, position: number) => {
-    dragItem.current = position;
-  };
-  const handleDragEnter = (e: React.DragEvent, position: number) => {
-    dragOverItem.current = position;
-  };
-  const handleDragEnd = () => {
-    if (dragItem.current !== null && dragOverItem.current !== null) {
-      const newGoals = [...goals];
-      const draggingItemContent = newGoals[dragItem.current];
-      newGoals.splice(dragItem.current, 1);
-      newGoals.splice(dragOverItem.current, 0, draggingItemContent);
-      setGoals(newGoals);
-    }
-    dragItem.current = null;
-    dragOverItem.current = null;
-  };
-
+export default function TodayGoalDailyDetail({
+  ratio,
+  completedGoals,
+  totalGoals,
+}: TodayGoalDailyDetailProps) {
   return (
-    <Card className="w-full p-5 bg-white shadow-md border-none" radius="lg">
-      <h2 className="text-lg font-bold mb-4 text-gray-800">오늘의 목표</h2>
-
-      <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
-        {goals.map((goal, index) => {
-          const colorClass = GOAL_COLORS[index % GOAL_COLORS.length];
-
-          return (
-            <Link
-              key={goal.id}
-              href={`/goals/${goal.id}`}
-              className="flex w-full bg-white border-b last:border-b-0 border-gray-200 cursor-grab active:cursor-grabbing hover:bg-gray-50 transition-colors text-foreground"
-              draggable
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragEnter={(e) => handleDragEnter(e, index)}
-              onDragEnd={handleDragEnd}
-              onDragOver={(e) => e.preventDefault()}
-            >
-              <div className="flex w-full pointer-events-none">
-                <div className={`w-3 ${colorClass}`} />
-
-                <div className="flex flex-col items-start p-4">
-                  <span className="text-base font-bold text-gray-800">
-                    {goal.title}
-                  </span>
-                  <span className="text-sm text-gray-500 mt-1">
-                    {goal.currentAmount} / {goal.targetAmount}
-                    {goal.unit}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          );
-        })}
+    <div className="flex flex-col gap-2 mt-2">
+      <div className="flex items-center justify-between mb-1">
+        <h3 className="text-base font-bold text-white">오늘의 목표 달성률</h3>
+        <span className="text-2xl font-extrabold text-white">{ratio}%</span>
       </div>
-    </Card>
+
+      <Progress
+        value={ratio}
+        color="success"
+        className="w-full"
+        classNames={{
+          indicator: 'bg-[#52c41a]',
+          track: 'bg-[#d9d9d9]',
+        }}
+        size="lg"
+        radius="none"
+      />
+
+      <div className="flex justify-end gap-6 text-base font-bold text-white mt-1">
+        <span>
+          {completedGoals}/{totalGoals}개
+        </span>
+      </div>
+    </div>
   );
 }
