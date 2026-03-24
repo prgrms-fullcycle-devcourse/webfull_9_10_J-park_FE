@@ -25,10 +25,10 @@ export default function TodayGoalRatio() {
 
   const baseTotalTime = DUMMY_PROGRESS.totalTime + totalRecordedTime;
   const [liveTotalTime, setLiveTotalTime] = useState(baseTotalTime);
+  const [progressValue, setProgressValue] = useState(0);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-
     if (playingId !== null && startTime) {
       interval = setInterval(() => {
         setLiveTotalTime(baseTotalTime + (Date.now() - startTime));
@@ -36,9 +36,15 @@ export default function TodayGoalRatio() {
     } else {
       setLiveTotalTime(baseTotalTime);
     }
-
     return () => clearInterval(interval);
   }, [playingId, startTime, baseTotalTime]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setProgressValue(DUMMY_PROGRESS.ratio);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <div className="flex flex-col gap-8 p-5 bg-white w-full rounded-lg shadow-sm mb-4">
@@ -51,31 +57,38 @@ export default function TodayGoalRatio() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 pb-8">
         <div className="flex items-center justify-between mb-1">
           <h3 className="text-lg font-bold text-gray-800">
             오늘의 목표 달성률
           </h3>
           <span className="text-2xl font-extrabold text-black">
-            {DUMMY_PROGRESS.ratio}%
+            {progressValue}%
           </span>
         </div>
 
         <Progress
-          value={DUMMY_PROGRESS.ratio}
+          value={progressValue}
           color="success"
           className="w-full"
           classNames={{
-            indicator: 'bg-[#52c41a]',
             track: 'bg-gray-200',
           }}
           size="lg"
-          radius="sm"
         />
 
-        <div className="flex justify-end gap-6 text-lg font-bold text-black mt-1">
-          <span>
-            {DUMMY_PROGRESS.completedGoals}/{DUMMY_PROGRESS.totalGoals}개
+        <div className="relative mt-2">
+          <span
+            className="absolute transition-all duration-500 ease-in-out text-black"
+            style={{ left: `${Math.max(0, progressValue - 3)}%` }}
+          >
+            <p className="font-bold -mb-1 text-center">
+              {DUMMY_PROGRESS.completedGoals} 개
+            </p>
+          </span>
+
+          <span className="absolute right-0 text-black text-right">
+            <p className="font-bold -mb-1">{DUMMY_PROGRESS.totalGoals} 개</p>
           </span>
         </div>
       </div>
