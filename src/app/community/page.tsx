@@ -76,7 +76,7 @@ export default function RankingPage() {
     if (rank === 3)
       return <FaMedal className="text-4xl text-amber-600 drop-shadow-md" />;
     return (
-      <span className="text-xl font-bold text-black w-8 text-center">
+      <span className="text-xl font-bold text-black w-20 text-center">
         {rank}등
       </span>
     );
@@ -116,7 +116,7 @@ export default function RankingPage() {
                   </div>
 
                   <div className="flex-1 flex items-center gap-3">
-                    <div className="flex justify-center items-center w-10">
+                    <div className="flex justify-center items-center w-20">
                       {renderRankIcon(item.rank)}
                     </div>
                     <span className="text-lg font-extrabold text-black">
@@ -160,7 +160,7 @@ export default function RankingPage() {
 
             <div className="flex-1 flex items-center gap-3">
               <div className="flex justify-center items-center w-10">
-                <span className="text-xl font-bold text-yellow-400 w-8 text-center">
+                <span className="text-xl font-bold text-yellow-400 w-20 text-center">
                   {myRankData.rank}등
                 </span>
               </div>
