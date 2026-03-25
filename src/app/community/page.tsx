@@ -83,15 +83,15 @@ export default function RankingPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-white overflow-hidden relative">
-      <div className="shrink-0 flex flex-col items-center justify-center py-10 border-b border-gray-200">
+    <div className="flex flex-col min-h-screen w-full bg-white relative">
+      <div className="flex flex-col items-center justify-center py-10 border-b border-gray-200">
         <h1 className="text-3xl font-bold text-black flex items-center gap-3">
           <FaCrown className="text-5xl text-yellow-400 drop-shadow-lg" />
           오늘의 공부시간 순위
         </h1>
       </div>
 
-      <div className="flex-1 w-full overflow-y-auto scrollbar-hide pb-4">
+      <div className="flex flex-col w-full pb-[150px]">
         {status === 'pending' ? (
           <div className="flex justify-center items-center py-10">
             <Spinner color="warning" size="lg" />
@@ -142,7 +142,7 @@ export default function RankingPage() {
       </div>
 
       {myRankData && (
-        <div className="shrink-0 w-full bg-gray-800 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.3)] relative z-40">
+        <div className="sticky bottom-[72px] mt-auto w-full bg-gray-800 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.3)] z-40">
           <div className="absolute top-0 left-0 bg-yellow-400 text-black text-xs font-extrabold px-3 py-1 rounded-br-lg z-50">
             내 순위
           </div>
@@ -151,9 +151,6 @@ export default function RankingPage() {
             <div className="flex flex-col items-center gap-1 w-16">
               <Avatar
                 src={myRankData.profileImage || undefined}
-                fallback={
-                  <span className="text-[10px] text-gray-400">프로필</span>
-                }
                 className="w-12 h-12 text-large bg-gray-600 border border-gray-500"
               />
             </div>
@@ -175,8 +172,6 @@ export default function RankingPage() {
           </div>
         </div>
       )}
-
-      <div className="shrink-0 w-full h-[72px] bg-transparent pointer-events-none" />
     </div>
   );
 }
