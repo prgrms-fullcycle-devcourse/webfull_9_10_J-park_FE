@@ -20,8 +20,6 @@ const PACE_LEVEL_INFO: Record<
 };
 
 const fetchRiskData = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
   return {
     success: true,
     data: {
@@ -59,14 +57,18 @@ export default function PaceDial() {
   const currentPace = PACE_LEVEL_INFO[level] || PACE_LEVEL_INFO[0];
 
   return (
-    <div className="flex flex-col items-center justify-center w-full bg-white p-6 rounded-lg shadow-sm mb-4 gap-4">
-      <div className="w-full max-w-[300px]">
+    <div className="flex flex-col items-center justify-center w-full bg-white p-5 rounded-lg shadow-sm mb-4 gap-4">
+      <h1 className="text-lg font-bold text-black mb-2 self-start w-full text-left pl-1">
+        목표 진행 속도
+      </h1>
+
+      <div className="w-full max-w-[320px]">
         <GaugeComponent
           type="semicircle"
           arc={{
             colorArray: ['#52c41a', '#fadb14', '#ff4d4f'],
             padding: 0.02,
-            width: 0.25,
+            width: 0.5,
           }}
           pointer={{
             type: 'needle',
@@ -91,9 +93,14 @@ export default function PaceDial() {
         />
       </div>
 
-      <h2 className="text-lg font-bold text-black mt-2">
+      <h2 className="text-base font-bold text-black mt-1">
         현재 페이스는 <span className="text-xl">{currentPace.icon}</span>{' '}
-        <span style={{ color: currentPace.color }}>{currentPace.text}</span>{' '}
+        <span
+          style={{ color: currentPace.color }}
+          className="text-xl font-extrabold"
+        >
+          {currentPace.text}
+        </span>{' '}
         입니다.
       </h2>
     </div>
