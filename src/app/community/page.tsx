@@ -91,7 +91,7 @@ export default function RankingPage() {
         </h1>
       </div>
 
-      <div className="flex flex-col w-full pb-[150px]">
+      <div className="flex flex-col w-full pb-[30px]">
         {status === 'pending' ? (
           <div className="flex justify-center items-center py-10">
             <Spinner color="warning" size="lg" />
