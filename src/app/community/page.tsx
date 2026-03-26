@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useMemo } from 'react';
-import { Spinner } from '@heroui/react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { RankingsResponse, MyProfileResponse } from '@/types/api';
 import { formatMilliseconds } from '@/lib/utils';
+
 import RankingHeader from './components/RankingHeader';
-import RankingListItem from './components/RankingListItem';
+import RankingList from './components/RankingList';
 import MyRankingBar from './components/MyRankingBar';
 
 const fetchRankings = async ({
@@ -102,7 +102,9 @@ export default function RankingPage() {
       rank: myRanking,
       nickname: me.nickname ? String(me.nickname) : '이름 없음',
       profileImage: me.profileImageUrl || null,
-      totalTime: me.totalTime ? String(me.totalTime) : '00:00:00',
+      totalTime: me.totalTime
+        ? formatMilliseconds(Number(me.totalTime))
+        : '00:00:00',
     };
   }, [myRanking, profileData]);
 
@@ -110,34 +112,13 @@ export default function RankingPage() {
     <div className="flex flex-col min-h-screen w-full bg-white relative">
       <RankingHeader />
 
-      <div className="flex flex-col w-full pb-[30px]">
-        {rankingStatus === 'pending' ? (
-          <div className="flex justify-center items-center py-10">
-            <Spinner color="warning" size="lg" />
-          </div>
-        ) : rankingStatus === 'error' ? (
-          <div className="flex justify-center items-center py-10 text-red-500 font-bold">
-            데이터를 불러오는 중 오류가 발생했습니다.
-          </div>
-        ) : (
-          <>
-            {allRanks.map((item, index) => (
-              <RankingListItem
-                key={`rank-${item.rank}-${index}`}
-                item={item}
-                isMyRank={item.rank === myRanking}
-              />
-            ))}
-
-            <div
-              ref={ref}
-              className="h-10 flex justify-center items-center mt-4"
-            >
-              {isFetchingNextPage && <Spinner color="warning" size="sm" />}
-            </div>
-          </>
-        )}
-      </div>
+      <RankingList
+        status={rankingStatus}
+        allRanks={allRanks}
+        myRanking={myRanking}
+        bottomRef={ref}
+        isFetchingNextPage={isFetchingNextPage}
+      />
 
       <MyRankingBar myRankData={myRankData} />
     </div>
