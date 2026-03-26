@@ -52,16 +52,25 @@ export default function GoalCreateFormModal() {
     onClose();
   };
   const onSubmit = () => {
-    const res = axios.post('/goals', {
+    const params = {
       title,
       detail,
       totalAmount,
       category,
-      startDate,
-      endDate,
+      startDate: startDate.toString(),
+      endDate: endDate.toString(),
       quota,
-    });
-    console.log('submit');
+    };
+    // const res = axios.post('/goals', {
+    //   title,
+    //   detail,
+    //   totalAmount,
+    //   category,
+    //   startDate,
+    //   endDate,
+    //   quota,
+    // });
+    console.log(params);
   };
 
   return (
@@ -98,17 +107,16 @@ export default function GoalCreateFormModal() {
             </span>
           </ModalHeader>
           <ModalBody>
-            <Form
+            <div
               className="relative flex flex-row gap-6 transition-transform duration-500 ease-in-out scrollbar-hide"
               style={{
                 transform: `translateX(calc(${-currentStep * 100}% - (${currentStep} * 1.5rem)))`,
               }}
-              onSubmit={onSubmit}
             >
               <GoalInfoForm />
               <GoalCategoryForm />
               <GoalDateForm />
-            </Form>
+            </div>
           </ModalBody>
           <ModalFooter className="flex flex-col">
             {currentStep < MAX_STEPS ? (
@@ -116,7 +124,7 @@ export default function GoalCreateFormModal() {
                 다음으로
               </Button>
             ) : (
-              <Button color="primary" size="lg" type="submit" fullWidth>
+              <Button color="primary" size="lg" fullWidth onPress={onSubmit}>
                 생성하기
               </Button>
             )}

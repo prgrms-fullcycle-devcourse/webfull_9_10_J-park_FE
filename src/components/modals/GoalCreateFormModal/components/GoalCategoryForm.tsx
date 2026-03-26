@@ -1,14 +1,27 @@
-import { Input, Select, SelectItem } from '@heroui/react';
+import { Input, Select, SelectItem, Skeleton } from '@heroui/react';
 import { useCreateGoalFormStore } from '../stores/useCreateGoalFormStore';
+import { useQuery } from '@tanstack/react-query';
 
-const categories = [
-  { key: 'book', label: '책', unit: '페이지' },
-  { key: 'study', label: '공부', unit: '분' },
-];
+import { Category, CategoryResponse } from '@/types/api';
+import { api } from '@/lib/axios';
 
 export default function GoalCategoryForm() {
+  const {
+    data: categories,
+    isLoading,
+    isError,
+  } = useQuery<Category[]>({
+    queryKey: ['categories'],
+    queryFn: () =>
+      api.get<CategoryResponse>('/categories').then((res) => res.data),
+  });
+
   const { totalAmount, category, setTotalAmount, setCategory } =
     useCreateGoalFormStore();
+
+  if (isError) {
+    return;
+  }
   return (
     <section className="flex flex-col gap-3 min-w-full">
       <Input
@@ -21,19 +34,22 @@ export default function GoalCategoryForm() {
         type="number"
         placeholder="목표 분량을 작성해주세요."
       />
-      <Select
-        isRequired
-        size="lg"
-        label="카테고리"
-        variant="bordered"
-        items={categories}
-        selectedKeys={category}
-        onSelectionChange={(key) => setCategory(key as string)}
-      >
-        {categories.map((c) => (
-          <SelectItem key={c.key}>{c.label}</SelectItem>
-        ))}
-      </Select>
+
+      {categories && (
+        <Select
+          isRequired
+          size="lg"
+          label="카테고리"
+          variant="bordered"
+          items={categories.map((n) => ({ key: n.id, label: n.name }))}
+          selectedKeys={category}
+          onSelectionChange={(key) => setCategory(key as string)}
+        >
+          {categories.map((c) => (
+            <SelectItem key={c.id}>{c.name}</SelectItem>
+          ))}
+        </Select>
+      )}
     </section>
   );
 }

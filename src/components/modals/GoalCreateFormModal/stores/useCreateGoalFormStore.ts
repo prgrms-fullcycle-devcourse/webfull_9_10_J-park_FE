@@ -1,4 +1,5 @@
 import { CalendarDate } from '@heroui/react';
+import { getLocalTimeZone, today } from '@internationalized/date';
 import { create } from 'zustand';
 
 interface GoalFormState {
@@ -6,25 +7,25 @@ interface GoalFormState {
   detail?: string;
   category: string;
   totalAmount: string;
-  startDate: CalendarDate | null;
-  endDate: CalendarDate | null;
+  startDate: CalendarDate;
+  endDate: CalendarDate;
   quota: string;
   setTitle: (payload: string) => void;
   setDetail: (payload: string) => void;
   setTotalAmount: (payload: string) => void;
   setCategory: (payload: string) => void;
-  setStartDate: (payload: CalendarDate | null) => void;
-  setEndDate: (payload: CalendarDate | null) => void;
+  setStartDate: (payload: CalendarDate) => void;
+  setEndDate: (payload: CalendarDate) => void;
   reset: () => void;
 }
 
 const initialState = {
   title: '',
   detail: undefined,
-  category: 'book',
+  category: '',
   totalAmount: '0',
-  startDate: null,
-  endDate: null,
+  startDate: today(getLocalTimeZone()),
+  endDate: today(getLocalTimeZone()).add({ weeks: 1 }),
   quota: '0',
 };
 
@@ -34,10 +35,8 @@ export const useCreateGoalFormStore = create<GoalFormState>()((set) => ({
   setDetail: (payload: string) => set(() => ({ detail: payload })),
   setTotalAmount: (payload: string) => set(() => ({ totalAmount: payload })),
   setCategory: (payload: string) => set(() => ({ category: payload })),
-  setStartDate: (payload: CalendarDate | null) =>
-    set(() => ({ startDate: payload })),
-  setEndDate: (payload: CalendarDate | null) =>
-    set(() => ({ endDate: payload })),
+  setStartDate: (payload: CalendarDate) => set(() => ({ startDate: payload })),
+  setEndDate: (payload: CalendarDate) => set(() => ({ endDate: payload })),
   setQuota: (payload: string) => set(() => ({ quota: payload })),
   reset: () =>
     set(() => ({
