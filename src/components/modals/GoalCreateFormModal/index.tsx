@@ -19,9 +19,10 @@ import { useCreateGoalFormStore } from './stores/useCreateGoalFormStore';
 import GoalInfoForm from './components/GoalInfoForm';
 import GoalCategoryForm from './components/GoalCategoryForm';
 import GoalDateForm from './components/GoalDateForm';
-import axios from 'axios';
 
-const MAX_STEPS = 2;
+import GoalConfirmation from './components/GoalConfirmation';
+
+const MAX_STEPS = 3;
 const modalTitles = ['정보 입력', '총량 설정', '기한 설정'];
 
 export default function GoalCreateFormModal() {
@@ -116,6 +117,7 @@ export default function GoalCreateFormModal() {
               <GoalInfoForm />
               <GoalCategoryForm />
               <GoalDateForm />
+              <GoalConfirmation />
             </div>
           </ModalBody>
           <ModalFooter className="flex flex-col">
