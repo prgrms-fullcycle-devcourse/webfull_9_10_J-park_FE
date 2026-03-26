@@ -87,18 +87,24 @@ export default function RankingPage() {
   const myRankData = useMemo(() => {
     if (!myRanking) return null;
 
-    const foundMeInRanks = allRanks.find((item) => item.rank === myRanking);
-    if (foundMeInRanks) return foundMeInRanks;
-
     const me = profileData?.data;
+
+    if (!me) {
+      return {
+        rank: myRanking,
+        nickname: '데이터 확인 중...',
+        profileImage: null,
+        totalTime: '00:00:00',
+      };
+    }
 
     return {
       rank: myRanking,
-      nickname: me?.nickname ?? '이름 없음',
-      profileImage: me?.profileImageUrl ?? null,
-      totalTime: formatMilliseconds(me?.totalTime ?? 0),
+      nickname: me.nickname ? String(me.nickname) : '이름 없음',
+      profileImage: me.profileImageUrl || null,
+      totalTime: me.totalTime ? String(me.totalTime) : '00:00:00',
     };
-  }, [allRanks, myRanking, profileData]);
+  }, [myRanking, profileData]);
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-white relative">

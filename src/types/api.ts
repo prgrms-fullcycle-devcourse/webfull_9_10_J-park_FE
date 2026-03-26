@@ -72,7 +72,7 @@ export interface MyProfileResponse {
     id: number;
     nickname: string;
     profileImageUrl: string | null;
-    totalTime: number;
+    totalTime: number | string;
     createdAt: string;
   };
 }
