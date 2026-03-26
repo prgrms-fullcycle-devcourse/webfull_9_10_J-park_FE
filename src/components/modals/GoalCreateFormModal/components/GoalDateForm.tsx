@@ -1,8 +1,8 @@
-import { DatePicker, RangeCalendar } from '@heroui/react';
+import { RangeCalendar } from '@heroui/react';
 import { useCreateGoalFormStore } from '../stores/useCreateGoalFormStore';
 
 export default function GoalDateForm() {
-  const { startDate, dueDate, setStartDate, setDueDate } =
+  const { startDate, endDate, setStartDate, setEndDate } =
     useCreateGoalFormStore();
 
   return (
