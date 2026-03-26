@@ -69,11 +69,10 @@ export interface MyProfileResponse {
   success: boolean;
   message: string;
   data: {
-    userId: number;
-    username: string;
-    profileImage: string | null;
-    totalTime: string;
-    goals: TodayGoal[];
+    id: number;
+    nickname: string;
+    profileImageUrl: string | null;
+    totalTime: number;
     createdAt: string;
   };
 }

@@ -5,7 +5,7 @@ import { Spinner } from '@heroui/react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { RankingsResponse, MyProfileResponse } from '@/types/api';
-
+import { formatMilliseconds } from '@/lib/utils';
 import RankingHeader from './components/RankingHeader';
 import RankingListItem from './components/RankingListItem';
 import MyRankingBar from './components/MyRankingBar';
@@ -86,23 +86,19 @@ export default function RankingPage() {
 
   const myRankData = useMemo(() => {
     if (!myRanking) return null;
+
+    const foundMeInRanks = allRanks.find((item) => item.rank === myRanking);
+    if (foundMeInRanks) return foundMeInRanks;
+
     const me = profileData?.data;
 
-    if (!me) {
-      return {
-        rank: myRanking,
-        nickname: '불러오는 중...',
-        profileImage: null,
-        totalTime: '00:00:00',
-      };
-    }
     return {
       rank: myRanking,
-      nickname: me.username,
-      profileImage: me.profileImage,
-      totalTime: me.totalTime,
+      nickname: me?.nickname ?? '이름 없음',
+      profileImage: me?.profileImageUrl ?? null,
+      totalTime: formatMilliseconds(me?.totalTime ?? 0),
     };
-  }, [myRanking, profileData]);
+  }, [allRanks, myRanking, profileData]);
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-white relative">
