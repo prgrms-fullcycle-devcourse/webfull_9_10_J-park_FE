@@ -12,41 +12,44 @@ interface Props {
 export default function RankingListItem({ item, isMyRank }: Props) {
   const renderRankIcon = (rank: number) => {
     if (rank === 1)
-      return <FaTrophy className="text-3xl text-yellow-400 drop-shadow-md" />;
+      return <FaTrophy className="text-2xl text-yellow-400 drop-shadow-sm" />;
     if (rank === 2)
-      return <FaMedal className="text-3xl text-gray-400 drop-shadow-md" />;
+      return <FaMedal className="text-2xl text-gray-400 drop-shadow-sm" />;
     if (rank === 3)
-      return <FaMedal className="text-3xl text-amber-600 drop-shadow-md" />;
+      return <FaMedal className="text-2xl text-amber-600 drop-shadow-sm" />;
+
     return (
-      <span className="text-lg font-bold text-black text-center">{rank}등</span>
+      <span className="text-base font-bold text-gray-700 whitespace-nowrap">
+        {rank}등
+      </span>
     );
   };
 
   return (
     <div
-      className={`flex items-center gap-3 py-4 px-4 sm:px-6 border-b border-gray-200 transition-colors ${
-        isMyRank ? 'bg-gray-200' : 'bg-white hover:bg-gray-50'
+      className={`flex items-center gap-3 py-3 px-5 border-b border-gray-100 transition-colors ${
+        isMyRank ? 'bg-blue-50/50' : 'bg-white hover:bg-gray-50'
       }`}
     >
       <div className="flex-shrink-0">
         <Avatar
           src={item.profileImage || undefined}
-          className="w-10 h-10 sm:w-12 sm:h-12 text-large bg-gray-100 border border-gray-300"
+          className="w-9 h-9 bg-gray-100 border border-gray-200"
         />
       </div>
 
-      <div className="flex-shrink-0 w-12 flex justify-center items-center">
+      <div className="flex-shrink-0 w-14 flex justify-center items-center">
         {renderRankIcon(item.rank)}
       </div>
 
       <div className="flex-1 min-w-0">
-        <span className="text-base sm:text-lg font-extrabold text-black block truncate">
+        <span className="text-base font-bold text-gray-900 block truncate">
           {item.nickname}
         </span>
       </div>
 
-      <div className="flex-shrink-0 ml-2">
-        <span className="text-base sm:text-lg text-gray-800 font-medium tracking-wide whitespace-nowrap">
+      <div className="flex-shrink-0 ml-1">
+        <span className="text-base text-gray-600 font-semibold tracking-tight">
           {item.totalTime}
         </span>
       </div>
