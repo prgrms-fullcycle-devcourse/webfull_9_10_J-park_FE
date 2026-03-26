@@ -13,7 +13,14 @@ import {
 import { FaChevronLeft } from 'react-icons/fa6';
 import { CgAddR } from 'react-icons/cg';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { useCreateGoalFormStore } from './stores/useCreateGoalFormStore';
 import GoalInfoForm from './components/GoalInfoForm';
@@ -28,6 +35,7 @@ const modalTitles = ['정보 입력', '총량 설정', '기한 설정'];
 export default function GoalCreateFormModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(0);
+
   const {
     title,
     detail,
@@ -35,24 +43,51 @@ export default function GoalCreateFormModal() {
     totalAmount,
     startDate,
     endDate,
-    quota,
+
     reset,
   } = useCreateGoalFormStore();
+
+  const isValid = useMemo(() => {
+    switch (currentStep) {
+      case 0:
+        if (title && title !== '') {
+          return true;
+        } else {
+          return false;
+        }
+      case 1:
+        if (Number(totalAmount) > 0 && category && category !== '') {
+          return true;
+        } else {
+          return false;
+        }
+      default:
+        if (startDate && endDate) {
+          return true;
+        } else {
+          return false;
+        }
+    }
+  }, [currentStep, title, totalAmount, category, startDate, endDate]);
 
   const onNext = useCallback(() => {
     if (currentStep < MAX_STEPS) {
       setCurrentStep((prev) => prev + 1);
     }
   }, [currentStep]);
+
   const onPrev = () => {
     setCurrentStep((prev) => Math.max(0, prev - 1));
   };
+
   const onReset = () => {
     setCurrentStep(0);
     reset();
     onClose();
   };
-  const onSubmit = () => {
+
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const params = {
       title,
       detail,
@@ -60,7 +95,6 @@ export default function GoalCreateFormModal() {
       category,
       startDate: startDate.toString(),
       endDate: endDate.toString(),
-      quota,
     };
     // const res = axios.post('/goals', {
     //   title,
@@ -108,25 +142,32 @@ export default function GoalCreateFormModal() {
             </span>
           </ModalHeader>
           <ModalBody>
-            <div
+            <Form
               className="relative flex flex-row gap-6 transition-transform duration-500 ease-in-out scrollbar-hide"
               style={{
                 transform: `translateX(calc(${-currentStep * 100}% - (${currentStep} * 1.5rem)))`,
               }}
+              onSubmit={onSubmit}
             >
               <GoalInfoForm />
               <GoalCategoryForm />
               <GoalDateForm />
               <GoalConfirmation />
-            </div>
+            </Form>
           </ModalBody>
           <ModalFooter className="flex flex-col">
             {currentStep < MAX_STEPS ? (
-              <Button color="primary" size="lg" onPress={onNext} fullWidth>
+              <Button
+                isDisabled={!isValid}
+                color="primary"
+                size="lg"
+                onPress={onNext}
+                fullWidth
+              >
                 다음으로
               </Button>
             ) : (
-              <Button color="primary" size="lg" fullWidth onPress={onSubmit}>
+              <Button color="primary" size="lg" fullWidth type="submit">
                 생성하기
               </Button>
             )}

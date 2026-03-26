@@ -15,6 +15,11 @@ export default function GoalInfoForm() {
         label="목표"
         type="text"
         placeholder="목표 이름을 작성해주세요."
+        validate={(value) => {
+          if (!value || value === '') {
+            return '목표 이름을 작성해주세요';
+          }
+        }}
       />
       <Textarea
         value={detail}
