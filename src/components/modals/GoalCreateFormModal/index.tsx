@@ -19,6 +19,7 @@ import { useCreateGoalFormStore } from './stores/useCreateGoalFormStore';
 import GoalInfoForm from './components/GoalInfoForm';
 import GoalCategoryForm from './components/GoalCategoryForm';
 import GoalDateForm from './components/GoalDateForm';
+import axios from 'axios';
 
 const MAX_STEPS = 2;
 const modalTitles = ['정보 입력', '총량 설정', '기한 설정'];
@@ -26,7 +27,16 @@ const modalTitles = ['정보 입력', '총량 설정', '기한 설정'];
 export default function GoalCreateFormModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(0);
-  const { reset } = useCreateGoalFormStore();
+  const {
+    title,
+    detail,
+    category,
+    totalAmount,
+    startDate,
+    endDate,
+    quota,
+    reset,
+  } = useCreateGoalFormStore();
 
   const onNext = useCallback(() => {
     if (currentStep < MAX_STEPS) {
@@ -42,6 +52,15 @@ export default function GoalCreateFormModal() {
     onClose();
   };
   const onSubmit = () => {
+    const res = axios.post('/goals', {
+      title,
+      detail,
+      totalAmount,
+      category,
+      startDate,
+      endDate,
+      quota,
+    });
     console.log('submit');
   };
 
