@@ -76,3 +76,19 @@ export interface MyProfileResponse {
     createdAt: string;
   };
 }
+
+export interface GoalsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    goals: Goal[];
+  };
+}
+
+export type Goal = {
+  id: number;
+  title: string;
+  endDate: string;
+  description: string;
+  progressRate: number;
+};
