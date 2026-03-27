@@ -58,6 +58,7 @@ export default function DailyGoalTimer({
       localStartTimer(goalId);
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['runningTimer', goalId] });
+      queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
     },
   });
 
@@ -68,12 +69,13 @@ export default function DailyGoalTimer({
       localStopTimer();
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['runningTimer', goalId] });
+      queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
     },
   });
 
   const handleToggleTimer = async (e: React.MouseEvent) => {
     e.preventDefault();
-    if (startMutation.isPending || endMutation.isPending) return; // 통신 중 중복 클릭 방지
+    if (startMutation.isPending || endMutation.isPending) return;
 
     if (isPlaying) {
       endMutation.mutate();

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { Progress } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import { formatMilliseconds } from '@/lib/utils';
@@ -9,7 +9,8 @@ import { useTimerStore } from '@/stores/useTimerStore';
 import { fetchTodayProgress } from '@/api/goalApi';
 
 export default function TodayGoalRatio() {
-  const { playingId, startTime, recordedTimes } = useTimerStore();
+  // 💡 1. 복잡한 recordedTimes 는 이제 필요 없습니다! 쿨하게 지워줍니다.
+  const { playingId, startTime } = useTimerStore();
 
   const { data: progressData } = useQuery({
     queryKey: ['todayProgress'],
@@ -23,27 +24,24 @@ export default function TodayGoalRatio() {
     ratio: 0,
   };
 
-  const totalRecordedTime = useMemo(() => {
-    const safeRecordedTimes = recordedTimes || {};
-    return Object.values(safeRecordedTimes).reduce(
-      (acc: number, curr: number) => acc + curr,
-      0,
-    );
-  }, [recordedTimes]);
-
-  const baseTotalTime = safeData.totalTime + totalRecordedTime;
+  // 💡 2. 서버가 주는 진짜 총 공부시간만 베이스캠프로 삼습니다!
+  const baseTotalTime = safeData.totalTime;
   const [liveTotalTime, setLiveTotalTime] = useState(baseTotalTime);
   const [progressValue, setProgressValue] = useState(0);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
+
     if (playingId !== null && startTime) {
+      // 💡 타이머가 켜져 있을 때: 서버가 저장해 둔 시간 + 지금 막 흘러가는 시간
       interval = setInterval(() => {
         setLiveTotalTime(baseTotalTime + (Date.now() - startTime));
       }, 1000);
     } else {
+      // 💡 타이머가 꺼져 있을 때: 서버가 알려준 최신 시간 그대로 노출!
       setLiveTotalTime(baseTotalTime);
     }
+
     return () => clearInterval(interval);
   }, [playingId, startTime, baseTotalTime]);
 
