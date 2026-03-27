@@ -43,3 +43,8 @@ export function formatMilliseconds(ms: number) {
 
   return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
 }
+
+const CATEGORY = ['', '페이지', '강'];
+export function getUnit(categoryID: number) {
+  return CATEGORY[categoryID] || '';
+}
