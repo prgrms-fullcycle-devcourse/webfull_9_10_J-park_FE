@@ -1,9 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTimerStore } from '@/stores/useTimerStore';
 import { formatMilliseconds } from '@/lib/utils';
 import GoalPlayButton from '@/components/GoalPlayButton';
+
+import {
+  startTimer as apiStartTimer,
+  endTimer as apiEndTimer,
+} from '@/api/timerApi';
 
 interface DailyGoalTimerProps {
   goalId: number;
@@ -18,12 +24,18 @@ export default function DailyGoalTimer({
   quotaText,
   initialStudyTime,
 }: DailyGoalTimerProps) {
-  const { playingId, startTime, stopTimer, startTimer, recordedTimes } =
-    useTimerStore();
+  const queryClient = useQueryClient();
+
+  const {
+    playingId,
+    startTime,
+    stopTimer: localStopTimer,
+    startTimer: localStartTimer,
+    recordedTimes,
+  } = useTimerStore();
 
   const baseTime = initialStudyTime + (recordedTimes[goalId] || 0);
   const [liveMs, setLiveMs] = useState(baseTime);
-
   const isPlaying = playingId === goalId;
 
   useEffect(() => {
@@ -40,12 +52,33 @@ export default function DailyGoalTimer({
     return () => clearInterval(interval);
   }, [isPlaying, startTime, baseTime]);
 
+  const startMutation = useMutation({
+    mutationFn: () => apiStartTimer({ goalId }),
+    onSuccess: () => {
+      localStartTimer(goalId);
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['runningTimer', goalId] });
+    },
+  });
+
+  const endMutation = useMutation({
+    mutationFn: () =>
+      apiEndTimer({ goalId, currentCompletedAmount: 0, isPaused: true }),
+    onSuccess: () => {
+      localStopTimer();
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['runningTimer', goalId] });
+    },
+  });
+
   const handleToggleTimer = async (e: React.MouseEvent) => {
     e.preventDefault();
+    if (startMutation.isPending || endMutation.isPending) return; // 통신 중 중복 클릭 방지
+
     if (isPlaying) {
-      stopTimer();
+      endMutation.mutate();
     } else {
-      startTimer(goalId);
+      startMutation.mutate();
     }
   };
 

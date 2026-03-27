@@ -6,9 +6,10 @@ import GoalPlayButton from '@/components/GoalPlayButton';
 import GoalStatusBadge from '@/components/GoalStatusBadge';
 import { formatMilliseconds } from '@/lib/utils';
 import { useTimerStore } from '@/stores/useTimerStore';
+import { TodayGoal as GoalType } from '@/types/goal';
 
 interface TodayGoalItemProps {
-  goal: any;
+  goal: GoalType;
   colorClass: string;
   isPlaying: boolean;
   onPlayClick: (e: React.MouseEvent, goalId: number) => void;
