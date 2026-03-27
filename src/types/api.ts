@@ -7,8 +7,7 @@
  *
  * 서버에서 반환하는 표준 응답 형태에 맞게 수정하세요.
  */
-export interface ApiResponse<T> {
-  data: T;
+export interface ApiResponse {
   message: string;
   success: boolean;
 }
@@ -91,4 +90,25 @@ export type Goal = {
   endDate: string;
   description: string;
   progressRate: number;
+};
+
+export interface CategoryResponse extends ApiResponse {
+  data: Category[];
+}
+
+export type Category = {
+  id: number;
+  name: string;
+  unit: string;
+};
+
+export interface CreateGoalResponse extends ApiResponse {
+  data: CreatedGoal;
+}
+export type CreatedGoal = {
+  id: string;
+  title: string;
+  categoryId: number;
+  userName: string;
+  quota: number;
 };

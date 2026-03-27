@@ -1,41 +1,43 @@
 import { CalendarDate } from '@heroui/react';
+import { getLocalTimeZone, today } from '@internationalized/date';
 import { create } from 'zustand';
 
 interface GoalFormState {
-  name: string;
-  description?: string;
+  title: string;
+  detail?: string;
   category: string;
   totalAmount: string;
-  startDate: CalendarDate | null;
-  dueDate: CalendarDate | null;
-  setName: (payload: string) => void;
-  setDescription: (payload: string) => void;
+  startDate: CalendarDate;
+  endDate: CalendarDate;
+  quota: string;
+  setTitle: (payload: string) => void;
+  setDetail: (payload: string) => void;
   setTotalAmount: (payload: string) => void;
   setCategory: (payload: string) => void;
-  setStartDate: (payload: CalendarDate | null) => void;
-  setDueDate: (payload: CalendarDate | null) => void;
+  setStartDate: (payload: CalendarDate) => void;
+  setEndDate: (payload: CalendarDate) => void;
   reset: () => void;
 }
 
 const initialState = {
-  name: '',
-  description: undefined,
-  category: 'book',
+  title: '',
+  detail: undefined,
+  category: '',
   totalAmount: '0',
-  startDate: null,
-  dueDate: null,
+  startDate: today(getLocalTimeZone()),
+  endDate: today(getLocalTimeZone()).add({ weeks: 1 }),
+  quota: '0',
 };
 
 export const useCreateGoalFormStore = create<GoalFormState>()((set) => ({
   ...initialState,
-  setName: (payload: string) => set(() => ({ name: payload })),
-  setDescription: (payload: string) => set(() => ({ description: payload })),
+  setTitle: (payload: string) => set(() => ({ title: payload })),
+  setDetail: (payload: string) => set(() => ({ detail: payload })),
   setTotalAmount: (payload: string) => set(() => ({ totalAmount: payload })),
   setCategory: (payload: string) => set(() => ({ category: payload })),
-  setStartDate: (payload: CalendarDate | null) =>
-    set(() => ({ startDate: payload })),
-  setDueDate: (payload: CalendarDate | null) =>
-    set(() => ({ dueDate: payload })),
+  setStartDate: (payload: CalendarDate) => set(() => ({ startDate: payload })),
+  setEndDate: (payload: CalendarDate) => set(() => ({ endDate: payload })),
+  setQuota: (payload: string) => set(() => ({ quota: payload })),
   reset: () =>
     set(() => ({
       ...initialState,
