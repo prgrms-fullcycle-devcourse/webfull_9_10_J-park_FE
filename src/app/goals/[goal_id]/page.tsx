@@ -1,3 +1,4 @@
+import { api } from '@/lib/axios';
 import DailyGoalList from './components/DailyGoalList';
 import GoalDetailInformation from './components/GoalDetailInformation';
 import GoalProgression from './components/GoalProgression';
@@ -168,7 +169,14 @@ const sampleData = {
   ],
 };
 
-export default function GoalDetail() {
+export default async function GoalDetail({
+  params,
+}: {
+  params: Promise<{ goal_id: string }>;
+}) {
+  const { goal_id } = await params;
+  const res = api.get(`/goals/${goal_id}`);
+  console.log(res);
   return (
     <div className="flex flex-col p-6 gap-4">
       <h1 className="flex w-full font-bold text-2xl">목표 정보</h1>

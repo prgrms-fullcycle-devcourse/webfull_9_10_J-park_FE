@@ -13,7 +13,7 @@ import {
 import { FaChevronLeft } from 'react-icons/fa6';
 import { CgAddR } from 'react-icons/cg';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useCreateGoalFormStore } from './stores/useCreateGoalFormStore';
 import GoalInfoForm from './components/GoalInfoForm';
@@ -21,7 +21,7 @@ import GoalCategoryForm from './components/GoalCategoryForm';
 import GoalDateForm from './components/GoalDateForm';
 
 import GoalConfirmation from './components/GoalConfirmation';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { CreatedGoal, CreateGoalResponse } from '@/types/api';
 
@@ -36,6 +36,7 @@ type GoalParams = {
   endDate: string;
 };
 export default function GoalCreateFormModal() {
+  const queryClient = useQueryClient();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(0);
   const {
@@ -102,6 +103,12 @@ export default function GoalCreateFormModal() {
     };
     mutateCreateGoal(params);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      queryClient.invalidateQueries({ queryKey: ['goals'] });
+    }
+  }, [isSuccess, queryClient]);
 
   return (
     <>
