@@ -57,6 +57,8 @@ export default function DailyGoalDetailPage({
           goalTitle={currentGoal?.title || '목표 없음'}
           quotaText="할당량"
           initialStudyTime={currentGoal?.studyTime || 0}
+          targetAmount={currentGoal?.targetAmount || 0}
+          unit={currentGoal?.unit || ''}
         />
 
         <hr className="border-gray-500" />
