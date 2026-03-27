@@ -2,27 +2,29 @@
 
 import { Progress } from '@heroui/react';
 import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTodayProgress } from '@/api/goalApi';
 
-// 💡 Props 구조는 동일하게 유지합니다.
-interface TodayGoalDailyDetailProps {
-  ratio: number;
-  completedGoals: number;
-  totalGoals: number;
-}
+export default function TodayGoalDailyDetail() {
+  const { data: progressData } = useQuery({
+    queryKey: ['todayProgress'],
+    queryFn: fetchTodayProgress,
+  });
 
-export default function TodayGoalDailyDetail({
-  ratio,
-  completedGoals,
-  totalGoals,
-}: TodayGoalDailyDetailProps) {
+  const safeData = progressData?.data || {
+    ratio: 0,
+    completedGoals: 0,
+    totalGoals: 0,
+  };
+
   const [value, setValue] = useState(0);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setValue(ratio);
+      setValue(safeData.ratio);
     }, 1000);
     return () => clearTimeout(timeout);
-  }, [ratio]);
+  }, [safeData.ratio]);
 
   return (
     <div className="flex flex-col gap-2 mt-2 pb-8">
@@ -34,6 +36,7 @@ export default function TodayGoalDailyDetail({
       <Progress
         value={value}
         color="success"
+        aria-label="오늘의 목표 전체 진행률"
         className="w-full"
         classNames={{
           track: 'bg-[#d9d9d9]',
@@ -46,11 +49,13 @@ export default function TodayGoalDailyDetail({
           className="absolute transition-all duration-500 ease-in-out text-white"
           style={{ left: `${Math.max(0, value - 3)}%` }}
         >
-          <p className="font-bold -mb-1 text-center">{completedGoals} 개</p>
+          <p className="font-bold -mb-1 text-center">
+            {safeData.completedGoals} 개
+          </p>
         </span>
 
         <span className="absolute right-0 text-white text-right">
-          <p className="font-bold -mb-1">{totalGoals} 개</p>
+          <p className="font-bold -mb-1">{safeData.totalGoals} 개</p>
         </span>
       </div>
     </div>

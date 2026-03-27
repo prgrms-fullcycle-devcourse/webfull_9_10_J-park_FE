@@ -1,7 +1,7 @@
 'use client';
 
 import { Spinner } from '@heroui/react';
-import { RankingItem } from '@/types/api';
+import { RankingItem } from '@/types/user';
 import { formatMilliseconds } from '@/lib/utils';
 import RankingListItem from './RankingListItem';
 

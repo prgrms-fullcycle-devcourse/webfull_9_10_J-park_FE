@@ -3,7 +3,7 @@ import { Avatar } from '@heroui/react';
 interface MyRankData {
   rank: number;
   nickname: string;
-  profileImage: string | null;
+  profileImageUrl: string | null;
   totalTime: string;
 }
 
@@ -23,7 +23,7 @@ export default function MyRankingBar({ myRankData }: Props) {
       <div className="flex items-center gap-3 py-4 px-6">
         <div className="flex-shrink-0">
           <Avatar
-            src={myRankData.profileImage || undefined}
+            src={myRankData.profileImageUrl || undefined}
             className="w-11 h-11 bg-gray-600 border border-gray-500"
           />
         </div>
