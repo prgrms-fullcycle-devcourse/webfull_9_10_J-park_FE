@@ -34,6 +34,7 @@ export default function DetailContainer({ goalID }: Props) {
       {data && (
         <>
           <GoalDetailInformation
+            goalID={goalID}
             title={data.title}
             description={data.description}
             category={data.category}

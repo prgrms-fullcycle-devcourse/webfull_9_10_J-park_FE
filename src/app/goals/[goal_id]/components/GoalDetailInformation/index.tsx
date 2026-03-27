@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  addToast,
   Button,
   Card,
   CardBody,
@@ -17,6 +18,7 @@ import { api } from '@/lib/axios';
 import { GoalParams } from '@/components/modals/GoalCreateFormModal';
 
 interface Props {
+  goalID: number;
   title: string;
   description: string;
   category: string;
@@ -27,6 +29,7 @@ interface Props {
 }
 
 export default function GoalDetailInformation({
+  goalID,
   title,
   description,
   totalAmount,
@@ -34,14 +37,16 @@ export default function GoalDetailInformation({
   endDate,
   unit,
 }: Props) {
-  const { mutate, isSuccess } = useMutation<
+  const { mutate, isSuccess, isPending, isError } = useMutation<
     GoalDetail,
     Error,
     Partial<GoalParams>
   >({
     mutationKey: ['patch', 'goal'],
     mutationFn: (params) =>
-      api.patch<GoalDetailResponse>('/goals', params).then((res) => res.data),
+      api
+        .patch<GoalDetailResponse>(`/goals/${goalID}`, params)
+        .then((res) => res.data),
   });
   const queryClient = useQueryClient();
   const [newTotalAmount, setNewTotalAmount] = useState(totalAmount.toString());
@@ -56,12 +61,24 @@ export default function GoalDetailInformation({
 
   useEffect(() => {
     if (isSuccess) {
+      addToast({
+        title: '목표 정보수정',
+        description: '목표 정보가 정상적으로 수정되어습니다',
+        color: 'success',
+      });
       queryClient.invalidateQueries({ queryKey: ['goal', 'detail'] });
     }
-  }, [isSuccess, queryClient]);
+    if (isError) {
+      addToast({
+        title: '목표 정보수정',
+        description: '요청 실패했습니다. 잠시후 다시 시도해주세요',
+        color: 'danger',
+      });
+    }
+  }, [isSuccess, isError, queryClient]);
 
   return (
-    <Card fullWidth id="goal-information">
+    <Card fullWidth id="goal-information" isDisabled={isPending}>
       <CardBody className="flex gap-4">
         <div>
           <small>{description}</small>
@@ -99,6 +116,8 @@ export default function GoalDetailInformation({
           size="lg"
           color="success"
           className="text-white"
+          isLoading={isPending}
+          isDisabled={isPending}
           onPress={() =>
             mutate({
               totalAmount: Number(newTotalAmount),
