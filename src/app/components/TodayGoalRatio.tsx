@@ -2,18 +2,26 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { Progress } from '@heroui/react';
+import { useQuery } from '@tanstack/react-query';
 import { formatMilliseconds } from '@/lib/utils';
 import { useTimerStore } from '@/stores/useTimerStore';
 
-const DUMMY_PROGRESS = {
-  totalTime: 93847,
-  totalGoals: 3,
-  completedGoals: 2,
-  ratio: 66,
-};
+import { fetchTodayProgress } from '@/api/goalApi';
 
 export default function TodayGoalRatio() {
   const { playingId, startTime, recordedTimes } = useTimerStore();
+
+  const { data: progressData } = useQuery({
+    queryKey: ['todayProgress'],
+    queryFn: fetchTodayProgress,
+  });
+
+  const safeData = progressData?.data || {
+    totalTime: 0,
+    totalGoals: 0,
+    completedGoals: 0,
+    ratio: 0,
+  };
 
   const totalRecordedTime = useMemo(() => {
     const safeRecordedTimes = recordedTimes || {};
@@ -23,7 +31,7 @@ export default function TodayGoalRatio() {
     );
   }, [recordedTimes]);
 
-  const baseTotalTime = DUMMY_PROGRESS.totalTime + totalRecordedTime;
+  const baseTotalTime = safeData.totalTime + totalRecordedTime;
   const [liveTotalTime, setLiveTotalTime] = useState(baseTotalTime);
   const [progressValue, setProgressValue] = useState(0);
 
@@ -41,10 +49,10 @@ export default function TodayGoalRatio() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setProgressValue(DUMMY_PROGRESS.ratio);
+      setProgressValue(safeData.ratio);
     }, 1000);
     return () => clearTimeout(timeout);
-  }, []);
+  }, [safeData.ratio]);
 
   return (
     <div className="flex flex-col gap-8 p-5 bg-white w-full rounded-lg shadow-sm mb-4">
@@ -70,6 +78,7 @@ export default function TodayGoalRatio() {
         <Progress
           value={progressValue}
           color="success"
+          aria-label="오늘의 목표 전체 진행률"
           className="w-full"
           classNames={{
             track: 'bg-gray-200',
@@ -83,12 +92,12 @@ export default function TodayGoalRatio() {
             style={{ left: `${Math.max(0, progressValue - 3)}%` }}
           >
             <p className="font-bold -mb-1 text-center">
-              {DUMMY_PROGRESS.completedGoals} 개
+              {safeData.completedGoals} 개
             </p>
           </span>
 
           <span className="absolute right-0 text-black text-right">
-            <p className="font-bold -mb-1">{DUMMY_PROGRESS.totalGoals} 개</p>
+            <p className="font-bold -mb-1">{safeData.totalGoals} 개</p>
           </span>
         </div>
       </div>

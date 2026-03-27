@@ -1,40 +1,11 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card } from '@heroui/react';
 import { useTimerStore } from '@/stores/useTimerStore';
 import TodayGoalItem from './TodayGoalItem';
-
-const DUMMY_GOALS = [
-  {
-    id: 1,
-    title: '목표 1',
-    studyTime: 900000,
-    currentAmount: 10,
-    targetAmount: 10,
-    unit: '페이지',
-    completed: true,
-  },
-  {
-    id: 2,
-    title: '목표 2',
-    studyTime: 3600000,
-    currentAmount: 12,
-    targetAmount: 10,
-    unit: '페이지',
-    completed: true,
-  },
-  {
-    id: 3,
-    title: '목표 3',
-    studyTime: 1800000,
-    currentAmount: 2,
-    targetAmount: 10,
-    unit: '페이지',
-    completed: false,
-  },
-];
+import { TodayGoal as GoalType } from '@/types/goal';
 
 const GOAL_COLORS = [
   'bg-red-500',
@@ -44,18 +15,27 @@ const GOAL_COLORS = [
   'bg-purple-400',
 ];
 
-export default function TodayGoalDashboard() {
+interface Props {
+  goals: GoalType[];
+}
+
+export default function TodayGoalDashboard({ goals }: Props) {
   const router = useRouter();
-  const [goals, setGoals] = useState(DUMMY_GOALS);
   const { playingId, startTimer } = useTimerStore();
 
+  const [localGoals, setLocalGoals] = useState<GoalType[]>(goals);
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
+
+  useEffect(() => {
+    setLocalGoals(goals);
+  }, [goals]);
 
   const handlePlayClick = (e: React.MouseEvent, goalId: number) => {
     e.preventDefault();
     e.stopPropagation();
     startTimer(goalId);
+
     router.push(`/goals/${goalId}/daily-1`);
   };
 
@@ -67,11 +47,13 @@ export default function TodayGoalDashboard() {
   };
   const handleDragEnd = () => {
     if (dragItem.current !== null && dragOverItem.current !== null) {
-      const newGoals = [...goals];
+      const newGoals = [...localGoals];
       const draggingItemContent = newGoals[dragItem.current];
+
       newGoals.splice(dragItem.current, 1);
       newGoals.splice(dragOverItem.current, 0, draggingItemContent);
-      setGoals(newGoals);
+
+      setLocalGoals(newGoals);
     }
     dragItem.current = null;
     dragOverItem.current = null;
@@ -82,20 +64,26 @@ export default function TodayGoalDashboard() {
       <h2 className="text-lg font-bold mb-4 text-gray-800">오늘의 목표</h2>
 
       <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
-        {goals.map((goal, index) => {
-          return (
-            <TodayGoalItem
-              key={goal.id}
-              goal={goal}
-              colorClass={GOAL_COLORS[index % GOAL_COLORS.length]}
-              isPlaying={playingId === goal.id}
-              onPlayClick={handlePlayClick}
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragEnter={(e) => handleDragEnter(e, index)}
-              onDragEnd={handleDragEnd}
-            />
-          );
-        })}
+        {localGoals.length > 0 ? (
+          localGoals.map((goal, index) => {
+            return (
+              <TodayGoalItem
+                key={goal.id}
+                goal={goal}
+                colorClass={GOAL_COLORS[index % GOAL_COLORS.length]}
+                isPlaying={playingId === goal.id}
+                onPlayClick={handlePlayClick}
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragEnter={(e) => handleDragEnter(e, index)}
+                onDragEnd={handleDragEnd}
+              />
+            );
+          })
+        ) : (
+          <div className="p-4 text-center text-gray-500 font-medium">
+            오늘의 목표가 없습니다.
+          </div>
+        )}
       </div>
     </Card>
   );

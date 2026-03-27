@@ -1,13 +1,9 @@
 'use client';
 
-interface Goal {
-  id: number;
-  title: string;
-  unit: string;
-}
+import { TodayGoal } from '@/types/goal';
 
 interface DailyGoalListProps {
-  goals: Goal[];
+  goals: TodayGoal[];
 }
 
 const GOAL_COLORS = ['bg-red-500', 'bg-orange-400', 'bg-green-500'];
@@ -30,7 +26,7 @@ export default function DailyGoalList({ goals }: DailyGoalListProps) {
                 {goal.title}
               </span>
               <span className="text-sm text-gray-600">
-                오늘 할당량 (0{goal.unit})
+                {goal.currentAmount} / {goal.targetAmount} {goal.unit}
               </span>
             </div>
           </div>
