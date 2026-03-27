@@ -64,9 +64,9 @@ export default function Goals() {
                       <Progress
                         color="success"
                         size="sm"
-                        value={73}
+                        value={goal.progressRate}
                         label="진행도"
-                        valueLabel="73%"
+                        valueLabel={goal.progressRate}
                         showValueLabel={true}
                         classNames={{ label: 'text-sm', value: 'text-sm' }}
                         className="col-span-2"
