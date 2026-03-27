@@ -34,6 +34,7 @@ export default function TodayGoalDailyDetail({
       <Progress
         value={value}
         color="success"
+        label="오늘의 목표 전체 진행률"
         className="w-full"
         classNames={{
           track: 'bg-[#d9d9d9]',

@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 
 const GaugeComponent = dynamic(() => import('react-gauge-component'), {
   ssr: false,
-  loading: () => <Spinner color="warning" size="lg" />,
+  loading: () => <Spinner color="warning" size="lg" label="데이터 로딩 중" />,
 });
 
 const PACE_LEVEL_INFO: Record<

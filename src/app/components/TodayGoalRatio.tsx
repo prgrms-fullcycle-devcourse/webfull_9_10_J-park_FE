@@ -70,6 +70,7 @@ export default function TodayGoalRatio() {
         <Progress
           value={progressValue}
           color="success"
+          label="오늘의 목표 전체 진행률"
           className="w-full"
           classNames={{
             track: 'bg-gray-200',
