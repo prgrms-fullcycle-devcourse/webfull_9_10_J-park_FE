@@ -3,7 +3,7 @@ export type RankingItem = {
   rank: number;
   userId: number;
   nickname: string;
-  profileImage: string;
+  profileImageUrl: string;
   totalTime: string;
 };
 

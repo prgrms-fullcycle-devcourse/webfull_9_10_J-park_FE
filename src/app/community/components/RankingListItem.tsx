@@ -2,7 +2,7 @@
 
 import { Avatar } from '@heroui/react';
 import { FaTrophy, FaMedal } from 'react-icons/fa';
-import { RankingItem } from '@/types/api';
+import { RankingItem } from '@/types/user';
 
 interface Props {
   item: RankingItem;
@@ -33,7 +33,7 @@ export default function RankingListItem({ item, isMyRank }: Props) {
     >
       <div className="flex-shrink-0">
         <Avatar
-          src={item.profileImage || undefined}
+          src={item.profileImageUrl || undefined}
           className="w-9 h-9 bg-gray-100 border border-gray-200"
         />
       </div>

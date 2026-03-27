@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-import { RankingsResponse, MyProfileResponse } from '@/types/api';
+import { RankingsResponse, MyProfileResponse } from '@/types/user';
 import { formatMilliseconds } from '@/lib/utils';
 
 import RankingHeader from './components/RankingHeader';
@@ -93,7 +93,7 @@ export default function RankingPage() {
       return {
         rank: myRanking,
         nickname: '데이터 확인 중...',
-        profileImage: null,
+        profileImageUrl: null,
         totalTime: '00:00:00',
       };
     }
@@ -101,7 +101,7 @@ export default function RankingPage() {
     return {
       rank: myRanking,
       nickname: me.nickname ? String(me.nickname) : '이름 없음',
-      profileImage: me.profileImageUrl || null,
+      profileImageUrl: me.profileImageUrl || null,
       totalTime: me.totalTime
         ? formatMilliseconds(Number(me.totalTime))
         : '00:00:00',
