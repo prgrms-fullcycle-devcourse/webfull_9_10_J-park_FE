@@ -59,3 +59,14 @@ export type Category = {
   name: string;
   unit: string;
 };
+
+export interface CreateGoalResponse extends ApiResponse {
+  data: CreatedGoal;
+}
+export type CreatedGoal = {
+  id: string;
+  title: string;
+  categoryId: number;
+  userName: string;
+  quota: number;
+};

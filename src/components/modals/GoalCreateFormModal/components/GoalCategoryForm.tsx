@@ -43,7 +43,7 @@ export default function GoalCategoryForm() {
           variant="bordered"
           items={categories.map((n) => ({ key: n.id, label: n.name }))}
           selectedKeys={category}
-          onSelectionChange={(key) => setCategory(key as string)}
+          onSelectionChange={(keys) => setCategory(keys.currentKey as string)}
         >
           {categories.map((c) => (
             <SelectItem key={c.id}>{c.name}</SelectItem>

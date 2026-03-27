@@ -2,7 +2,7 @@
 
 import {
   Button,
-  Form,
+  Link,
   Modal,
   ModalBody,
   ModalContent,
@@ -13,14 +13,7 @@ import {
 import { FaChevronLeft } from 'react-icons/fa6';
 import { CgAddR } from 'react-icons/cg';
 
-import {
-  FormEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { useCreateGoalFormStore } from './stores/useCreateGoalFormStore';
 import GoalInfoForm from './components/GoalInfoForm';
@@ -28,24 +21,36 @@ import GoalCategoryForm from './components/GoalCategoryForm';
 import GoalDateForm from './components/GoalDateForm';
 
 import GoalConfirmation from './components/GoalConfirmation';
+import { useMutation } from '@tanstack/react-query';
+import { api } from '@/lib/axios';
+import { CreatedGoal, CreateGoalResponse } from '@/types/api';
 
 const MAX_STEPS = 3;
 const modalTitles = ['정보 입력', '총량 설정', '기한 설정'];
-
+type GoalParams = {
+  title: string;
+  detail: string | undefined;
+  categoryId: number;
+  totalAmount: number;
+  startDate: string;
+  endDate: string;
+};
 export default function GoalCreateFormModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(0);
-
   const {
-    title,
-    detail,
-    category,
-    totalAmount,
-    startDate,
-    endDate,
+    data,
+    mutate: mutateCreateGoal,
+    isPending,
+    isSuccess,
+  } = useMutation<CreatedGoal, Error, GoalParams>({
+    mutationKey: ['create', 'goal'],
+    mutationFn: (params) =>
+      api.post<CreateGoalResponse>('/goals', params).then((res) => res.data),
+  });
 
-    reset,
-  } = useCreateGoalFormStore();
+  const { title, detail, category, totalAmount, startDate, endDate, reset } =
+    useCreateGoalFormStore();
 
   const isValid = useMemo(() => {
     switch (currentStep) {
@@ -86,26 +91,16 @@ export default function GoalCreateFormModal() {
     onClose();
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = () => {
     const params = {
       title,
       detail,
-      totalAmount,
-      category,
+      totalAmount: Number(totalAmount),
+      categoryId: Number(category),
       startDate: startDate.toString(),
       endDate: endDate.toString(),
     };
-    // const res = axios.post('/goals', {
-    //   title,
-    //   detail,
-    //   totalAmount,
-    //   category,
-    //   startDate,
-    //   endDate,
-    //   quota,
-    // });
-    console.log(params);
+    mutateCreateGoal(params);
   };
 
   return (
@@ -142,18 +137,41 @@ export default function GoalCreateFormModal() {
             </span>
           </ModalHeader>
           <ModalBody>
-            <Form
+            {isSuccess && (
+              <div className="absolute flex flex-col gap-4 items-center justify-center text-2xl top-0 left-0 min-w-full min-h-full z-50 bg-white">
+                <p>
+                  <b className="text-success-400">성공적</b>으로 생성되었습니다!
+                </p>
+                <Button
+                  as={Link}
+                  href={`/goals/${data.id}`}
+                  color="primary"
+                  size="lg"
+                  className="mb-6"
+                >
+                  데일리 목표 바로가기
+                </Button>
+                <Button
+                  variant="light"
+                  size="lg"
+                  className="mb-6"
+                  onPress={onClose}
+                >
+                  닫기
+                </Button>
+              </div>
+            )}
+            <div
               className="relative flex flex-row gap-6 transition-transform duration-500 ease-in-out scrollbar-hide"
               style={{
                 transform: `translateX(calc(${-currentStep * 100}% - (${currentStep} * 1.5rem)))`,
               }}
-              onSubmit={onSubmit}
             >
               <GoalInfoForm />
               <GoalCategoryForm />
               <GoalDateForm />
               <GoalConfirmation />
-            </Form>
+            </div>
           </ModalBody>
           <ModalFooter className="flex flex-col">
             {currentStep < MAX_STEPS ? (
@@ -167,7 +185,14 @@ export default function GoalCreateFormModal() {
                 다음으로
               </Button>
             ) : (
-              <Button color="primary" size="lg" fullWidth type="submit">
+              <Button
+                color="primary"
+                size="lg"
+                fullWidth
+                onPress={onSubmit}
+                isLoading={isPending}
+                isDisabled={isPending}
+              >
                 생성하기
               </Button>
             )}
