@@ -27,7 +27,7 @@ import { CreatedGoal, CreateGoalResponse } from '@/types/api';
 
 const MAX_STEPS = 3;
 const modalTitles = ['정보 입력', '총량 설정', '기한 설정'];
-type GoalParams = {
+export type GoalParams = {
   title: string;
   detail: string | undefined;
   categoryId: number;

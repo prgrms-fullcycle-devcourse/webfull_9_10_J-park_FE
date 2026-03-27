@@ -44,7 +44,25 @@ export function formatMilliseconds(ms: number) {
   return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
 }
 
-const CATEGORY = ['', '페이지', '강'];
+const CATEGORY_UNIT = ['', '페이지', '강'];
+
 export function getUnit(categoryID: number) {
-  return CATEGORY[categoryID] || '';
+  return CATEGORY_UNIT[categoryID] || '';
+}
+
+export function getCategoryIDFromUnit(categoryUnit: string) {
+  switch (categoryUnit) {
+    case '페이지':
+      return 1;
+    default:
+      return 2;
+  }
+}
+export function getUnitFromCategory(category: string) {
+  switch (category) {
+    case '책':
+      return '페이지';
+    default:
+      return '강';
+  }
 }

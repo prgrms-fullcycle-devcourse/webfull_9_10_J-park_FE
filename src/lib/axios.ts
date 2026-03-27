@@ -56,7 +56,6 @@ apiClient.interceptors.response.use(
     // 공통 에러 핸들링
     if (error.response) {
       const { status } = error.response;
-
       switch (status) {
         case 401:
           // TODO: 인증 만료 처리 (예: 토큰 갱신 또는 로그인 페이지 리다이렉트)
