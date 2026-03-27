@@ -44,10 +44,21 @@ export default function GoalSubmitModal({
         <div className="flex items-center justify-center gap-3 text-black font-bold mt-2 w-full">
           <input
             type="number"
+            min="0"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (
+                e.key === '-' ||
+                e.key === 'e' ||
+                e.key === 'E' ||
+                e.key === '+'
+              ) {
+                e.preventDefault();
+              }
+            }}
             placeholder="0"
-            className="w-20 h-12 text-center text-2xl bg-white border border-gray-400 text-black outline-none rounded-md focus:border-orange-500"
+            className="w-20 h-12 text-center text-2xl bg-white border border-gray-400 text-black outline-none rounded-md focus:border-orange-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none m-0"
           />
           <span className="text-3xl font-light text-gray-500">/</span>
           <span className="text-3xl">{targetAmount}</span>

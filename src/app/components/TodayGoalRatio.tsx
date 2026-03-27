@@ -9,7 +9,6 @@ import { useTimerStore } from '@/stores/useTimerStore';
 import { fetchTodayProgress } from '@/api/goalApi';
 
 export default function TodayGoalRatio() {
-  // 💡 1. 복잡한 recordedTimes 는 이제 필요 없습니다! 쿨하게 지워줍니다.
   const { playingId, startTime } = useTimerStore();
 
   const { data: progressData } = useQuery({
@@ -24,7 +23,6 @@ export default function TodayGoalRatio() {
     ratio: 0,
   };
 
-  // 💡 2. 서버가 주는 진짜 총 공부시간만 베이스캠프로 삼습니다!
   const baseTotalTime = safeData.totalTime;
   const [liveTotalTime, setLiveTotalTime] = useState(baseTotalTime);
   const [progressValue, setProgressValue] = useState(0);
@@ -33,12 +31,10 @@ export default function TodayGoalRatio() {
     let interval: NodeJS.Timeout;
 
     if (playingId !== null && startTime) {
-      // 💡 타이머가 켜져 있을 때: 서버가 저장해 둔 시간 + 지금 막 흘러가는 시간
       interval = setInterval(() => {
         setLiveTotalTime(baseTotalTime + (Date.now() - startTime));
       }, 1000);
     } else {
-      // 💡 타이머가 꺼져 있을 때: 서버가 알려준 최신 시간 그대로 노출!
       setLiveTotalTime(baseTotalTime);
     }
 
@@ -83,21 +79,6 @@ export default function TodayGoalRatio() {
           }}
           size="lg"
         />
-
-        <div className="relative mt-2">
-          <span
-            className="absolute transition-all duration-500 ease-in-out text-black"
-            style={{ left: `${Math.max(0, progressValue - 3)}%` }}
-          >
-            <p className="font-bold -mb-1 text-center">
-              {safeData.completedGoals} 개
-            </p>
-          </span>
-
-          <span className="absolute right-0 text-black text-right">
-            <p className="font-bold -mb-1">{safeData.totalGoals} 개</p>
-          </span>
-        </div>
       </div>
     </div>
   );
