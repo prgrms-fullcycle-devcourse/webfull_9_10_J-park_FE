@@ -14,6 +14,7 @@ import type {
 const apiClient: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 50000,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },

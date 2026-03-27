@@ -155,7 +155,10 @@ export default function GoalCreateFormModal() {
                   variant="light"
                   size="lg"
                   className="mb-6"
-                  onPress={onClose}
+                  onPress={() => {
+                    reset();
+                    onClose();
+                  }}
                 >
                   닫기
                 </Button>
