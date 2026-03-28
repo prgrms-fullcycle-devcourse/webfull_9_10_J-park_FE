@@ -44,8 +44,9 @@ export default function DailyGoalDetailPage({
 
   const todayGoals = goalData?.data.todayGoals || [];
   const currentGoal =
-    todayGoals.find((g) => g.id === currentGoalId) || todayGoals[0];
-
+    todayGoals.find(
+      (g: { id: number; [key: string]: any }) => g.id === currentGoalId,
+    ) || todayGoals[0];
   return (
     <div
       className="min-h-screen w-full flex flex-col overflow-y-auto scrollbar-hide pb-20"
