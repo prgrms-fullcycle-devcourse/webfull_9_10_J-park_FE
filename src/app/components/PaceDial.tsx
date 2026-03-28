@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Spinner } from '@heroui/react';
 import dynamic from 'next/dynamic';
+import { fetchRiskData } from '@/api/riskApi';
 
 const GaugeComponent = dynamic(() => import('react-gauge-component'), {
   ssr: false,
@@ -13,20 +14,9 @@ const PACE_LEVEL_INFO: Record<
   number,
   { text: string; icon: string; color: string }
 > = {
-  0: { text: '아주 양호', icon: '🟢', color: '#52c41a' },
-  1: { text: '양호', icon: '🟢', color: '#52c41a' },
-  2: { text: '주의', icon: '🟡', color: '#fadb14' },
-  3: { text: '위험', icon: '🔴', color: '#ff4d4f' },
-};
-
-const fetchRiskData = async () => {
-  return {
-    success: true,
-    data: {
-      score: 80,
-      level: 3,
-    },
-  };
+  0: { text: '안전', icon: '🟢', color: '#52c41a' },
+  1: { text: '주의', icon: '🟡', color: '#fadb14' },
+  2: { text: '위험', icon: '🔴', color: '#ff4d4f' },
 };
 
 export default function PaceDial() {
@@ -66,7 +56,11 @@ export default function PaceDial() {
         <GaugeComponent
           type="semicircle"
           arc={{
-            colorArray: ['#52c41a', '#fadb14', '#ff4d4f'],
+            subArcs: [
+              { limit: 30, color: '#52c41a' },
+              { limit: 70, color: '#fadb14' },
+              { limit: 100, color: '#ff4d4f' },
+            ],
             padding: 0.02,
             width: 0.5,
           }}
@@ -101,7 +95,7 @@ export default function PaceDial() {
         >
           {currentPace.text}
         </span>{' '}
-        입니다.
+        단계입니다.
       </h2>
     </div>
   );
