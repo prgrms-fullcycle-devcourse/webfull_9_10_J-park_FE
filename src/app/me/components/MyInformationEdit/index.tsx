@@ -2,7 +2,7 @@
 
 import { api } from '@/lib/axios';
 import { User } from '@/types/user';
-import { Button, Card, CardBody, Input } from '@heroui/react';
+import { addToast, Button, Card, CardBody, Input } from '@heroui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -17,8 +17,14 @@ export default function MyInformationEdit({ userInfo }: Props) {
   const { mutate } = useMutation<User, Error, { name: string }>({
     mutationKey: ['users', 'me'],
     mutationFn: (params) => api.patch('/users', params),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['users', 'me'] }),
+    onSuccess: () => {
+      addToast({
+        title: '프로필 별명을 수정했습니다',
+        description: '프로필 별명을 성공적으로 수정했습니다',
+        color: 'success',
+      });
+      queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
+    },
   });
   const queryClient = useQueryClient();
   const [username, setUsername] = useState(() => userInfo.nickname);
@@ -64,7 +70,7 @@ export default function MyInformationEdit({ userInfo }: Props) {
           <Button
             size="sm"
             radius="full"
-            className={`${isEditing ? 'bg-success-400 text-white text-md' : 'bg-gray-200 text-gray-400 text-md'}`}
+            className={`${isEditing ? 'bg-success-400 text-white text-md' : 'bg-gray-200  text-md'}`}
             onPress={() => handleOnClickEdit()}
           >
             {isEditing ? '저장' : '수정'}
