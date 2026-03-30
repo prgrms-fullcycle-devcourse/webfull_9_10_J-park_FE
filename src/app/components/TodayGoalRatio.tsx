@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { Progress } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import { formatMilliseconds } from '@/lib/utils';
@@ -9,7 +9,7 @@ import { useTimerStore } from '@/stores/useTimerStore';
 import { fetchTodayProgress } from '@/api/goalApi';
 
 export default function TodayGoalRatio() {
-  const { playingId, startTime, recordedTimes } = useTimerStore();
+  const { playingId, startTime } = useTimerStore();
 
   const { data: progressData } = useQuery({
     queryKey: ['todayProgress'],
@@ -23,20 +23,13 @@ export default function TodayGoalRatio() {
     ratio: 0,
   };
 
-  const totalRecordedTime = useMemo(() => {
-    const safeRecordedTimes = recordedTimes || {};
-    return Object.values(safeRecordedTimes).reduce(
-      (acc: number, curr: number) => acc + curr,
-      0,
-    );
-  }, [recordedTimes]);
-
-  const baseTotalTime = safeData.totalTime + totalRecordedTime;
+  const baseTotalTime = safeData.totalTime;
   const [liveTotalTime, setLiveTotalTime] = useState(baseTotalTime);
   const [progressValue, setProgressValue] = useState(0);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
+
     if (playingId !== null && startTime) {
       interval = setInterval(() => {
         setLiveTotalTime(baseTotalTime + (Date.now() - startTime));
@@ -44,6 +37,7 @@ export default function TodayGoalRatio() {
     } else {
       setLiveTotalTime(baseTotalTime);
     }
+
     return () => clearInterval(interval);
   }, [playingId, startTime, baseTotalTime]);
 
@@ -85,21 +79,6 @@ export default function TodayGoalRatio() {
           }}
           size="lg"
         />
-
-        <div className="relative mt-2">
-          <span
-            className="absolute transition-all duration-500 ease-in-out text-black"
-            style={{ left: `${Math.max(0, progressValue - 3)}%` }}
-          >
-            <p className="font-bold -mb-1 text-center">
-              {safeData.completedGoals} 개
-            </p>
-          </span>
-
-          <span className="absolute right-0 text-black text-right">
-            <p className="font-bold -mb-1">{safeData.totalGoals} 개</p>
-          </span>
-        </div>
       </div>
     </div>
   );

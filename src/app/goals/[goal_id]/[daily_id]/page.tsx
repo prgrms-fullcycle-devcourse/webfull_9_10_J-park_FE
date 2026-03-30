@@ -44,8 +44,9 @@ export default function DailyGoalDetailPage({
 
   const todayGoals = goalData?.data.todayGoals || [];
   const currentGoal =
-    todayGoals.find((g) => g.id === currentGoalId) || todayGoals[0];
-
+    todayGoals.find(
+      (g: { id: number; [key: string]: any }) => g.id === currentGoalId,
+    ) || todayGoals[0];
   return (
     <div
       className="min-h-screen w-full flex flex-col overflow-y-auto scrollbar-hide pb-20"
@@ -57,6 +58,8 @@ export default function DailyGoalDetailPage({
           goalTitle={currentGoal?.title || '목표 없음'}
           quotaText="할당량"
           initialStudyTime={currentGoal?.studyTime || 0}
+          targetAmount={currentGoal?.targetAmount || 0}
+          unit={currentGoal?.unit || ''}
         />
 
         <hr className="border-gray-500" />

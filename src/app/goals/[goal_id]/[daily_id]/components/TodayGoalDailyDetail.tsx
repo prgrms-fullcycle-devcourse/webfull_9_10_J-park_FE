@@ -3,6 +3,7 @@
 import { Progress } from '@heroui/react';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+
 import { fetchTodayProgress } from '@/api/goalApi';
 
 export default function TodayGoalDailyDetail() {
@@ -43,21 +44,6 @@ export default function TodayGoalDailyDetail() {
         }}
         size="lg"
       />
-
-      <div className="relative mt-2">
-        <span
-          className="absolute transition-all duration-500 ease-in-out text-white"
-          style={{ left: `${Math.max(0, value - 3)}%` }}
-        >
-          <p className="font-bold -mb-1 text-center">
-            {safeData.completedGoals} 개
-          </p>
-        </span>
-
-        <span className="absolute right-0 text-white text-right">
-          <p className="font-bold -mb-1">{safeData.totalGoals} 개</p>
-        </span>
-      </div>
     </div>
   );
 }

@@ -2,10 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from '@heroui/react';
 import { useTimerStore } from '@/stores/useTimerStore';
 import TodayGoalItem from './TodayGoalItem';
 import { TodayGoal as GoalType } from '@/types/goal';
+
+import { startTimer as apiStartTimer } from '@/api/timerApi';
 
 const GOAL_COLORS = [
   'bg-red-500',
@@ -21,7 +24,9 @@ interface Props {
 
 export default function TodayGoalDashboard({ goals }: Props) {
   const router = useRouter();
-  const { playingId, startTimer } = useTimerStore();
+  const queryClient = useQueryClient();
+
+  const { playingId, startTimer: localStartTimer } = useTimerStore();
 
   const [localGoals, setLocalGoals] = useState<GoalType[]>(goals);
   const dragItem = useRef<number | null>(null);
@@ -31,12 +36,24 @@ export default function TodayGoalDashboard({ goals }: Props) {
     setLocalGoals(goals);
   }, [goals]);
 
+  const startMutation = useMutation({
+    mutationFn: (goalId: number) => apiStartTimer({ goalId }),
+    onSuccess: (_, goalId) => {
+      localStartTimer(goalId);
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      router.push(`/goals/${goalId}/daily-1`);
+    },
+  });
+
   const handlePlayClick = (e: React.MouseEvent, goalId: number) => {
     e.preventDefault();
     e.stopPropagation();
-    startTimer(goalId);
 
-    router.push(`/goals/${goalId}/daily-1`);
+    if (playingId === goalId) {
+      router.push(`/goals/${goalId}/daily-1`);
+    } else {
+      startMutation.mutate(goalId);
+    }
   };
 
   const handleDragStart = (e: React.DragEvent, position: number) => {
