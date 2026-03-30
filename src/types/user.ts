@@ -29,11 +29,18 @@ export type TodayGoal = {
 export interface MyProfileResponse {
   success: boolean;
   message: string;
-  data: {
-    id: number;
-    nickname: string;
-    profileImageUrl: string | null;
-    totalTime: number | string;
-    createdAt: string;
-  };
+  data: User;
 }
+
+export type User = {
+  userId: number;
+  nickname: string;
+  profileImageUrl: string | null;
+  totalTime: number | string;
+  createdAt: string;
+  goals: {
+    id: number;
+    title: string;
+    todayQuota: number;
+  }[];
+};

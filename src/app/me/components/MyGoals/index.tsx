@@ -1,12 +1,5 @@
 'use client';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Divider,
-  Link,
-} from '@heroui/react';
+import { Button, Card, CardBody, CardHeader, Link } from '@heroui/react';
 
 interface Props {
   goals: { id: number; title: string; todayQuota: number }[];
@@ -21,12 +14,13 @@ export default function MyGoals({ goals }: Props) {
           <Button
             key={goal.id}
             as={Link}
+            href={`goals/${goal.id}`}
             variant="light"
             radius="none"
             className="flex justify-between h-full p-2 px-4 border-b-1 border-slate-200"
           >
             <span>
-              <p className="text-lg">{goal.title}</p>
+              <p className="text-lg max-w-full text-ellipsis">{goal.title}</p>
               <p>오늘 할당량</p>
             </span>
             <span>

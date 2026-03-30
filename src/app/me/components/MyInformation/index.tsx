@@ -1,16 +1,24 @@
 'use client';
-import { Avatar, Button, Card, CardBody, Image } from '@heroui/react';
+import IconCropperModal from '@/components/modals/ProfileImageCropModal';
+import { User } from '@/types/user';
+import {
+  addToast,
+  Button,
+  Card,
+  CardBody,
+  Image,
+  useDisclosure,
+} from '@heroui/react';
 import { MdModeEdit } from 'react-icons/md';
 
 interface Props {
-  userInfo: {
-    username: string;
-    profileImage: string;
-    totalTime: string;
-    createdAt: string;
-  };
+  userInfo: User;
 }
+
+const DEFAULT_PROFILE_IMG_URL = 'https://picsum.photos/id/237/200/300';
+
 export default function MyInformation({ userInfo }: Props) {
+  const { isOpen, onOpenChange, onOpen } = useDisclosure();
   return (
     <Card>
       <CardBody>
@@ -20,7 +28,7 @@ export default function MyInformation({ userInfo }: Props) {
               isZoomed
               radius="full"
               alt="user profile image"
-              src={userInfo.profileImage}
+              src={userInfo.profileImageUrl ?? DEFAULT_PROFILE_IMG_URL}
               width={200}
               height={200}
               shadow="sm"
@@ -31,11 +39,23 @@ export default function MyInformation({ userInfo }: Props) {
               radius="full"
               variant="flat"
               className="absolute bottom-0 right-0 z-30 bg-slate-300 border-3 border-white shadow-md"
+              onPress={onOpen}
             >
               <MdModeEdit className="text-white" size={24} />
             </Button>
+            <IconCropperModal
+              isOpen={isOpen}
+              onOpenChange={onOpenChange}
+              onConfirm={(blob, url) => {
+                addToast({
+                  title: '프로필 이미지 변경합니다',
+                  description: '이 기능은 추후 업데이트됩니다',
+                  color: 'warning',
+                });
+              }}
+            />
           </div>
-          <h1 className="font-bold text-4xl mt-4">{userInfo.username}</h1>
+          <h1 className="font-bold text-4xl mt-4">{userInfo.nickname}</h1>
           <p className="text-slate-400">{userInfo.createdAt}</p>
         </div>
       </CardBody>
