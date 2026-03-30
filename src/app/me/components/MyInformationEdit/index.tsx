@@ -33,12 +33,14 @@ export default function MyInformationEdit({ userInfo }: Props) {
 
   const handleOnClickEdit = useCallback(() => {
     if (isEditing) {
-      mutate({ name: username });
+      if (username !== userInfo.nickname) {
+        mutate({ name: username });
+      }
       setIsEditing(false);
     } else {
       setIsEditing(true);
     }
-  }, [isEditing, username, mutate]);
+  }, [isEditing, username, userInfo, mutate]);
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
