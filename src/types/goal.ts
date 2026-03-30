@@ -8,6 +8,7 @@ export interface TodayGoal {
   completed: boolean;
   isTimerRunning: boolean;
   progressRate: number;
+  dailyId: number;
 }
 
 export interface TodayGoalResponse {

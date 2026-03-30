@@ -37,22 +37,27 @@ export default function TodayGoalDashboard({ goals }: Props) {
   }, [goals]);
 
   const startMutation = useMutation({
-    mutationFn: (goalId: number) => apiStartTimer({ goalId }),
-    onSuccess: (_, goalId) => {
-      localStartTimer(goalId);
+    mutationFn: (variables: { goalId: number; dailyId: number }) =>
+      apiStartTimer({ goalId: variables.goalId }),
+    onSuccess: (_, variables) => {
+      localStartTimer(variables.goalId);
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
-      router.push(`/goals/${goalId}/daily-1`);
+      router.push(`/goals/${variables.goalId}/${variables.dailyId}`);
     },
   });
 
-  const handlePlayClick = (e: React.MouseEvent, goalId: number) => {
+  const handlePlayClick = (
+    e: React.MouseEvent,
+    goalId: number,
+    dailyId: number,
+  ) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (playingId === goalId) {
-      router.push(`/goals/${goalId}/daily-1`);
+      router.push(`/goals/${goalId}/${dailyId}`);
     } else {
-      startMutation.mutate(goalId);
+      startMutation.mutate({ goalId, dailyId });
     }
   };
 
@@ -89,7 +94,7 @@ export default function TodayGoalDashboard({ goals }: Props) {
                 goal={goal}
                 colorClass={GOAL_COLORS[index % GOAL_COLORS.length]}
                 isPlaying={playingId === goal.id}
-                onPlayClick={handlePlayClick}
+                onPlayClick={(e) => handlePlayClick(e, goal.id, goal.dailyId)}
                 onDragStart={(e) => handleDragStart(e, index)}
                 onDragEnter={(e) => handleDragEnter(e, index)}
                 onDragEnd={handleDragEnd}
