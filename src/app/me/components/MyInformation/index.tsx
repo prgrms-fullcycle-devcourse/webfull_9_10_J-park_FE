@@ -1,15 +1,14 @@
 'use client';
-import { Avatar, Button, Card, CardBody, Image } from '@heroui/react';
+import { User } from '@/types/user';
+import { Button, Card, CardBody, Image } from '@heroui/react';
 import { MdModeEdit } from 'react-icons/md';
 
 interface Props {
-  userInfo: {
-    username: string;
-    profileImage: string;
-    totalTime: string;
-    createdAt: string;
-  };
+  userInfo: User;
 }
+
+const DEFAULT_PROFILE_IMG_URL = 'https://picsum.photos/id/237/200/300';
+
 export default function MyInformation({ userInfo }: Props) {
   return (
     <Card>
@@ -20,7 +19,7 @@ export default function MyInformation({ userInfo }: Props) {
               isZoomed
               radius="full"
               alt="user profile image"
-              src={userInfo.profileImage}
+              src={userInfo.profileImageUrl ?? DEFAULT_PROFILE_IMG_URL}
               width={200}
               height={200}
               shadow="sm"
@@ -35,7 +34,7 @@ export default function MyInformation({ userInfo }: Props) {
               <MdModeEdit className="text-white" size={24} />
             </Button>
           </div>
-          <h1 className="font-bold text-4xl mt-4">{userInfo.username}</h1>
+          <h1 className="font-bold text-4xl mt-4">{userInfo.nickname}</h1>
           <p className="text-slate-400">{userInfo.createdAt}</p>
         </div>
       </CardBody>
