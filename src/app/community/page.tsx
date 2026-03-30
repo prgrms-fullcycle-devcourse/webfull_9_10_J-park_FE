@@ -3,44 +3,31 @@
 import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-import { RankingsResponse, MyProfileResponse } from '@/types/user';
+import { RankingsResponse, MyProfileResponse, Ranking } from '@/types/user';
 import { formatMilliseconds } from '@/lib/utils';
 
 import RankingHeader from './components/RankingHeader';
 import RankingList from './components/RankingList';
 import MyRankingBar from './components/MyRankingBar';
+import { api } from '@/lib/axios';
 
 const fetchRankings = async ({
   pageParam = 1,
 }): Promise<RankingsResponse & { nextPage?: number }> => {
-  const response = await fetch(
-    `https://lampfire-backend.onrender.com/rankings?page=${pageParam}&limit=30`,
-    {
-      method: 'GET',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-    },
+  const response = await api.get<RankingsResponse>(
+    `rankings?page=${pageParam}&limit=30`,
   );
-  if (!response.ok) throw new Error('랭킹 데이터를 불러오는데 실패했습니다.');
+  if (!response.success)
+    throw new Error('랭킹 데이터를 불러오는데 실패했습니다.');
 
-  const result = await response.json();
-  const ranksArray = result.data.ranks || [];
+  const ranksArray = response.data.ranks || [];
   const hasNext = ranksArray.length === 30;
 
-  return { ...result, nextPage: hasNext ? pageParam + 1 : undefined };
+  return { ...response, nextPage: hasNext ? pageParam + 1 : undefined };
 };
 
 const fetchMyProfile = async (): Promise<MyProfileResponse> => {
-  const response = await fetch(
-    'https://lampfire-backend.onrender.com/users/me',
-    {
-      method: 'GET',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-    },
-  );
-  if (!response.ok) throw new Error('내 정보를 불러오는데 실패했습니다.');
-  return await response.json();
+  return api.get<MyProfileResponse>('/users/me');
 };
 
 export default function RankingPage() {
@@ -79,7 +66,7 @@ export default function RankingPage() {
     const rawRanking = rankingData?.pages[0]?.data?.myRanking;
     if (!rawRanking) return null;
     if (typeof rawRanking === 'object') {
-      return (rawRanking as any).myRanking || (rawRanking as any).rank || null;
+      return (rawRanking as Ranking).myRanking || null;
     }
     return rawRanking;
   }, [rankingData]);

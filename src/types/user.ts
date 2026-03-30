@@ -11,11 +11,12 @@ export type RankingItem = {
 export interface RankingsResponse {
   success: boolean;
   message: string;
-  data: {
-    myRanking: number;
-    topRankings: RankingItem[];
-    ranks: RankingItem[];
-  };
+  data: Ranking;
+}
+export interface Ranking {
+  myRanking: number;
+  topRankings: RankingItem[];
+  ranks: RankingItem[];
 }
 
 /** 내 정보 조회 타입 */

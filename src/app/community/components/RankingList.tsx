@@ -4,6 +4,7 @@ import { Spinner } from '@heroui/react';
 import { RankingItem } from '@/types/user';
 import { formatMilliseconds } from '@/lib/utils';
 import RankingListItem from './RankingListItem';
+import RankingListSkeleton from './RankingListSkeleton';
 
 interface Props {
   status: 'pending' | 'error' | 'success';
@@ -20,12 +21,9 @@ export default function RankingList({
   bottomRef,
   isFetchingNextPage,
 }: Props) {
+  // if (true) {
   if (status === 'pending') {
-    return (
-      <div className="flex justify-center items-center py-10">
-        <Spinner color="warning" size="lg" />
-      </div>
-    );
+    return <RankingListSkeleton />;
   }
 
   if (status === 'error') {
