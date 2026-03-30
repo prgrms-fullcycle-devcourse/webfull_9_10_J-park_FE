@@ -14,6 +14,7 @@ export default function MyGoals({ goals }: Props) {
           <Button
             key={goal.id}
             as={Link}
+            href={`goals/${goal.id}`}
             variant="light"
             radius="none"
             className="flex justify-between h-full p-2 px-4 border-b-1 border-slate-200"
