@@ -1,10 +1,4 @@
-import {
-  Input,
-  NumberInput,
-  Select,
-  SelectItem,
-  Skeleton,
-} from '@heroui/react';
+import { NumberInput, Select, SelectItem } from '@heroui/react';
 import { useCreateGoalFormStore } from '../stores/useCreateGoalFormStore';
 import { useQuery } from '@tanstack/react-query';
 
@@ -16,7 +10,7 @@ export default function GoalCategoryForm() {
   const {
     data: categoryData,
     isLoading,
-    isError,
+    isFetched,
   } = useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: () =>
@@ -26,7 +20,7 @@ export default function GoalCategoryForm() {
   const { totalAmount, category, setTotalAmount, setCategory } =
     useCreateGoalFormStore();
 
-  if (isLoading || isError) {
+  if (isLoading || !isFetched) {
     return;
   }
 
