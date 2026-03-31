@@ -1,4 +1,5 @@
 'use client';
+import { STORAGE_KEYS } from '@/constants';
 import { api } from '@/lib/axios';
 import { EndTimer, EndTimerResponse } from '@/types/timer';
 import {
@@ -31,6 +32,9 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
       api
         .post<EndTimerResponse>('/timers/end', { ...params, isPaused: true })
         .then((res) => res.data),
+    onSuccess: () => {
+      localStorage.removeItem(STORAGE_KEYS.startedDailyGoalID);
+    },
   });
   return (
     <>

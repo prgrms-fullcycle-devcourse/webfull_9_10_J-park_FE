@@ -66,6 +66,10 @@ export default function FloatingTimer() {
     return;
   }
 
+  if (!goalTitle || goalTitle !== '') {
+    return;
+  }
+
   return (
     <div
       className="absolute flex justify-center transition-all z-50 top-8 left-0 w-full"
