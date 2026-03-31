@@ -9,6 +9,7 @@ import TodayGoalItem from './TodayGoalItem';
 import { TodayGoal as GoalType } from '@/types/goal';
 
 import { startTimer as apiStartTimer } from '@/api/timerApi';
+import { STORAGE_KEYS } from '@/constants';
 
 const GOAL_COLORS = [
   'bg-red-500',
@@ -43,6 +44,10 @@ export default function TodayGoalDashboard({ goals }: Props) {
       localStartTimer(variables.goalId);
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       router.push(`/goals/${variables.goalId}/${variables.dailyId}`);
+      localStorage.setItem(
+        STORAGE_KEYS.startedDailyGoalID,
+        JSON.stringify(variables.goalId),
+      );
     },
   });
 

@@ -1,3 +1,4 @@
+import { STORAGE_KEYS } from '@/constants';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -48,6 +49,7 @@ export const useTimerStore = create<TimerState>()(
               [playingId]: (recordedTimes[playingId] || 0) + elapsed, // 수첩에 시간 더하기
             },
           });
+          localStorage.removeItem(STORAGE_KEYS.startedDailyGoalID);
         }
       },
     }),
