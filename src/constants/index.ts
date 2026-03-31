@@ -18,3 +18,7 @@ export const CATEGORIES = [
   { id: 1, name: '책', unit: '장' },
   { id: 2, name: '강의', unit: '강' },
 ];
+
+export const STORAGE_KEYS = {
+  startedDailyGoalID: 'started_daily_goal_ID',
+};

@@ -96,7 +96,7 @@ export default function GoalCreateFormModal() {
     const params = {
       title,
       detail,
-      totalAmount: Number(totalAmount),
+      totalAmount: totalAmount,
       categoryId: Number(category),
       startDate: startDate.toString(),
       endDate: endDate.toString(),
