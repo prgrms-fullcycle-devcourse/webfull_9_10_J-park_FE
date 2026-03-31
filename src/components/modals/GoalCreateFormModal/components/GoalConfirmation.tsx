@@ -20,7 +20,7 @@ export default function GoalConfirmation() {
           일부터 <b>{eMonth}</b>월 <b> {eDay}</b>일까지
         </div>
         <div className="flex justify-center my-2 text-2xl items-baseline">
-          <b className="mr-2 text-4xl">{totalAmount}</b>{' '}
+          <b className="mr-2 text-4xl">{totalAmount.toLocaleString()}</b>{' '}
           {getUnit(Number(category))}
         </div>
         을 달성하기 위해 등불이 도와드릴까요?

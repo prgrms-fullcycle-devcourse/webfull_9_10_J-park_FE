@@ -13,3 +13,8 @@ export const ROUTE = {
   COMMUNITY: '/community',
   ME: '/me',
 };
+
+export const CATEGORIES = [
+  { id: 1, name: '책', unit: '장' },
+  { id: 2, name: '강의', unit: '강' },
+];
