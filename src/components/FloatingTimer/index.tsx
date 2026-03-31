@@ -91,12 +91,12 @@ export default function FloatingTimer() {
               <Timer initialTimeMS={initialTimeMS} />
               <StopTimerModal goalID={goalID} targetAmount={targetAmount} />
             </div>
-            <div className="flex flex-col max-w-2/3 justify-between col-start-2 col-span-2 px-0">
+            <div className="flex flex-col min-w-2/3 max-w-2/3justify-between col-start-2 col-span-2 px-0">
               <div className="overflow-hidden font-bold text-lg w-full">
                 <p
                   className="text-nowrap animate-slide-loop"
                   style={{
-                    width: `${goalTitle.length * 12}px`,
+                    width: `${goalTitle.length > 24 ? goalTitle.length * 12 : 0}px`,
                   }}
                 >
                   {goalTitle}
