@@ -22,7 +22,7 @@ export default function GoalInfoForm() {
         }}
       />
       <Textarea
-        value={detail}
+        value={detail || ''}
         onValueChange={setDetail}
         size="lg"
         variant="bordered"
