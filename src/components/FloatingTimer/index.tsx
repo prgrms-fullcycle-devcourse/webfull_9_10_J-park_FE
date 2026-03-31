@@ -53,7 +53,7 @@ export default function FloatingTimer() {
 
   const initialTimeMS = useMemo(() => {
     if (startDate) {
-      const delta = Date.now() - new Date(startDate);
+      const delta = Date.now() - +new Date(startDate);
       return delta;
     }
   }, [startDate]);
