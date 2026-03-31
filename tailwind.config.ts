@@ -11,7 +11,17 @@ const config = {
     fontFamily: {
       notosan: ['NotoSan', 'sans-serif'],
     },
-    extend: {},
+    extend: {
+      keyframes: {
+        'slide-loop': {
+          from: { transform: 'translateX(50%)' },
+          to: { transform: 'translateX(-105%)' },
+        },
+      },
+      animation: {
+        'slide-loop': 'slide-loop 20s linear infinite',
+      },
+    },
   },
   darkMode: 'class',
   plugins: [heroui(), tailWindScrollbarHide],
