@@ -12,7 +12,7 @@ interface TodayGoalItemProps {
   goal: GoalType;
   colorClass: string;
   isPlaying: boolean;
-  onPlayClick: (e: React.MouseEvent, goalId: number) => void;
+  onPlayClick: (e: React.MouseEvent, goalId: number, dailyId: number) => void;
   onDragStart: (e: React.DragEvent) => void;
   onDragEnter: (e: React.DragEvent) => void;
   onDragEnd: () => void;
@@ -79,7 +79,7 @@ export default function TodayGoalItem({
             <GoalStatusBadge status={goal.completed ? '달성' : '미달성'} />
             <GoalPlayButton
               isPlaying={isPlaying}
-              onClick={(e) => onPlayClick(e, goal.id)}
+              onClick={(e) => onPlayClick(e, goal.id, goal.dailyId)}
             />
           </div>
         </div>

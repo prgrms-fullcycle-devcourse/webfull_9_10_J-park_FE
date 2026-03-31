@@ -11,7 +11,7 @@ import {
   startTimer as apiStartTimer,
   endTimer as apiEndTimer,
 } from '@/api/timerApi';
-import GoalSubmitModal from './GoalSubmitModal';
+import GoalSubmitModal from '../../../../components/GoalSubmitModal';
 
 interface DailyGoalTimerProps {
   goalId: number;
@@ -130,6 +130,7 @@ export default function DailyGoalTimer({
         targetAmount={targetAmount}
         unit={unit}
         isPending={endMutation.isPending}
+        goalTitle={goalTitle}
       />
     </>
   );

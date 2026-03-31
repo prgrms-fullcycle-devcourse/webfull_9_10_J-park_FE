@@ -10,6 +10,7 @@ interface GoalSubmitModalProps {
   targetAmount: number;
   unit: string;
   isPending: boolean;
+  goalTitle: string;
 }
 
 export default function GoalSubmitModal({
@@ -19,6 +20,7 @@ export default function GoalSubmitModal({
   targetAmount,
   unit,
   isPending,
+  goalTitle,
 }: GoalSubmitModalProps) {
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
 
@@ -38,9 +40,14 @@ export default function GoalSubmitModal({
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
       <div className="bg-white p-8 rounded-xl flex flex-col items-center gap-8 shadow-2xl w-[360px]">
-        <h2 className="text-2xl font-extrabold text-black tracking-tight">
-          공부량 제출하기
-        </h2>
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h2 className="text-2xl font-extrabold text-black tracking-tight">
+            공부량 제출하기
+          </h2>
+          <p className="text-lg font-medium text-gray-500 break-keep">
+            {goalTitle}
+          </p>
+        </div>
 
         <div className="flex items-center justify-center gap-4 text-black font-bold mt-2 w-full">
           <NumberInput

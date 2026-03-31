@@ -6,9 +6,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from '@heroui/react';
 import { useTimerStore } from '@/stores/useTimerStore';
 import TodayGoalItem from './TodayGoalItem';
+import GoalSubmitModal from './GoalSubmitModal';
 import { TodayGoal as GoalType } from '@/types/goal';
 
-import { startTimer as apiStartTimer } from '@/api/timerApi';
+import {
+  startTimer as apiStartTimer,
+  endTimer as apiEndTimer,
+} from '@/api/timerApi';
 
 const GOAL_COLORS = [
   'bg-red-500',
@@ -32,9 +36,17 @@ export default function TodayGoalDashboard({ goals }: Props) {
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingGoal, setPendingGoal] = useState<{
+    goalId: number;
+    dailyId: number;
+  } | null>(null);
+
   useEffect(() => {
     setLocalGoals(goals);
   }, [goals]);
+
+  const playingGoal = localGoals.find((g) => g.id === playingId);
 
   const startMutation = useMutation({
     mutationFn: (variables: { goalId: number; dailyId: number }) =>
@@ -43,6 +55,25 @@ export default function TodayGoalDashboard({ goals }: Props) {
       localStartTimer(variables.goalId);
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       router.push(`/goals/${variables.goalId}/${variables.dailyId}`);
+    },
+  });
+
+  const endMutation = useMutation({
+    mutationFn: (amount: number) =>
+      apiEndTimer({
+        goalId: playingId!,
+        currentCompletedAmount: amount,
+        isPaused: false,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+
+      if (pendingGoal) {
+        startMutation.mutate(pendingGoal);
+      }
+
+      setIsModalOpen(false);
+      setPendingGoal(null);
     },
   });
 
@@ -56,6 +87,9 @@ export default function TodayGoalDashboard({ goals }: Props) {
 
     if (playingId === goalId) {
       router.push(`/goals/${goalId}/${dailyId}`);
+    } else if (playingId && playingId !== goalId) {
+      setPendingGoal({ goalId, dailyId });
+      setIsModalOpen(true);
     } else {
       startMutation.mutate({ goalId, dailyId });
     }
@@ -82,31 +116,48 @@ export default function TodayGoalDashboard({ goals }: Props) {
   };
 
   return (
-    <Card className="w-full p-5 bg-white shadow-md border-none" radius="lg">
-      <h2 className="text-lg font-bold mb-4 text-gray-800">오늘의 목표</h2>
+    <>
+      <Card className="w-full p-5 bg-white shadow-md border-none" radius="lg">
+        <h2 className="text-lg font-bold mb-4 text-gray-800">오늘의 목표</h2>
 
-      <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
-        {localGoals.length > 0 ? (
-          localGoals.map((goal, index) => {
-            return (
-              <TodayGoalItem
-                key={goal.id}
-                goal={goal}
-                colorClass={GOAL_COLORS[index % GOAL_COLORS.length]}
-                isPlaying={playingId === goal.id}
-                onPlayClick={(e) => handlePlayClick(e, goal.id, goal.dailyId)}
-                onDragStart={(e) => handleDragStart(e, index)}
-                onDragEnter={(e) => handleDragEnter(e, index)}
-                onDragEnd={handleDragEnd}
-              />
-            );
-          })
-        ) : (
-          <div className="p-4 text-center text-gray-500 font-medium">
-            오늘의 목표가 없습니다.
-          </div>
-        )}
-      </div>
-    </Card>
+        <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
+          {localGoals.length > 0 ? (
+            localGoals.map((goal, index) => {
+              return (
+                <TodayGoalItem
+                  key={goal.id}
+                  goal={goal}
+                  colorClass={GOAL_COLORS[index % GOAL_COLORS.length]}
+                  isPlaying={playingId === goal.id}
+                  onPlayClick={handlePlayClick}
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragEnter={(e) => handleDragEnter(e, index)}
+                  onDragEnd={handleDragEnd}
+                />
+              );
+            })
+          ) : (
+            <div className="p-4 text-center text-gray-500 font-medium">
+              오늘의 목표가 없습니다.
+            </div>
+          )}
+        </div>
+      </Card>
+
+      {playingGoal && (
+        <GoalSubmitModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setPendingGoal(null);
+          }}
+          onSubmit={(amount: number) => endMutation.mutate(amount)}
+          targetAmount={playingGoal.targetAmount}
+          unit={playingGoal.unit}
+          isPending={endMutation.isPending}
+          goalTitle={playingGoal.title}
+        />
+      )}
+    </>
   );
 }
