@@ -1,4 +1,10 @@
-import { Input, Select, SelectItem, Skeleton } from '@heroui/react';
+import {
+  Input,
+  NumberInput,
+  Select,
+  SelectItem,
+  Skeleton,
+} from '@heroui/react';
 import { useCreateGoalFormStore } from '../stores/useCreateGoalFormStore';
 import { useQuery } from '@tanstack/react-query';
 
@@ -29,7 +35,7 @@ export default function GoalCategoryForm() {
 
   return (
     <section className="flex flex-col gap-3 min-w-full">
-      <Input
+      <NumberInput
         isRequired
         value={totalAmount}
         onValueChange={setTotalAmount}
