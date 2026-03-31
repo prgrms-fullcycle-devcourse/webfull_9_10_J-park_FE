@@ -7,7 +7,7 @@ interface GoalSubmitModalProps {
   onClose: () => void;
   onSubmit: (amount: number) => void;
   targetAmount: number;
-  unit: string;
+  unit?: string;
   isPending: boolean;
 }
 
