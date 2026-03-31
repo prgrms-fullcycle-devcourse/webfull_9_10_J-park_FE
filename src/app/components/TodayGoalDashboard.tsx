@@ -1,18 +1,12 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from '@heroui/react';
-import { useTimerStore } from '@/stores/useTimerStore';
 import TodayGoalItem from './TodayGoalItem';
 import GoalSubmitModal from './GoalSubmitModal';
 import { TodayGoal as GoalType } from '@/types/goal';
 
-import {
-  startTimer as apiStartTimer,
-  endTimer as apiEndTimer,
-} from '@/api/timerApi';
+import { useTodayGoalController } from '@/hooks/useTodayGoalController';
 
 const GOAL_COLORS = [
   'bg-red-500',
@@ -22,78 +16,26 @@ const GOAL_COLORS = [
   'bg-purple-400',
 ];
 
-interface Props {
-  goals: GoalType[];
-}
+export default function TodayGoalDashboard() {
+  const {
+    goals,
+    isLoading,
+    playingId,
+    isModalOpen,
+    endMutation,
+    handlePlayClick,
+    closeAndClearModal,
+  } = useTodayGoalController();
 
-export default function TodayGoalDashboard({ goals }: Props) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  const { playingId, startTimer: localStartTimer } = useTimerStore();
-
-  const [localGoals, setLocalGoals] = useState<GoalType[]>(goals);
+  const [localGoals, setLocalGoals] = useState<GoalType[]>([]);
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [pendingGoal, setPendingGoal] = useState<{
-    goalId: number;
-    dailyId: number;
-  } | null>(null);
 
   useEffect(() => {
     setLocalGoals(goals);
   }, [goals]);
 
   const playingGoal = localGoals.find((g) => g.id === playingId);
-
-  const startMutation = useMutation({
-    mutationFn: (variables: { goalId: number; dailyId: number }) =>
-      apiStartTimer({ goalId: variables.goalId }),
-    onSuccess: (_, variables) => {
-      localStartTimer(variables.goalId);
-      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
-      router.push(`/goals/${variables.goalId}/${variables.dailyId}`);
-    },
-  });
-
-  const endMutation = useMutation({
-    mutationFn: (amount: number) =>
-      apiEndTimer({
-        goalId: playingId!,
-        currentCompletedAmount: amount,
-        isPaused: false,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
-
-      if (pendingGoal) {
-        startMutation.mutate(pendingGoal);
-      }
-
-      setIsModalOpen(false);
-      setPendingGoal(null);
-    },
-  });
-
-  const handlePlayClick = (
-    e: React.MouseEvent,
-    goalId: number,
-    dailyId: number,
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (playingId === goalId) {
-      router.push(`/goals/${goalId}/${dailyId}`);
-    } else if (playingId && playingId !== goalId) {
-      setPendingGoal({ goalId, dailyId });
-      setIsModalOpen(true);
-    } else {
-      startMutation.mutate({ goalId, dailyId });
-    }
-  };
 
   const handleDragStart = (e: React.DragEvent, position: number) => {
     dragItem.current = position;
@@ -105,15 +47,16 @@ export default function TodayGoalDashboard({ goals }: Props) {
     if (dragItem.current !== null && dragOverItem.current !== null) {
       const newGoals = [...localGoals];
       const draggingItemContent = newGoals[dragItem.current];
-
       newGoals.splice(dragItem.current, 1);
       newGoals.splice(dragOverItem.current, 0, draggingItemContent);
-
       setLocalGoals(newGoals);
     }
     dragItem.current = null;
     dragOverItem.current = null;
   };
+
+  if (isLoading)
+    return <div className="p-4 text-center">데이터를 불러오는 중입니다...</div>;
 
   return (
     <>
@@ -122,20 +65,18 @@ export default function TodayGoalDashboard({ goals }: Props) {
 
         <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
           {localGoals.length > 0 ? (
-            localGoals.map((goal, index) => {
-              return (
-                <TodayGoalItem
-                  key={goal.id}
-                  goal={goal}
-                  colorClass={GOAL_COLORS[index % GOAL_COLORS.length]}
-                  isPlaying={playingId === goal.id}
-                  onPlayClick={handlePlayClick}
-                  onDragStart={(e) => handleDragStart(e, index)}
-                  onDragEnter={(e) => handleDragEnter(e, index)}
-                  onDragEnd={handleDragEnd}
-                />
-              );
-            })
+            localGoals.map((goal, index) => (
+              <TodayGoalItem
+                key={goal.id}
+                goal={goal}
+                colorClass={GOAL_COLORS[index % GOAL_COLORS.length]}
+                isPlaying={playingId === goal.id}
+                onPlayClick={handlePlayClick}
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragEnter={(e) => handleDragEnter(e, index)}
+                onDragEnd={handleDragEnd}
+              />
+            ))
           ) : (
             <div className="p-4 text-center text-gray-500 font-medium">
               오늘의 목표가 없습니다.
@@ -147,10 +88,7 @@ export default function TodayGoalDashboard({ goals }: Props) {
       {playingGoal && (
         <GoalSubmitModal
           isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setPendingGoal(null);
-          }}
+          onClose={closeAndClearModal}
           onSubmit={(amount: number) => endMutation.mutate(amount)}
           targetAmount={playingGoal.targetAmount}
           unit={playingGoal.unit}
