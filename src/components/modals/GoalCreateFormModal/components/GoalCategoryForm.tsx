@@ -1,15 +1,16 @@
-import { Input, Select, SelectItem, Skeleton } from '@heroui/react';
+import { NumberInput, Select, SelectItem } from '@heroui/react';
 import { useCreateGoalFormStore } from '../stores/useCreateGoalFormStore';
 import { useQuery } from '@tanstack/react-query';
 
 import { Category, CategoryResponse } from '@/types/api';
 import { api } from '@/lib/axios';
+import { CATEGORIES } from '@/constants';
 
 export default function GoalCategoryForm() {
   const {
-    data: categories,
+    data: categoryData,
     isLoading,
-    isError,
+    isFetched,
   } = useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: () =>
@@ -19,12 +20,16 @@ export default function GoalCategoryForm() {
   const { totalAmount, category, setTotalAmount, setCategory } =
     useCreateGoalFormStore();
 
-  if (isError) {
+  if (isLoading || !isFetched) {
     return;
   }
+
+  const categories =
+    categoryData && categoryData.length > 0 ? categoryData : CATEGORIES;
+
   return (
     <section className="flex flex-col gap-3 min-w-full">
-      <Input
+      <NumberInput
         isRequired
         value={totalAmount}
         onValueChange={setTotalAmount}
@@ -35,7 +40,7 @@ export default function GoalCategoryForm() {
         placeholder="목표 분량을 작성해주세요."
       />
 
-      {categories && (
+      {
         <Select
           isRequired
           size="lg"
@@ -49,7 +54,7 @@ export default function GoalCategoryForm() {
             <SelectItem key={c.id}>{c.name}</SelectItem>
           ))}
         </Select>
-      )}
+      }
     </section>
   );
 }
