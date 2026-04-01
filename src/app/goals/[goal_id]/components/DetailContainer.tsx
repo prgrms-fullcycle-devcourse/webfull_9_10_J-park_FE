@@ -46,7 +46,7 @@ export default function DetailContainer({ goalID }: Props) {
 
           <GoalProgression progress={data.progress} period={data.period} />
 
-          <DailyGoalList dailyProgress={data.dailyProgress} />
+          <DailyGoalList goalID={goalID} dailyProgress={data.dailyProgress} />
         </>
       )}
     </>
