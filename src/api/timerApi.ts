@@ -22,3 +22,22 @@ export const endTimer = async (data: EndTimerPayload) => {
   const response = await apiClient.post('/timers/end', data);
   return response.data;
 };
+
+//타이머 정보 조회
+export const fetchRunningTimer = async (goalId: number) => {
+  try {
+    const response = await apiClient.get(`/timers`, {
+      params: { goalId },
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.status === 404) {
+      return {
+        data: {
+          timer: { isRunning: false },
+        },
+      };
+    }
+    throw error;
+  }
+};

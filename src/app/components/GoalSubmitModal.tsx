@@ -7,7 +7,11 @@ interface GoalSubmitModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (amount: number) => void;
-  targetAmount: number;
+
+  totalTargetAmount: number;
+  dailyTargetAmount: number;
+
+  currentAmount: number;
   unit: string;
   isPending: boolean;
   goalTitle: string;
@@ -17,25 +21,34 @@ export default function GoalSubmitModal({
   isOpen,
   onClose,
   onSubmit,
-  targetAmount,
+  totalTargetAmount,
+  dailyTargetAmount,
+  currentAmount,
   unit,
   isPending,
   goalTitle,
 }: GoalSubmitModalProps) {
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      setInputValue(undefined);
+      setInputValue(currentAmount);
+      setIsSubmitting(false);
     }
-  }, [isOpen]);
+  }, [isOpen, currentAmount]);
 
   if (!isOpen) return null;
 
   const handleSubmit = () => {
-    if (isPending || inputValue === undefined || inputValue <= 0) return;
+    if (isPending || isSubmitting || inputValue === undefined) return;
+
+    setIsSubmitting(true);
     onSubmit(inputValue);
   };
+
+  const isSubmitDisabled =
+    isPending || isSubmitting || inputValue === undefined;
 
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
@@ -51,7 +64,7 @@ export default function GoalSubmitModal({
 
         <div className="flex flex-col w-full gap-2">
           <span className="text-sm font-bold text-orange-500 text-center bg-orange-50 py-1.5 rounded-md">
-            오늘의 총 목표량: {targetAmount} {unit}
+            총 목표량: {totalTargetAmount} {unit}
           </span>
 
           <div className="flex items-center justify-center gap-4 text-black font-bold mt-2 w-full">
@@ -70,7 +83,8 @@ export default function GoalSubmitModal({
             />
 
             <span className="text-4xl font-light text-gray-400">/</span>
-            <span className="text-4xl">{targetAmount}</span>
+
+            <span className="text-4xl">{dailyTargetAmount}</span>
             <span className="text-2xl pt-2">{unit}</span>
           </div>
         </div>
@@ -78,10 +92,10 @@ export default function GoalSubmitModal({
         <div className="w-full flex gap-3 mt-4">
           <button
             onClick={handleSubmit}
-            disabled={isPending || inputValue === undefined || inputValue <= 0}
+            disabled={isSubmitDisabled}
             className="flex-1 py-4 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-lg"
           >
-            {isPending ? '제출 중...' : '제출하고 종료하기'}
+            {isPending || isSubmitting ? '제출 중...' : '제출하고 종료하기'}
           </button>
 
           <button
