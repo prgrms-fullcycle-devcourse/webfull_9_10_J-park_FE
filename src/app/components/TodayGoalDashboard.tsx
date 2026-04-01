@@ -7,14 +7,6 @@ import GoalSubmitModal from './GoalSubmitModal';
 import { TodayGoal as GoalType } from '@/types/goal';
 import { useTodayGoalController } from '@/hooks/useTodayGoalController';
 
-const GOAL_COLORS = [
-  'bg-red-500',
-  'bg-orange-400',
-  'bg-green-400',
-  'bg-blue-400',
-  'bg-purple-400',
-];
-
 export default function TodayGoalDashboard() {
   const {
     goals,
@@ -76,7 +68,6 @@ export default function TodayGoalDashboard() {
               <TodayGoalItem
                 key={goal.id}
                 goal={goal}
-                colorClass={GOAL_COLORS[index % GOAL_COLORS.length]}
                 isPlaying={playingId === goal.id}
                 onPlayClick={handlePlayClick}
                 onDragStart={(e) => handleDragStart(e, index)}
