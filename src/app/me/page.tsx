@@ -41,11 +41,11 @@ export default function MePage() {
     return;
   }
 
-  const { nickname, createdAt, totalTime, goals } = userInfo.data;
+  const { totalTime, goals } = userInfo.data;
 
   return (
     <div
-      className="relative flex flex-col gap-4 bg-slate-200 overflow-auto scrollbar-hide min-h-full max-h-full"
+      className="relative flex flex-col gap-4 bg-slate-200 overflow-auto scrollbar-hide max-h-screen"
       style={{
         backgroundImage: `url(${DEFAULT_PROFILE_IMG_URL})`,
         backgroundRepeat: 'no-repeat',
