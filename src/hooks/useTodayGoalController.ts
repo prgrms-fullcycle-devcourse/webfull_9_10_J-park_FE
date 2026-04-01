@@ -63,7 +63,8 @@ export const useTodayGoalController = () => {
     e.stopPropagation();
 
     if (playingId === goalId) {
-      router.push(`/goals/${goalId}/${dailyId}`);
+      setPendingGoal(null);
+      setIsModalOpen(true);
     } else if (playingId && playingId !== goalId) {
       setPendingGoal({ goalId, dailyId });
       setIsModalOpen(true);
