@@ -52,13 +52,15 @@ export default function GoalDetailInformation({
   const [newTotalAmount, setNewTotalAmount] = useState(totalAmount.toString());
   const [newStartDate] = useState(() => {
     const s = new Date(startDate);
-    return new CalendarDate(s.getFullYear(), s.getMonth(), s.getDay());
+    console.log();
+    return new CalendarDate(s.getFullYear(), s.getMonth() + 1, s.getDate());
   });
   const [newEndDate, setNewEndDate] = useState(() => {
     const e = new Date(endDate);
-    return new CalendarDate(e.getFullYear(), e.getMonth(), e.getDay());
+    return new CalendarDate(e.getFullYear(), e.getMonth() + 1, e.getDate());
   });
 
+  console.log(newStartDate, newEndDate);
   useEffect(() => {
     if (isSuccess) {
       addToast({
@@ -97,7 +99,6 @@ export default function GoalDetailInformation({
         </div>
         <RangeCalendar
           calendarWidth="full"
-          minValue={newStartDate}
           classNames={{ content: 'bg-content1' }}
           nextButtonProps={{
             variant: 'bordered',
@@ -121,6 +122,7 @@ export default function GoalDetailInformation({
           onPress={() =>
             mutate({
               totalAmount: Number(newTotalAmount),
+              startDate: newStartDate.toString(),
               endDate: newEndDate.toString(),
             })
           }
