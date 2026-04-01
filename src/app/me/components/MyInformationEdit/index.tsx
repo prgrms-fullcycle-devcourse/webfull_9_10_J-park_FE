@@ -11,6 +11,7 @@ import { LuUser } from 'react-icons/lu';
 interface Props {
   userInfo: {
     nickname: string;
+    createdAt: string;
   };
 }
 export default function MyInformationEdit({ userInfo }: Props) {
@@ -49,36 +50,31 @@ export default function MyInformationEdit({ userInfo }: Props) {
   }, [isEditing]);
 
   return (
-    <Card>
-      <CardBody>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <LuUser size={20} className="text-slate-400 mr-2" />
-            <Input
-              size="lg"
-              variant="bordered"
-              defaultValue={username}
-              onValueChange={setUsername}
-              ref={inputRef}
-              className={`${isEditing ? '' : 'hidden'}`}
-            />
-            <p
-              className={`${isEditing ? 'hidden' : ''}`}
-              style={{ lineHeight: 0 }}
-            >
-              {username}
-            </p>
-          </div>
-          <Button
-            size="sm"
-            radius="full"
-            className={`${isEditing ? 'bg-success-400 text-white text-md' : 'bg-gray-200  text-md'}`}
-            onPress={() => handleOnClickEdit()}
-          >
-            {isEditing ? '저장' : '수정'}
-          </Button>
-        </div>
-      </CardBody>
-    </Card>
+    <div className="flex bg-white rounded-t-2xl justify-between items-center p-6">
+      <div>
+        <small className="text-gray-600">{userInfo.createdAt}</small>
+        <Input
+          variant="bordered"
+          defaultValue={username}
+          onValueChange={setUsername}
+          ref={inputRef}
+          className={`${isEditing ? '' : 'hidden'}`}
+          classNames={{
+            input: 'font-black text-2xl border-none',
+            inputWrapper: 'border-none shadow-none min-h-8 h-8',
+          }}
+        />
+        <p className={`${isEditing ? 'hidden' : ''} font-black text-2xl`}>
+          {username}
+        </p>
+      </div>
+      <Button
+        radius="full"
+        className={`${isEditing ? 'bg-success-400 text-white text-md' : 'bg-gray-200  text-md'}`}
+        onPress={() => handleOnClickEdit()}
+      >
+        {isEditing ? '저장' : '수정'}
+      </Button>
+    </div>
   );
 }
