@@ -10,7 +10,6 @@ import { TodayGoal as GoalType } from '@/types/goal';
 
 interface TodayGoalItemProps {
   goal: GoalType;
-  colorClass: string;
   isPlaying: boolean;
   onPlayClick: (e: React.MouseEvent, goalId: number, dailyId: number) => void;
   onDragStart: (e: React.DragEvent) => void;
@@ -20,7 +19,6 @@ interface TodayGoalItemProps {
 
 export default function TodayGoalItem({
   goal,
-  colorClass,
   isPlaying,
   onPlayClick,
   onDragStart,
@@ -47,7 +45,7 @@ export default function TodayGoalItem({
 
   return (
     <Link
-      href={`/goals/${goal.id}`}
+      href={`/goals/${goal.id}/${goal.dailyId}`}
       className="flex w-full bg-white border-b last:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors cursor-grab active:cursor-grabbing text-foreground"
       draggable
       onDragStart={onDragStart}
@@ -56,8 +54,6 @@ export default function TodayGoalItem({
       onDragOver={(e) => e.preventDefault()}
     >
       <div className="flex w-full pointer-events-none">
-        <div className={`w-3 ${colorClass}`} />
-
         <div className="flex flex-1 items-center justify-between p-4">
           <div className="flex flex-col items-start gap-1">
             <div className="flex items-center gap-3">

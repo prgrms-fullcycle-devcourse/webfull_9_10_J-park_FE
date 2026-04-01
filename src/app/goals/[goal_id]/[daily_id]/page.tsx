@@ -64,8 +64,10 @@ export default function DailyGoalDetailPage({
 
         <hr className="border-gray-500" />
 
-        <TodayGoalDailyDetail />
-
+        <TodayGoalDailyDetail
+          currentAmount={currentGoal?.currentAmount || 0}
+          targetAmount={currentGoal?.targetAmount || 0}
+        />
         {todayGoals.length > 0 ? (
           <DailyGoalList goals={todayGoals} />
         ) : (

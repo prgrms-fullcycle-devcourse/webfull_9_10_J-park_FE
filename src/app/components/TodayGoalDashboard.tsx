@@ -5,16 +5,7 @@ import { Card } from '@heroui/react';
 import TodayGoalItem from './TodayGoalItem';
 import GoalSubmitModal from './GoalSubmitModal';
 import { TodayGoal as GoalType } from '@/types/goal';
-
 import { useTodayGoalController } from '@/hooks/useTodayGoalController';
-
-const GOAL_COLORS = [
-  'bg-red-500',
-  'bg-orange-400',
-  'bg-green-400',
-  'bg-blue-400',
-  'bg-purple-400',
-];
 
 export default function TodayGoalDashboard() {
   const {
@@ -34,6 +25,9 @@ export default function TodayGoalDashboard() {
   useEffect(() => {
     setLocalGoals(goals);
   }, [goals]);
+
+  const totalCount = localGoals.length;
+  const completedCount = localGoals.filter((g) => g.completed).length;
 
   const playingGoal = localGoals.find((g) => g.id === playingId);
 
@@ -61,7 +55,12 @@ export default function TodayGoalDashboard() {
   return (
     <>
       <Card className="w-full p-5 bg-white shadow-md border-none" radius="lg">
-        <h2 className="text-lg font-bold mb-4 text-gray-800">오늘의 목표</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-gray-800">오늘의 목표</h2>
+          <span className="text-sm font-semibold text-green-500 bg-green-50 px-3 py-1 rounded-full">
+            {completedCount}/{totalCount} 달성!
+          </span>
+        </div>
 
         <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
           {localGoals.length > 0 ? (
@@ -69,7 +68,6 @@ export default function TodayGoalDashboard() {
               <TodayGoalItem
                 key={goal.id}
                 goal={goal}
-                colorClass={GOAL_COLORS[index % GOAL_COLORS.length]}
                 isPlaying={playingId === goal.id}
                 onPlayClick={handlePlayClick}
                 onDragStart={(e) => handleDragStart(e, index)}

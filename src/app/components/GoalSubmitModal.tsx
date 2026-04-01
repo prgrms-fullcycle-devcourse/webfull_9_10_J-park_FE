@@ -49,24 +49,30 @@ export default function GoalSubmitModal({
           </p>
         </div>
 
-        <div className="flex items-center justify-center gap-4 text-black font-bold mt-2 w-full">
-          <NumberInput
-            value={inputValue}
-            onValueChange={setInputValue}
-            minValue={0}
-            variant="bordered"
-            placeholder="0"
-            aria-label="공부량 입력"
-            classNames={{
-              base: 'w-32',
-              inputWrapper: 'h-16',
-              input: 'text-3xl font-bold text-center',
-            }}
-          />
+        <div className="flex flex-col w-full gap-2">
+          <span className="text-sm font-bold text-orange-500 text-center bg-orange-50 py-1.5 rounded-md">
+            오늘의 총 목표량: {targetAmount} {unit}
+          </span>
 
-          <span className="text-4xl font-light text-gray-400">/</span>
-          <span className="text-4xl">{targetAmount}</span>
-          <span className="text-2xl pt-2">{unit}</span>
+          <div className="flex items-center justify-center gap-4 text-black font-bold mt-2 w-full">
+            <NumberInput
+              value={inputValue}
+              onValueChange={setInputValue}
+              minValue={0}
+              variant="bordered"
+              placeholder="0"
+              aria-label="공부량 입력"
+              classNames={{
+                base: 'w-32',
+                inputWrapper: 'h-16',
+                input: 'text-3xl font-bold text-center',
+              }}
+            />
+
+            <span className="text-4xl font-light text-gray-400">/</span>
+            <span className="text-4xl">{targetAmount}</span>
+            <span className="text-2xl pt-2">{unit}</span>
+          </div>
         </div>
 
         <div className="w-full flex gap-3 mt-4">
