@@ -2,10 +2,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Card } from '@heroui/react';
+import { useQuery } from '@tanstack/react-query';
 import TodayGoalItem from './TodayGoalItem';
 import GoalSubmitModal from './GoalSubmitModal';
 import { TodayGoal as GoalType } from '@/types/goal';
 import { useTodayGoalController } from '@/hooks/useTodayGoalController';
+import { fetchGoalDetail } from '@/api/goalApi';
 
 export default function TodayGoalDashboard() {
   const {
@@ -30,6 +32,14 @@ export default function TodayGoalDashboard() {
   const completedCount = localGoals.filter((g) => g.completed).length;
 
   const playingGoal = localGoals.find((g) => g.id === playingId);
+
+  const { data: detailData } = useQuery({
+    queryKey: ['goalDetail', playingId],
+    queryFn: () => fetchGoalDetail(playingId!),
+    enabled: isModalOpen && playingId !== null,
+  });
+
+  const fetchedTotalAmount = detailData?.data?.progress?.targetAmount || 0;
 
   const handleDragStart = (e: React.DragEvent, position: number) => {
     dragItem.current = position;
@@ -68,7 +78,7 @@ export default function TodayGoalDashboard() {
               <TodayGoalItem
                 key={goal.id}
                 goal={goal}
-                isPlaying={playingId === goal.id}
+                isPlaying={playingId === goal.id && !isModalOpen}
                 onPlayClick={handlePlayClick}
                 onDragStart={(e) => handleDragStart(e, index)}
                 onDragEnter={(e) => handleDragEnter(e, index)}
@@ -88,7 +98,9 @@ export default function TodayGoalDashboard() {
           isOpen={isModalOpen}
           onClose={closeAndClearModal}
           onSubmit={(amount: number) => endMutation.mutate(amount)}
-          targetAmount={playingGoal.targetAmount}
+          totalTargetAmount={fetchedTotalAmount}
+          dailyTargetAmount={playingGoal.targetAmount}
+          currentAmount={playingGoal.currentAmount}
           unit={playingGoal.unit}
           isPending={endMutation.isPending}
           goalTitle={playingGoal.title}
