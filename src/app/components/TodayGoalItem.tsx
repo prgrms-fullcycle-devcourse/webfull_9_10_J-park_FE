@@ -45,7 +45,7 @@ export default function TodayGoalItem({
 
   return (
     <Link
-      href={`/goals/${goal.id}`}
+      href={`/goals/${goal.id}/${goal.dailyId}`}
       className="flex w-full bg-white border-b last:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors cursor-grab active:cursor-grabbing text-foreground"
       draggable
       onDragStart={onDragStart}
