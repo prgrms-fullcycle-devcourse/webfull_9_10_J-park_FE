@@ -20,6 +20,9 @@ interface DailyGoalTimerProps {
   initialStudyTime: number;
   targetAmount?: number;
   unit?: string;
+
+  totalTargetAmount: number;
+  currentTotalAmount: number;
 }
 
 export default function DailyGoalTimer({
@@ -29,6 +32,9 @@ export default function DailyGoalTimer({
   initialStudyTime,
   targetAmount = 0,
   unit = '',
+
+  totalTargetAmount,
+  currentTotalAmount,
 }: DailyGoalTimerProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -100,6 +106,7 @@ export default function DailyGoalTimer({
     }
   };
 
+  // 💡 여기서부터 UI 렌더링 부분은 질문자님의 원본 코드와 100% 똑같습니다!
   return (
     <>
       <div className="flex items-center justify-between mb-8 relative">
@@ -127,7 +134,9 @@ export default function DailyGoalTimer({
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={(amount) => endMutation.mutate(amount)}
-        targetAmount={targetAmount}
+        totalTargetAmount={totalTargetAmount}
+        dailyTargetAmount={targetAmount}
+        currentAmount={currentTotalAmount}
         unit={unit}
         isPending={endMutation.isPending}
         goalTitle={goalTitle}
