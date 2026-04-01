@@ -64,6 +64,7 @@ export default function DailyGoalList({ dailyProgress }: Props) {
                   size="lg"
                   key={date}
                   as={Link}
+                  radius="none"
                   className="shrink-0 h-full py-1 px-0"
                 >
                   <div
@@ -93,7 +94,10 @@ export default function DailyGoalList({ dailyProgress }: Props) {
                           color={progressColor}
                           value={completedAmount}
                           showValueLabel={true}
-                          label={`현재 ${completedAmount}/${targetAmount} 페이지 완료`}
+                          classNames={{
+                            label: 'w-full truncate ',
+                          }}
+                          label={`${completedAmount} / ${targetAmount} 페이지 완료`}
                           maxValue={targetAmount}
                         />
                       </div>
