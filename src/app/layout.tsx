@@ -39,7 +39,7 @@ export default async function RootLayout({
             <div className={mobileClasses}>
               <main className={`overflow-y-auto scrollbar-hide`}>
                 {children}
-                <div style={{ minHeight: STYLE.NAVBAR_HEIGHT }}></div>
+                {/* <div style={{ minHeight: STYLE.NAVBAR_HEIGHT }}></div> */}
               </main>
               <NavigationBar />
             </div>
