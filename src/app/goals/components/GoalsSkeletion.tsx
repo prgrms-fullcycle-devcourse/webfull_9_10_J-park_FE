@@ -12,8 +12,8 @@ export default function GoalsSkeleton({ size = 4 }: Props) {
         <CardBody className="flex flex-col gap-2">
           {Array(size)
             .fill(0)
-            .map(() => (
-              <>
+            .map((_, i) => (
+              <div key={'goals-' + i}>
                 <Skeleton className="w-full min-h-6 rounded-lg" />
                 <Skeleton className="w-36 min-h-4 rounded-lg" />
                 <div className="flex flex-col gap-2 bg-slate-50 rounded-2xl p-4">
@@ -26,7 +26,7 @@ export default function GoalsSkeleton({ size = 4 }: Props) {
                   </div>
                   <Skeleton className="w-full min-h-12 rounded-2xl mt-2" />
                 </div>
-              </>
+              </div>
             ))}
         </CardBody>
       </Card>
