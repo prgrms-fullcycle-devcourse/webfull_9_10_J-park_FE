@@ -9,6 +9,7 @@ import {
   Divider,
   Link,
   Progress,
+  ScrollShadow,
 } from '@heroui/react';
 
 const MINUTE_MILISECONDS = 60000;
@@ -40,7 +41,7 @@ export default function DailyGoalList({ dailyProgress }: Props) {
     <Card fullWidth id="daily-goal-list">
       <CardHeader className="font-bold">할당량 리스트</CardHeader>
       <CardBody>
-        <div className="flex flex-col max-h-100 gap-4 overflow-auto scrollbar-hide shadow-[inset_0_10px_10px_-15px_rgba(0,0,0,0.3),inset_0_-10px_10px_-15px_rgba(0,0,0,0.3)]">
+        <ScrollShadow className="flex flex-col max-h-100 gap-4 scrollbar-hide">
           {dailyProgress.map(
             ({
               date,
@@ -113,7 +114,7 @@ export default function DailyGoalList({ dailyProgress }: Props) {
               );
             },
           )}
-        </div>
+        </ScrollShadow>
       </CardBody>
     </Card>
   );
