@@ -84,38 +84,41 @@ export default function MePage() {
           <div className="text-sm text-gray-600 mb-4 mx-6">
             오늘해야 할 목표들
           </div>
-          {goals.map((goal) => (
-            <Button
-              key={goal.id}
-              as={Link}
-              href={`goals/${goal.id}`}
-              variant="light"
-              radius="none"
-              className="w-full h-full flex items-center gap-4 shrink-0 px-6 py-4"
-            >
+          {goals.length > 0 &&
+            goals.map((goal) => (
               <Button
-                radius="full"
-                className="p-0 hover:cursor-default bg-primary"
-                isIconOnly
-                disableAnimation
-                disableRipple
+                key={goal.id}
+                as={Link}
+                href={`goals/${goal.id}`}
+                variant="light"
+                radius="none"
+                className="w-full h-full flex items-center gap-4 shrink-0 px-6 py-4"
               >
-                <FcSurvey size={24} />
+                <Button
+                  radius="full"
+                  className="p-0 hover:cursor-default bg-primary"
+                  isIconOnly
+                  disableAnimation
+                  disableRipple
+                >
+                  <FcSurvey size={24} />
+                </Button>
+                <div className="flex w-full justify-between">
+                  <div>
+                    <p className="truncate font-black text-xl -mb-2">
+                      {goal.title}
+                    </p>
+                    <small className="text-gray-600">번호 {goal.id}</small>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-black text-xl -mb-2">
+                      {goal.todayQuota}
+                    </p>
+                    <small className="text-gray-600">할당량</small>
+                  </div>
+                </div>
               </Button>
-              <div className="flex w-full justify-between">
-                <div>
-                  <p className="truncate font-black text-xl -mb-2">
-                    {goal.title}
-                  </p>
-                  <small className="text-gray-600">번호 {goal.id}</small>
-                </div>
-                <div className="text-right">
-                  <p className="font-black text-xl -mb-2">{goal.todayQuota}</p>
-                  <small className="text-gray-600">할당량</small>
-                </div>
-              </div>
-            </Button>
-          ))}
+            ))}
         </div>
       </div>
       <IconCropperModal
