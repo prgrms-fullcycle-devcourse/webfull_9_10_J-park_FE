@@ -31,7 +31,7 @@ export default function GoalProgression({ progress, period }: Props) {
   return (
     <Card fullWidth id="goal-progression">
       <CardBody className="pb-12">
-        <div className="flex justify-between">
+        <div className="flex w-full overflow-clip justify-between">
           <div>
             <p className="font-bold">현재 진행도</p>
             <p>
@@ -46,17 +46,20 @@ export default function GoalProgression({ progress, period }: Props) {
           </span>
         </div>
         <Progress color="success" size="lg" value={value} />
-        <div className="relative">
+        <div className="relative w-full">
           <span
             className="absolute transition-all duration-500 ease-in-out"
-            style={{ left: `${Math.max(0, value - 3)}%` }}
+            style={{
+              left: `${Math.min(value, 90)}%`,
+              opacity: `${90 - Math.min(value, 90)}%`,
+            }}
           >
             <p className="font-bold -mb-2">{value}</p>
-            <small>{unit}</small>
+            <small className="text-xs">{unit}</small>
           </span>
-          <span className="absolute right-0">
+          <span className="absolute right-0 bg-white">
             <p className="font-bold -mb-2">{targetAmount}</p>
-            <small>{unit}</small>
+            <small className="text-xs">{unit}</small>
           </span>
         </div>
       </CardBody>
