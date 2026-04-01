@@ -52,7 +52,7 @@ export default function GoalDetailInformation({
   const [newTotalAmount, setNewTotalAmount] = useState(totalAmount.toString());
   const [newStartDate] = useState(() => {
     const s = new Date(startDate);
-    console.log();
+
     return new CalendarDate(s.getFullYear(), s.getMonth() + 1, s.getDate());
   });
   const [newEndDate, setNewEndDate] = useState(() => {
@@ -60,7 +60,6 @@ export default function GoalDetailInformation({
     return new CalendarDate(e.getFullYear(), e.getMonth() + 1, e.getDate());
   });
 
-  console.log(newStartDate, newEndDate);
   useEffect(() => {
     if (isSuccess) {
       addToast({
@@ -94,7 +93,7 @@ export default function GoalDetailInformation({
             labelPlacement="inside"
             value={newTotalAmount}
             onValueChange={setNewTotalAmount}
-            endContent={<span>{unit}</span>}
+            endContent={<p className="shrink-0 text-gray-400">{unit}</p>}
           />
         </div>
         <RangeCalendar
