@@ -12,7 +12,13 @@ import { TodayGoal as GoalType } from '@/types/goal';
 export const useTodayGoalController = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { playingId, startTimer: localStartTimer } = useTimerStore();
+
+  const {
+    playingId,
+    startTimer: localStartTimer,
+    stopTimer: localStopTimer,
+    clearRecordedTime,
+  } = useTimerStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingGoal, setPendingGoal] = useState<{
@@ -45,7 +51,27 @@ export const useTodayGoalController = () => {
         isPaused: false,
       }),
     onSuccess: () => {
+      const stoppedGoalId = playingId;
+      localStopTimer();
+      if (stoppedGoalId) clearRecordedTime(stoppedGoalId);
+
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+
+      if (pendingGoal) {
+        startMutation.mutate(pendingGoal);
+      }
+      setIsModalOpen(false);
+      setPendingGoal(null);
+    },
+    onError: (error) => {
+      console.error('타이머 종료 실패 (상태 강제 동기화 진행):', error);
+
+      const stoppedGoalId = playingId;
+      localStopTimer();
+      if (stoppedGoalId) clearRecordedTime(stoppedGoalId);
+
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+
       if (pendingGoal) {
         startMutation.mutate(pendingGoal);
       }

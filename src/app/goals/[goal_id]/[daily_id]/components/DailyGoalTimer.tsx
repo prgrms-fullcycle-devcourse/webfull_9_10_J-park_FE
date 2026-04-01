@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // 💡 react-router가 아닌 next/navigation을 잘 사용하고 계십니다!
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTimerStore } from '@/stores/useTimerStore';
 import { formatMilliseconds } from '@/lib/utils';
 import GoalPlayButton from '@/components/GoalPlayButton';
+import { useSyncedTime } from '@/hooks/useSyncedTime';
 
 import {
   startTimer as apiStartTimer,
@@ -43,27 +44,19 @@ export default function DailyGoalTimer({
     stopTimer: localStopTimer,
     startTimer: localStartTimer,
     recordedTimes,
+    clearRecordedTime,
   } = useTimerStore();
 
-  const baseTime = initialStudyTime + (recordedTimes[goalId] || 0);
-  const [liveMs, setLiveMs] = useState(baseTime);
-  const isPlaying = playingId === goalId;
-
+  const currentGlobalTime = useSyncedTime();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
+  const baseTime = initialStudyTime + (recordedTimes[goalId] || 0);
+  const isPlaying = playingId === goalId;
 
-    if (isPlaying && startTime) {
-      interval = setInterval(() => {
-        setLiveMs(baseTime + (Date.now() - startTime));
-      }, 1000);
-    } else {
-      setLiveMs(baseTime);
-    }
-
-    return () => clearInterval(interval);
-  }, [isPlaying, startTime, baseTime]);
+  const liveMs =
+    isPlaying && startTime
+      ? baseTime + (currentGlobalTime - startTime)
+      : baseTime;
 
   const startMutation = useMutation({
     mutationFn: () => apiStartTimer({ goalId }),
@@ -84,11 +77,27 @@ export default function DailyGoalTimer({
       }),
     onSuccess: () => {
       localStopTimer();
+      clearRecordedTime(goalId);
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['runningTimer', goalId] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
 
       setIsModalOpen(false);
+
+      router.push('/');
+    },
+
+    onError: (error: any) => {
+      console.error('타이머 종료 실패 (상태 강제 동기화 진행):', error);
+
+      localStopTimer();
+      clearRecordedTime(goalId);
+      setIsModalOpen(false);
+
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['runningTimer', goalId] });
+      queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+
       router.push('/');
     },
   });
