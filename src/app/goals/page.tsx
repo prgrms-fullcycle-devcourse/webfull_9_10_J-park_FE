@@ -44,7 +44,7 @@ export default function Goals() {
       <Page.Title>전체 목표</Page.Title>
       {data && data.length > 0 ? (
         <Card>
-          <CardBody>
+          <CardBody className=" scrollbar-hide">
             <Accordion
               className="w-full"
               selectionMode="multiple"
