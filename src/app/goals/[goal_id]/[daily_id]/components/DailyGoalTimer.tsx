@@ -11,7 +11,7 @@ import {
   startTimer as apiStartTimer,
   endTimer as apiEndTimer,
 } from '@/api/timerApi';
-import GoalSubmitModal from '../../../../components/GoalSubmitModal';
+import GoalSubmitModal from '@/app/components/GoalSubmitModal';
 
 interface DailyGoalTimerProps {
   goalId: number;
@@ -20,7 +20,6 @@ interface DailyGoalTimerProps {
   initialStudyTime: number;
   targetAmount?: number;
   unit?: string;
-
   totalTargetAmount: number;
   currentTotalAmount: number;
 }
@@ -32,7 +31,6 @@ export default function DailyGoalTimer({
   initialStudyTime,
   targetAmount = 0,
   unit = '',
-
   totalTargetAmount,
   currentTotalAmount,
 }: DailyGoalTimerProps) {
@@ -106,7 +104,6 @@ export default function DailyGoalTimer({
     }
   };
 
-  // 💡 여기서부터 UI 렌더링 부분은 질문자님의 원본 코드와 100% 똑같습니다!
   return (
     <>
       <div className="flex items-center justify-between mb-8 relative">
@@ -126,7 +123,10 @@ export default function DailyGoalTimer({
             startMutation.isPending || endMutation.isPending ? 'opacity-50' : ''
           }`}
         >
-          <GoalPlayButton isPlaying={isPlaying} onClick={handleToggleTimer} />
+          <GoalPlayButton
+            isPlaying={isPlaying && !isModalOpen}
+            onClick={handleToggleTimer}
+          />
         </div>
       </div>
 

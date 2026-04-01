@@ -41,23 +41,14 @@ export default function GoalSubmitModal({
   if (!isOpen) return null;
 
   const handleSubmit = () => {
-    if (
-      isPending ||
-      isSubmitting ||
-      inputValue === undefined ||
-      inputValue === currentAmount
-    )
-      return;
+    if (isPending || isSubmitting || inputValue === undefined) return;
 
     setIsSubmitting(true);
     onSubmit(inputValue);
   };
 
   const isSubmitDisabled =
-    isPending ||
-    isSubmitting ||
-    inputValue === undefined ||
-    inputValue === currentAmount;
+    isPending || isSubmitting || inputValue === undefined;
 
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 px-4">

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Card } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import TodayGoalItem from './TodayGoalItem';
-import GoalSubmitModal from './GoalSubmitModal';
+import GoalSubmitModal from '@/app/components/GoalSubmitModal';
 import { TodayGoal as GoalType } from '@/types/goal';
 import { useTodayGoalController } from '@/hooks/useTodayGoalController';
 import { fetchGoalDetail } from '@/api/goalApi';
@@ -40,6 +40,8 @@ export default function TodayGoalDashboard() {
   });
 
   const fetchedTotalAmount = detailData?.data?.progress?.targetAmount || 0;
+  const fetchedCurrentTotalAmount =
+    detailData?.data?.progress?.currentAmount || 0;
 
   const handleDragStart = (e: React.DragEvent, position: number) => {
     dragItem.current = position;
@@ -100,7 +102,7 @@ export default function TodayGoalDashboard() {
           onSubmit={(amount: number) => endMutation.mutate(amount)}
           totalTargetAmount={fetchedTotalAmount}
           dailyTargetAmount={playingGoal.targetAmount}
-          currentAmount={playingGoal.currentAmount}
+          currentAmount={fetchedCurrentTotalAmount || playingGoal.currentAmount}
           unit={playingGoal.unit}
           isPending={endMutation.isPending}
           goalTitle={playingGoal.title}
