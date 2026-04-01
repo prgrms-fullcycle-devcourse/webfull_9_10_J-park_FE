@@ -52,14 +52,13 @@ export default function GoalDetailInformation({
   const [newTotalAmount, setNewTotalAmount] = useState(totalAmount.toString());
   const [newStartDate] = useState(() => {
     const s = new Date(startDate);
-
     return new CalendarDate(s.getFullYear(), s.getMonth() + 1, s.getDate());
   });
   const [newEndDate, setNewEndDate] = useState(() => {
     const e = new Date(endDate);
     return new CalendarDate(e.getFullYear(), e.getMonth() + 1, e.getDate());
   });
-
+  const [hasChanged, setHasChanged] = useState(false);
   useEffect(() => {
     if (isSuccess) {
       addToast({
@@ -92,7 +91,10 @@ export default function GoalDetailInformation({
             label="총량"
             labelPlacement="inside"
             value={newTotalAmount}
-            onValueChange={setNewTotalAmount}
+            onValueChange={(v) => {
+              setNewTotalAmount(v);
+              setHasChanged(true);
+            }}
             endContent={<p className="shrink-0 text-gray-400">{unit}</p>}
           />
         </div>
@@ -108,6 +110,7 @@ export default function GoalDetailInformation({
           value={{ start: newStartDate, end: newEndDate }}
           onChange={(value) => {
             setNewEndDate(value.end);
+            setHasChanged(true);
           }}
         />
       </CardBody>
@@ -117,7 +120,7 @@ export default function GoalDetailInformation({
           color="success"
           className="text-white"
           isLoading={isPending}
-          isDisabled={isPending}
+          isDisabled={isPending || !hasChanged}
           onPress={() =>
             mutate({
               totalAmount: Number(newTotalAmount),
