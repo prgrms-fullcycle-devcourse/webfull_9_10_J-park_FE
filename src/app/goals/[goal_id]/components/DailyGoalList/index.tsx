@@ -15,7 +15,9 @@ import {
 const MINUTE_MILISECONDS = 60000;
 
 interface Props {
+  goalID: number;
   dailyProgress: {
+    dailyId: number;
     date: string;
     isCompleted: boolean;
     targetAmount: number;
@@ -25,7 +27,7 @@ interface Props {
   }[];
 }
 
-export default function DailyGoalList({ dailyProgress }: Props) {
+export default function DailyGoalList({ goalID, dailyProgress }: Props) {
   const todayRef = useRef<HTMLDivElement | null>(null);
 
   // useEffect(() => {
@@ -50,6 +52,7 @@ export default function DailyGoalList({ dailyProgress }: Props) {
               completedAmount,
               studyTime,
               isToday,
+              dailyId,
             }) => {
               const currentProg = completedAmount / targetAmount;
               const progressColor =
@@ -65,6 +68,7 @@ export default function DailyGoalList({ dailyProgress }: Props) {
                   size="lg"
                   key={date}
                   as={Link}
+                  href={`/goals/${goalID}/${dailyId}`}
                   radius="none"
                   className="shrink-0 h-full py-1 px-0"
                 >
