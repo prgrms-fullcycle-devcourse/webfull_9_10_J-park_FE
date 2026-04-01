@@ -223,12 +223,12 @@ export default function IconCropperModal({
                     />
                   ) : (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center text-sm text-neutral-600">
-                      <div className="rounded-xl border-2 border-dashed border-neutral-300 bg-white/60 p-6">
+                      <div
+                        className="cursor-pointer rounded-xl border-2 border-dashed border-neutral-300 bg-white/60 p-6"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
                         <div className="font-medium">이미지를 업로드하세요</div>
-                        <div
-                          className="mt-1 text-xs text-neutral-500"
-                          onClick={() => fileInputRef.current?.click()}
-                        >
+                        <div className="mt-1 text-xs text-neutral-500">
                           PNG/JPG, 최대 10MB
                         </div>
                       </div>
