@@ -36,16 +36,15 @@ export const useTimerStore = create<TimerState>()(
       },
 
       stopTimer: () => {
-        const { playingId, startTime, recordedTimes } = get();
+        const { playingId, recordedTimes } = get();
 
-        if (playingId !== null && startTime !== null) {
-          const elapsed = Date.now() - startTime;
+        if (playingId !== null) {
           set({
             playingId: null,
             startTime: null,
             recordedTimes: {
               ...recordedTimes,
-              [playingId]: (recordedTimes[playingId] || 0) + elapsed, // 수첩에 시간 더하기
+              [playingId]: 0,
             },
           });
         }
