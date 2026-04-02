@@ -95,25 +95,27 @@ export default function RankingPage() {
 
   return (
     <div className="relative flex flex-col gap-4 bg-slate-50 overflow-auto scrollbar-hide min-h-screen max-h-screen">
-      <div className="sticky top-0 p-6 pb-0 bg-slate-50 z-50">
-        <Avatar
-          radius="full"
-          className="p-0 hover:cursor-default w-16 h-16 mb-4"
-        />
-        <div className="flex w-full justify-between">
-          <div>
-            <p className="font-black text-xl -mb-2">
-              {myRankData?.totalTime}시간
-            </p>
-            <small className="text-gray-600">내가 공부한 시간</small>
-          </div>
-          <div className="text-right">
-            <p className="truncate font-black text-2xl -mb-2">
-              {myRankData?.rank}위
-            </p>
+      {myRankData && (
+        <div className="animate-fadeIn sticky top-0 p-6 pb-0 bg-slate-50 z-50">
+          <Avatar
+            radius="full"
+            className="p-0 hover:cursor-default w-16 h-16 mb-4"
+          />
+          <div className="flex w-full justify-between">
+            <div>
+              <p className="font-black text-xl -mb-2">
+                {myRankData?.totalTime}시간
+              </p>
+              <small className="text-gray-600">내가 공부한 시간</small>
+            </div>
+            <div className="text-right">
+              <p className="truncate font-black text-2xl -mb-2">
+                {myRankData?.rank}위
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       {myRankData && (
         <RankingList
           status={rankingStatus}
