@@ -8,19 +8,9 @@ import { TodayGoal as GoalType } from '@/types/goal';
 
 interface TodayGoalItemProps {
   goal: GoalType;
-  isPlaying: boolean;
-  onPlayClick: (e: React.MouseEvent, goalId: number, dailyId: number) => void;
-  onDragStart: (e: React.DragEvent) => void;
-  onDragEnter: (e: React.DragEvent) => void;
-  onDragEnd: () => void;
 }
 
-export default function TodayGoalItem({
-  goal,
-  onDragStart,
-  onDragEnter,
-  onDragEnd,
-}: TodayGoalItemProps) {
+export default function TodayGoalItem({ goal }: TodayGoalItemProps) {
   return (
     <Button
       as={Link}
@@ -30,9 +20,6 @@ export default function TodayGoalItem({
       className="h-full px-6 py-4"
       draggable
       radius="none"
-      onDragStart={onDragStart}
-      onDragEnter={onDragEnter}
-      onDragEnd={onDragEnd}
       onDragOver={(e) => e.preventDefault()}
     >
       <div className="flex w-full pointer-events-none">
