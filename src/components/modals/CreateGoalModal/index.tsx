@@ -134,7 +134,7 @@ export default function CreateGoalModal() {
                 classNames={{
                   input:
                     'font-black text-2xl border-none placeholder:text-gray-300',
-                  inputWrapper: 'border-none shadow-none ',
+                  inputWrapper: 'border-none shadow-none min-h-8 h-8 p-0 ',
                 }}
                 placeholder="목표가 뭐에요?"
               />
