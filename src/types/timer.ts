@@ -1,3 +1,5 @@
+import { ApiResponse } from './api';
+
 /** 실행 중인 타이머 정보 조회 (GET /timers) */
 export interface RunningTimerData {
   goalId: number;
@@ -42,10 +44,11 @@ export interface EndTimerRequest {
 export interface EndTimerResponse {
   success: boolean;
   message: string;
-  data: {
-    goalId: number;
-    isTimerRunning: boolean;
-    goalDuration: number;
-    goalProgressRate: number;
-  };
+  data: EndTimer;
 }
+export type EndTimer = {
+  goalId: number;
+  isTimerRunning: boolean;
+  goalDuration: number;
+  goalProgressRate: number;
+};

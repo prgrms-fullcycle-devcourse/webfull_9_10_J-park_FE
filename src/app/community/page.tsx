@@ -96,7 +96,7 @@ export default function RankingPage() {
   return (
     <div className="relative flex flex-col gap-4 bg-slate-50 overflow-auto scrollbar-hide min-h-screen max-h-screen">
       {myRankData && (
-        <div className="animate-fadeIn sticky top-0 p-6 pb-0 bg-slate-50 z-50">
+        <div className="animate-fadeIn sticky top-0 p-6 pb-0 bg-slate-50 z-30">
           <Avatar
             radius="full"
             className="p-0 hover:cursor-default w-16 h-16 mb-4"
