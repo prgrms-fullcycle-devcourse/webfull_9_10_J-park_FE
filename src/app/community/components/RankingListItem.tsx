@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, Button } from '@heroui/react';
+import { Avatar } from '@heroui/react';
 import { FaTrophy, FaMedal } from 'react-icons/fa';
 import { RankingItem } from '@/types/user';
 
@@ -29,7 +29,9 @@ export default function RankingListItem({
   const diffHours = Math.round(timeDiffMS / 60 / 60);
 
   return (
-    <div className={`flex items-center gap-3 px-6 py-2 bg-white`}>
+    <div
+      className={`flex items-center gap-3 px-6 py-2 ${isMyRank ? 'bg-slate-50' : 'bg-white'}`}
+    >
       <small className="text-primary font-black">{item.rank}</small>
 
       <Avatar

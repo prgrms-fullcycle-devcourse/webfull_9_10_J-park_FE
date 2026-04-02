@@ -4,14 +4,12 @@ import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { RankingsResponse, MyProfileResponse, Ranking } from '@/types/user';
-import { formatMilliseconds } from '@/lib/utils';
 
-import RankingHeader from './components/RankingHeader';
 import RankingList from './components/RankingList';
-import MyRankingBar from './components/MyRankingBar';
+
 import { api } from '@/lib/axios';
-import { FcSurvey } from 'react-icons/fc';
-import { Avatar, Button } from '@heroui/react';
+
+import { Avatar } from '@heroui/react';
 
 const fetchRankings = async ({
   pageParam = 1,
@@ -96,7 +94,7 @@ export default function RankingPage() {
   }, [myRanking, profileData]);
 
   return (
-    <div className="relative flex flex-col gap-4 bg-slate-50 overflow-auto scrollbar-hide max-h-screen">
+    <div className="relative flex flex-col gap-4 bg-slate-50 overflow-auto scrollbar-hide min-h-screen max-h-screen">
       <div className="sticky top-0 p-6 pb-0">
         <Avatar
           radius="full"

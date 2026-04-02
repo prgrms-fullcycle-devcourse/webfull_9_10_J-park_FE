@@ -2,9 +2,8 @@
 
 import { Spinner } from '@heroui/react';
 import { RankingItem } from '@/types/user';
-import { formatMilliseconds } from '@/lib/utils';
+
 import RankingListItem from './RankingListItem';
-import RankingListSkeleton from './RankingListSkeleton';
 
 interface Props {
   status: 'pending' | 'error' | 'success';
