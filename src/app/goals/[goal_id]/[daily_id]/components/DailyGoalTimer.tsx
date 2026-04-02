@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // 💡 react-router가 아닌 next/navigation을 잘 사용하고 계십니다!
+import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTimerStore } from '@/stores/useTimerStore';
 import { formatMilliseconds } from '@/lib/utils';
@@ -60,11 +60,27 @@ export default function DailyGoalTimer({
 
   const startMutation = useMutation({
     mutationFn: () => apiStartTimer({ goalId }),
-    onSuccess: () => {
+    onMutate: () => {
       localStartTimer(goalId);
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['runningTimer', goalId] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+    },
+    onError: (error: any) => {
+      const isAlreadyRunning =
+        error.response?.status === 409 ||
+        error.response?.data?.error?.code === 'ALREADY_RUNNING';
+
+      if (isAlreadyRunning) {
+        queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+        queryClient.invalidateQueries({ queryKey: ['runningTimer', goalId] });
+        queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+      } else {
+        localStopTimer();
+        alert('네트워크 오류로 타이머를 시작하지 못했습니다.');
+      }
     },
   });
 
@@ -78,17 +94,16 @@ export default function DailyGoalTimer({
     onSuccess: () => {
       localStopTimer();
       clearRecordedTime(goalId);
+
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['runningTimer', goalId] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
 
       setIsModalOpen(false);
-
       router.push('/');
     },
-
     onError: (error: any) => {
-      console.error('타이머 종료 실패 (상태 강제 동기화 진행):', error);
+      console.error('타이머 종료 실패 (상태 강제 동기화 진행)');
 
       localStopTimer();
       clearRecordedTime(goalId);
