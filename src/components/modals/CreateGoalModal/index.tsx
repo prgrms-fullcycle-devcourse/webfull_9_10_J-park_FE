@@ -34,6 +34,15 @@ export default function CreateGoalModal() {
     today(getLocalTimeZone()).add({ days: 7 }),
   );
 
+  const reset = () => {
+    setTitle(() => undefined);
+    setDetail(() => undefined);
+    setCategoryID(() => undefined);
+    setTotalAmount(() => undefined);
+    setStartDate(today(getLocalTimeZone()));
+    setEndDate(today(getLocalTimeZone()).add({ days: 7 }));
+  };
+
   const { mutate } = useMutation<
     CreateGoalResponse,
     Error,
@@ -56,6 +65,7 @@ export default function CreateGoalModal() {
       });
       queryClient.invalidateQueries({ queryKey: ['goals'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      reset();
     },
     onError: () => {
       addToast({
