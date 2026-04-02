@@ -32,8 +32,7 @@ export default function RankingListItem({
     <div
       className={`flex items-center gap-3 px-6 py-2 ${isMyRank ? 'bg-slate-50' : 'bg-white'}`}
     >
-      <small className="text-primary font-black">{item.rank}</small>
-
+      <small className="text-primary font-black">{item.rank}위</small>
       <Avatar
         src={item.profileImageUrl || undefined}
         className="w-9 h-9 bg-gray-100 "
