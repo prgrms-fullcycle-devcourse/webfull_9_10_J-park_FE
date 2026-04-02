@@ -1,29 +1,28 @@
 'use client';
-import {
-  Accordion,
-  AccordionItem,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Link,
-  Progress,
-  Skeleton,
-} from '@heroui/react';
+import { Button, Link } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 
 import { api } from '@/lib/axios';
 import { Goal, GoalsResponse } from '@/types/api';
-import { Page } from '@/components/ui';
-import DeleteConfirmationModal from './components/DeleteConfirmationModal';
-import GoalsSkeleton from './components/GoalsSkeletion';
+
+import { useEffect, useState } from 'react';
+import { FcSurvey } from 'react-icons/fc';
 
 export default function Goals() {
-  const { data, isError, isLoading } = useQuery<Goal[]>({
+  const [top, setTop] = useState(0);
+
+  const { data, isError } = useQuery<Goal[]>({
     queryKey: ['goals'],
     queryFn: () =>
       api.get<GoalsResponse>('goals').then((res) => res.data.goals),
   });
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setTop(80);
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, []);
 
   if (isError) {
     return (
@@ -35,76 +34,65 @@ export default function Goals() {
     );
   }
 
-  if (isLoading) {
-    return <GoalsSkeleton />;
-  }
-
   return (
-    <div className="flex flex-col h-full p-6 gap-4">
-      <Page.Title>전체 목표</Page.Title>
-      {data && data.length > 0 ? (
-        <Card>
-          <CardBody className=" scrollbar-hide">
-            <Accordion
-              className="w-full"
-              selectionMode="multiple"
-              itemClasses={{ trigger: 'py-2' }}
-              defaultExpandedKeys={data.map((n) => n.id.toString())}
-            >
-              {data.map((goal) => (
-                <AccordionItem
-                  key={goal.id}
-                  title={goal.title}
-                  subtitle={goal.endDate}
-                  classNames={{
-                    content: 'px-4 mb-2 bg-slate-50 rounded-2xl',
-                    title: 'font-bold',
-                    titleWrapper: 'w-full truncate',
-                    subtitle: 'text-slate-400',
-                  }}
+    <div className="relative flex flex-col h-full bg-slate-50 gap-4 min-h-screen max-h-screen">
+      <div className="w-full h-full p-6 flex flex-col">
+        <small className="text-gray-600">등록된 목표들</small>
+        <p className="truncate max-w-full font-black text-2xl -mb-2">
+          {data?.length}개
+        </p>
+      </div>
+      <div
+        className="absolute transition-all duration-500 ease-in-out min-h-full w-full bg-white rounded-t-2xl"
+        style={{
+          top: top,
+        }}
+      >
+        <p className="p-6 pb-2 font-black text-xl">전제 목표</p>
+        {data &&
+          data.length > 0 &&
+          data.map((goal) => (
+            <div key={goal.id}>
+              <small className="px-6">
+                {new Date(goal.endDate).toLocaleDateString('ko-kr', {
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </small>
+              <Button
+                as={Link}
+                href={`goals/${goal.id}`}
+                variant="light"
+                radius="none"
+                className="w-full h-full flex items-center gap-4 px-6 py-4"
+              >
+                <Button
+                  radius="full"
+                  className="p-0 hover:cursor-default bg-primary"
+                  isIconOnly
+                  disableAnimation
+                  disableRipple
                 >
-                  <div className="flex justify-between items-center">
-                    <p className="text-md w-full truncate">
-                      {goal.description}
+                  <FcSurvey size={24} />
+                </Button>
+                <div className="flex w-full justify-between">
+                  <div>
+                    <p className="truncate max-w-full font-black text-xl -mb-2">
+                      {goal.title}
                     </p>
-                    <DeleteConfirmationModal
-                      goalTitle={goal.title}
-                      goalID={goal.id}
-                    />
+                    <small className="text-gray-600">{goal.description}</small>
                   </div>
-                  <div className="w-full flex justify-between items-center gap-2">
-                    <Progress
-                      color="success"
-                      size="sm"
-                      value={goal.progressRate}
-                      label="진행도"
-                      valueLabel={`${goal.progressRate}%`}
-                      showValueLabel={true}
-                      classNames={{ label: 'text-sm', value: 'text-sm' }}
-                      className="col-span-2"
-                    />
+                  <div className="text-right">
+                    <p className="font-black text-xl -mb-2">
+                      {goal.progressRate}%
+                    </p>
+                    <small className="text-gray-600">진행율</small>
                   </div>
-                  <Button
-                    fullWidth
-                    as={Link}
-                    href={`goals/${goal.id}`}
-                    variant="flat"
-                    className="my-2"
-                  >
-                    상세보기
-                  </Button>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </CardBody>
-        </Card>
-      ) : (
-        <div className="flex items-center justify-center w-full rounded-2xl bg-slate-50">
-          <h1 className="text-lg text-slate-400 py-12">
-            현재 등록된 목표가 없습니다
-          </h1>
-        </div>
-      )}
+                </div>
+              </Button>
+            </div>
+          ))}
+      </div>
     </div>
   );
 }
