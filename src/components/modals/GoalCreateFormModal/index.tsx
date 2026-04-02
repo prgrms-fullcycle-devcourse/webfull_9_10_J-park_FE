@@ -130,22 +130,9 @@ export default function GoalCreateFormModal() {
         className="overflow-x-hidden"
       >
         <ModalContent>
-          <ModalHeader className="flex justify-between items-center">
-            <span>
-              {currentStep > 0 && (
-                <Button isIconOnly variant="light" size="sm" onPress={onPrev}>
-                  <FaChevronLeft size={16} />
-                </Button>
-              )}
-              <span>목표 생성하기: {modalTitles[currentStep]}</span>
-            </span>
-            <span className="text-sm text-gray-400">
-              {currentStep + 1}/{MAX_STEPS + 1}
-            </span>
-          </ModalHeader>
           <ModalBody>
             {isSuccess && (
-              <div className="absolute flex flex-col gap-4 items-center justify-center text-2xl top-0 left-0 min-w-full min-h-full z-50 bg-white">
+              <div className="absolute flex flex-col gap-4 items-center justify-center text-2xl top-0 left-0 min-w-full z-50 bg-white">
                 <p>
                   <b className="text-success-400">성공적</b>으로 생성되었습니다!
                 </p>
