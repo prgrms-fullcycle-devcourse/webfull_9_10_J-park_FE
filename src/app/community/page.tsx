@@ -4,12 +4,12 @@ import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { RankingsResponse, MyProfileResponse, Ranking } from '@/types/user';
-import { formatMilliseconds } from '@/lib/utils';
 
-import RankingHeader from './components/RankingHeader';
 import RankingList from './components/RankingList';
-import MyRankingBar from './components/MyRankingBar';
+
 import { api } from '@/lib/axios';
+
+import { Avatar } from '@heroui/react';
 
 const fetchRankings = async ({
   pageParam = 1,
@@ -81,7 +81,7 @@ export default function RankingPage() {
         rank: myRanking,
         nickname: '데이터 확인 중...',
         profileImageUrl: null,
-        totalTime: '00:00:00',
+        totalTime: 0,
       };
     }
 
@@ -89,25 +89,45 @@ export default function RankingPage() {
       rank: myRanking,
       nickname: me.nickname ? String(me.nickname) : '이름 없음',
       profileImageUrl: me.profileImageUrl || null,
-      totalTime: me.totalTime
-        ? formatMilliseconds(Number(me.totalTime))
-        : '00:00:00',
+      totalTime: me.totalTime ? Math.round(Number(me.totalTime) / 60 / 60) : 0,
     };
   }, [myRanking, profileData]);
 
   return (
-    <div className="flex flex-col min-h-screen w-full bg-white relative">
-      <RankingHeader />
+    <div className="relative flex flex-col gap-4 bg-slate-50 overflow-auto scrollbar-hide min-h-screen max-h-screen">
+      {myRankData && (
+        <div className="animate-fadeIn sticky top-0 p-6 pb-0 bg-slate-50 z-50">
+          <Avatar
+            radius="full"
+            className="p-0 hover:cursor-default w-16 h-16 mb-4"
+          />
+          <div className="flex w-full justify-between">
+            <div>
+              <p className="font-black text-xl -mb-2">
+                {myRankData?.totalTime}시간
+              </p>
+              <small className="text-gray-600">내가 공부한 시간</small>
+            </div>
+            <div className="text-right">
+              <p className="truncate font-black text-2xl -mb-2">
+                {myRankData?.rank}위
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      {myRankData && (
+        <RankingList
+          status={rankingStatus}
+          allRanks={allRanks}
+          myRanking={myRanking}
+          myTotalTime={myRankData.totalTime}
+          bottomRef={ref}
+          isFetchingNextPage={isFetchingNextPage}
+        />
+      )}
 
-      <RankingList
-        status={rankingStatus}
-        allRanks={allRanks}
-        myRanking={myRanking}
-        bottomRef={ref}
-        isFetchingNextPage={isFetchingNextPage}
-      />
-
-      <MyRankingBar myRankData={myRankData} />
+      {/* <MyRankingBar myRankData={myRankData} /> */}
     </div>
   );
 }

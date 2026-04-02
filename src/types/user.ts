@@ -4,7 +4,7 @@ export type RankingItem = {
   userId: number;
   nickname: string;
   profileImageUrl: string;
-  totalTime: string;
+  totalTime: number;
 };
 
 /** 전체 랭킹 조회 API 응답 데이터 (GET /rankings) */

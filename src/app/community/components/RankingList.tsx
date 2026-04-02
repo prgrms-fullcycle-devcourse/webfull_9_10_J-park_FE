@@ -2,13 +2,13 @@
 
 import { Spinner } from '@heroui/react';
 import { RankingItem } from '@/types/user';
-import { formatMilliseconds } from '@/lib/utils';
+
 import RankingListItem from './RankingListItem';
-import RankingListSkeleton from './RankingListSkeleton';
 
 interface Props {
   status: 'pending' | 'error' | 'success';
   allRanks: RankingItem[];
+  myTotalTime: number;
   myRanking: number | null;
   bottomRef: (node?: Element | null) => void;
   isFetchingNextPage: boolean;
@@ -18,12 +18,13 @@ export default function RankingList({
   status,
   allRanks,
   myRanking,
+  myTotalTime,
   bottomRef,
   isFetchingNextPage,
 }: Props) {
   // if (true) {
   if (status === 'pending') {
-    return <RankingListSkeleton />;
+    return;
   }
 
   if (status === 'error') {
@@ -35,21 +36,14 @@ export default function RankingList({
   }
 
   return (
-    <div className="flex flex-col w-full pb-[30px]">
+    <div className="animate-fadeIn rounded-t-2xl w-full min-h-dvh bg-white z-20 pt-6">
+      <small className="text-gray-600 p-6">공부시간 랭킹</small>
       {allRanks.map((item, index) => {
-        const safeTime = !item.totalTime
-          ? '00:00:00'
-          : String(item.totalTime).includes(':')
-            ? String(item.totalTime)
-            : formatMilliseconds(Number(item.totalTime));
-
         return (
           <RankingListItem
             key={`rank-${item.rank}-${index}`}
-            item={{
-              ...item,
-              totalTime: safeTime,
-            }}
+            item={item}
+            myTotalTime={myTotalTime}
             isMyRank={item.rank === myRanking}
           />
         );
