@@ -3,6 +3,7 @@ import { STORAGE_KEYS } from '@/constants';
 import { api } from '@/lib/axios';
 import { EndTimer, EndTimerResponse } from '@/types/timer';
 import {
+  addToast,
   Button,
   Modal,
   ModalBody,
@@ -11,16 +12,16 @@ import {
   NumberInput,
   useDisclosure,
 } from '@heroui/react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { FaStop } from 'react-icons/fa6';
 
 interface Props {
-  goalID: string;
+  goalID: number;
   targetAmount: number;
 }
 
 export default function StopTimerModal({ goalID, targetAmount }: Props) {
+  const queryClient = useQueryClient();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [actualAmount, setActualAmount] = useState(() => targetAmount);
   const { mutate, data } = useMutation<
@@ -32,8 +33,13 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
       api
         .post<EndTimerResponse>('/timers/end', { ...params, isPaused: true })
         .then((res) => res.data),
-    onSuccess: () => {
-      localStorage.removeItem(STORAGE_KEYS.startedDailyGoalID);
+    onSuccess: (data) => {
+      addToast({
+        title: '공부를 종료합니다',
+        description: `총 ${data.goalProgressRate}%만큼 진행하셨습니다.`,
+        color: 'success',
+      });
+      queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
     },
   });
   return (
@@ -51,6 +57,7 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
         hideCloseButton
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        placement="top-center"
       >
         <ModalContent>
           <ModalBody>
@@ -68,12 +75,13 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
           <ModalFooter>
             <Button
               color="danger"
-              onPress={() =>
+              onPress={() => {
                 mutate({
                   goalId: Number(goalID),
                   currentCompletedAmount: actualAmount,
-                })
-              }
+                });
+                onClose();
+              }}
             >
               종료하기
             </Button>
