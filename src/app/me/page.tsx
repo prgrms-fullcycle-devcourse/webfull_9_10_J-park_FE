@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { MyProfileResponse, User } from '@/types/user';
-import { addToast, Button, Link, Skeleton, useDisclosure } from '@heroui/react';
+import { addToast, Button, Link, useDisclosure } from '@heroui/react';
 import { FcSurvey } from 'react-icons/fc';
 import { FcClock } from 'react-icons/fc';
 import { MdModeEdit } from 'react-icons/md';
@@ -19,16 +19,6 @@ export default function MePage() {
       api.get<MyProfileResponse>('/users/me').then((res) => res.data),
   });
 
-  if (userInfo.isLoading && !userInfo.isFetched) {
-    return (
-      <div className="flex flex-col p-6 gap-4">
-        <Skeleton className="w-32 h-12 rounded-2xl" />
-        <Skeleton className="w-full h-80 rounded-2xl" />
-        <Skeleton className="w-full h-12 rounded-2xl" />
-        <Skeleton className="w-full h-80 rounded-2xl" />
-      </div>
-    );
-  }
   if (!userInfo.data || userInfo.isError) {
     return;
   }
@@ -37,7 +27,7 @@ export default function MePage() {
 
   return (
     <div
-      className="relative flex flex-col gap-4 bg-slate-200 overflow-auto scrollbar-hide max-h-screen"
+      className="relative flex flex-col gap-4 bg-slate-50 overflow-auto scrollbar-hide max-h-screen"
       style={{
         backgroundImage: `url(${DEFAULT_PROFILE_IMG_URL})`,
         backgroundRepeat: 'no-repeat',
@@ -53,7 +43,7 @@ export default function MePage() {
       >
         <MdModeEdit className="text-white" size={24} />
       </Button>
-      <div className="mt-80 rounded-t-2xl w-full min-h-dvh bg-white z-20">
+      <div className="animate-fadeIn mt-80 rounded-t-2xl w-full min-h-dvh bg-white z-20">
         <MyInformationEdit userInfo={{ ...userInfo.data }} />
         <div className="flex bg-white mb-4 items-center gap-4 p-6 pt-0">
           <Button
