@@ -3,14 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { MyProfileResponse, User } from '@/types/user';
-import {
-  addToast,
-  Button,
-  Input,
-  Link,
-  Skeleton,
-  useDisclosure,
-} from '@heroui/react';
+import { addToast, Button, Link, Skeleton, useDisclosure } from '@heroui/react';
 import { FcSurvey } from 'react-icons/fc';
 import { FcClock } from 'react-icons/fc';
 import { MdModeEdit } from 'react-icons/md';
