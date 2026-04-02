@@ -11,3 +11,9 @@ export const fetchTodayGoals = async () => {
   const response = await apiClient.get('/goals/today');
   return response.data;
 };
+
+// 개별 목표 상세 조회 API
+export const fetchGoalDetail = async (goalId: number) => {
+  const response = await apiClient.get(`/goals/${goalId}/detail`);
+  return response.data;
+};

@@ -2,11 +2,10 @@
 
 import { api } from '@/lib/axios';
 import { User } from '@/types/user';
-import { addToast, Button, Card, CardBody, Input } from '@heroui/react';
+import { addToast, Button, Input } from '@heroui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { LuUser } from 'react-icons/lu';
 
 interface Props {
   userInfo: {

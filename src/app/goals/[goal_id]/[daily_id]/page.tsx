@@ -7,7 +7,7 @@ import DailyGoalTimer from './components/DailyGoalTimer';
 import TodayGoalDailyDetail from './components/TodayGoalDailyDetail';
 import DailyGoalList from './components/DailyGoalList';
 
-import { fetchTodayGoals } from '@/api/goalApi';
+import { fetchTodayGoals, fetchGoalDetail } from '@/api/goalApi';
 
 export default function DailyGoalDetailPage({
   params,
@@ -26,6 +26,12 @@ export default function DailyGoalDetailPage({
     queryFn: fetchTodayGoals,
   });
 
+  const { data: detailData } = useQuery({
+    queryKey: ['goalDetail', currentGoalId],
+    queryFn: () => fetchGoalDetail(currentGoalId),
+    enabled: !!currentGoalId,
+  });
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#2a2a2a] text-white font-bold">
@@ -42,11 +48,15 @@ export default function DailyGoalDetailPage({
     );
   }
 
-  const todayGoals = goalData?.data.todayGoals || [];
+  const todayGoals = goalData?.data?.todayGoals || [];
   const currentGoal =
     todayGoals.find(
       (g: { id: number; [key: string]: any }) => g.id === currentGoalId,
     ) || todayGoals[0];
+
+  const totalTargetAmount = detailData?.data?.progress?.targetAmount || 0;
+  const currentTotalAmount = detailData?.data?.progress?.currentAmount || 0;
+
   return (
     <div
       className="min-h-screen w-full flex flex-col overflow-y-auto scrollbar-hide pb-20"
@@ -60,6 +70,8 @@ export default function DailyGoalDetailPage({
           initialStudyTime={currentGoal?.studyTime || 0}
           targetAmount={currentGoal?.targetAmount || 0}
           unit={currentGoal?.unit || ''}
+          totalTargetAmount={totalTargetAmount}
+          currentTotalAmount={currentTotalAmount}
         />
 
         <hr className="border-gray-500" />

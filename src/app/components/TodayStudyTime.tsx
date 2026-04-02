@@ -1,14 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { formatMilliseconds } from '@/lib/utils';
 import { useTimerStore } from '@/stores/useTimerStore';
+import { useSyncedTime } from '@/hooks/useSyncedTime';
 
 import { fetchTodayProgress } from '@/api/goalApi';
 
 export default function TodayTotalTime() {
   const { playingId, startTime } = useTimerStore();
+  const currentGlobalTime = useSyncedTime();
 
   const { data: progressData } = useQuery({
     queryKey: ['todayProgress'],
@@ -20,21 +21,11 @@ export default function TodayTotalTime() {
   };
 
   const baseTotalTime = safeData.totalTime;
-  const [liveTotalTime, setLiveTotalTime] = useState(baseTotalTime);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (playingId !== null && startTime) {
-      interval = setInterval(() => {
-        setLiveTotalTime(baseTotalTime + (Date.now() - startTime));
-      }, 1000);
-    } else {
-      setLiveTotalTime(baseTotalTime);
-    }
-
-    return () => clearInterval(interval);
-  }, [playingId, startTime, baseTotalTime]);
+  const liveTotalTime =
+    playingId !== null && startTime
+      ? baseTotalTime + (currentGlobalTime - startTime)
+      : baseTotalTime;
 
   return (
     <div className="flex flex-col gap-3 p-5 bg-white w-full rounded-lg shadow-sm mb-4">
