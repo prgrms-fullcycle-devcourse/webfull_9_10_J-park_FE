@@ -1,23 +1,32 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Spinner } from '@heroui/react';
-import dynamic from 'next/dynamic';
-import { fetchRiskData } from '@/api/riskApi';
+import { Card, CardBody, Spinner } from '@heroui/react';
 
-const GaugeComponent = dynamic(() => import('react-gauge-component'), {
-  ssr: false,
-  loading: () => <Spinner color="warning" size="lg" label="데이터 로딩 중" />,
-});
+import { fetchRiskData } from '@/api/riskApi';
+import { FcHighPriority } from 'react-icons/fc';
+import { FcMediumPriority } from 'react-icons/fc';
+import { FcLowPriority } from 'react-icons/fc';
+import { ReactElement } from 'react';
 
 const PACE_LEVEL_INFO: Record<
   number,
-  { text: string; icon: string; color: string }
+  { text: string; icon: ReactElement; color: string }
 > = {
-  0: { text: '안전', icon: '🟢', color: '#52c41a' },
-  1: { text: '주의', icon: '🟡', color: '#fadb14' },
-  2: { text: '위험', icon: '🔴', color: '#ff4d4f' },
+  0: {
+    text: '안전',
+    icon: <FcLowPriority size={80} />,
+    color: '#53c41a33',
+  },
+  1: { text: '주의', icon: <FcMediumPriority size={80} />, color: '#fadb14' },
+  2: { text: '위험', icon: <FcHighPriority size={80} />, color: '#ff4d4f' },
 };
+
+const PACE_WARNING = [
+  '현재 페이스를 유지 한다면 안정적으로 목표를 달설 할 수 있습니다!',
+  '현재 페이스가 지속 된다면 목표를 달성하지 못 할 수도 있습니다!',
+  '현재 페이스를 개선하지 않으면 목표 달설하기가 힘듭니다!',
+];
 
 export default function PaceDial() {
   const { data, isLoading, isError } = useQuery({
@@ -43,60 +52,27 @@ export default function PaceDial() {
     );
   }
 
-  const { score, level } = data.data;
-  const currentPace = PACE_LEVEL_INFO[level] || PACE_LEVEL_INFO[0];
+  const { level } = data.data;
 
   return (
-    <div className="flex flex-col items-center justify-center w-full bg-white p-5 rounded-lg shadow-sm mb-4 gap-4">
-      <h1 className="text-lg font-bold text-black mb-2 self-start w-full text-left pl-1">
-        목표 진행 속도
-      </h1>
-
-      <div className="w-full max-w-[320px]">
-        <GaugeComponent
-          type="semicircle"
-          arc={{
-            subArcs: [
-              { limit: 30, color: '#52c41a' },
-              { limit: 70, color: '#fadb14' },
-              { limit: 100, color: '#ff4d4f' },
-            ],
-            padding: 0.02,
-            width: 0.5,
-          }}
-          pointer={{
-            type: 'needle',
-            color: '#333333',
-            length: 0.8,
-            width: 15,
-            elastic: true,
-          }}
-          labels={{
-            valueLabel: {
-              formatTextValue: () => '',
-              style: { display: 'none' },
-            },
-            tickLabels: {
-              type: 'outer',
-              hideMinMax: true,
-            },
-          }}
-          value={score}
-          minValue={0}
-          maxValue={100}
-        />
-      </div>
-
-      <h2 className="text-base font-bold text-black mt-1">
-        현재 페이스는 <span className="text-xl">{currentPace.icon}</span>{' '}
-        <span
-          style={{ color: currentPace.color }}
-          className="text-xl font-extrabold"
-        >
-          {currentPace.text}
-        </span>{' '}
-        단계입니다.
-      </h2>
-    </div>
+    <Card>
+      <CardBody className="p-0">
+        <div className="flex items-center p-6 gap-4">
+          <div>{PACE_LEVEL_INFO[level].icon}</div>
+          <div className="absolute animate-ping">
+            {PACE_LEVEL_INFO[level].icon}
+          </div>
+          <div>
+            <p
+              className="font-black text-2xl"
+              style={{ color: PACE_LEVEL_INFO[level].color }}
+            >
+              {PACE_LEVEL_INFO[level].text}
+            </p>
+            <small className="text-gray-600">{PACE_WARNING[level]}</small>
+          </div>
+        </div>
+      </CardBody>
+    </Card>
   );
 }

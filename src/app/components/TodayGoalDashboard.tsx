@@ -28,9 +28,6 @@ export default function TodayGoalDashboard() {
     setLocalGoals(goals);
   }, [goals]);
 
-  const totalCount = localGoals.length;
-  const completedCount = localGoals.filter((g) => g.completed).length;
-
   const playingGoal = localGoals.find((g) => g.id === playingId);
 
   const { data: detailData } = useQuery({
@@ -66,15 +63,8 @@ export default function TodayGoalDashboard() {
 
   return (
     <>
-      <Card className="w-full p-5 bg-white shadow-md border-none" radius="lg">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-gray-800">오늘의 목표</h2>
-          <span className="text-sm font-semibold text-green-500 bg-green-50 px-3 py-1 rounded-full">
-            {completedCount}/{totalCount} 달성!
-          </span>
-        </div>
-
-        <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
+      <Card>
+        <div>
           {localGoals.length > 0 ? (
             localGoals.map((goal, index) => (
               <TodayGoalItem

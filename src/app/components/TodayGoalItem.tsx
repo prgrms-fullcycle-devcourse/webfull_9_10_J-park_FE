@@ -1,12 +1,10 @@
 'use client';
 
-import { Link } from '@heroui/react';
-import GoalPlayButton from '@/components/GoalPlayButton';
-import GoalStatusBadge from '@/components/GoalStatusBadge';
-import { formatMilliseconds } from '@/lib/utils';
-import { useTimerStore } from '@/stores/useTimerStore';
+import { Button, Link } from '@heroui/react';
+import { FcSurvey } from 'react-icons/fc';
+import { IoChevronForwardOutline } from 'react-icons/io5';
+
 import { TodayGoal as GoalType } from '@/types/goal';
-import { useSyncedTime } from '@/hooks/useSyncedTime';
 
 interface TodayGoalItemProps {
   goal: GoalType;
@@ -19,63 +17,55 @@ interface TodayGoalItemProps {
 
 export default function TodayGoalItem({
   goal,
-  isPlaying,
-  onPlayClick,
   onDragStart,
   onDragEnter,
   onDragEnd,
 }: TodayGoalItemProps) {
-  const { startTime, recordedTimes } = useTimerStore();
-  const currentGlobalTime = useSyncedTime();
-
-  const baseTime = goal.studyTime + (recordedTimes[goal.id] || 0);
-
-  const liveTime =
-    isPlaying && startTime
-      ? baseTime + (currentGlobalTime - startTime)
-      : baseTime;
-
   return (
-    <Link
+    <Button
+      as={Link}
+      variant="light"
       href={`/goals/${goal.id}/${goal.dailyId}`}
-      className="flex w-full bg-white border-b last:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors cursor-grab active:cursor-grabbing text-foreground"
+      fullWidth
+      className="h-full px-6 py-4"
       draggable
+      radius="none"
       onDragStart={onDragStart}
       onDragEnter={onDragEnter}
       onDragEnd={onDragEnd}
       onDragOver={(e) => e.preventDefault()}
     >
       <div className="flex w-full pointer-events-none">
-        <div className="flex flex-1 items-center justify-between p-4">
-          <div className="flex flex-col items-start gap-1">
-            <div className="flex items-center gap-3">
-              <span className="text-base font-bold text-gray-800">
-                {goal.title}
-              </span>
-
-              <span className="text-base font-bold text-gray-800">
-                {formatMilliseconds(liveTime)}
-              </span>
-            </div>
-            <span className="text-sm text-gray-500">
+        <div className="flex w-full gap-2">
+          <Button
+            radius="full"
+            className="p-0 hover:cursor-default bg-primary"
+            isIconOnly
+            disableAnimation
+            disableRipple
+          >
+            <FcSurvey size={24} />
+          </Button>
+          <div className="flex flex-col w-2/3">
+            <p className="truncate font-black text-xl">{goal.title}</p>
+            <small className="text-gray-600 ">
               {goal.currentAmount} / {goal.targetAmount}
               {goal.unit}
-            </span>
+            </small>
           </div>
 
-          <div className="flex items-center gap-3 pointer-events-auto">
-            <GoalStatusBadge status={goal.completed ? '달성' : '미달성'} />
-            <GoalPlayButton
-              isPlaying={isPlaying}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onPlayClick(e, goal.id, goal.dailyId);
-              }}
-            />
-          </div>
+          <Button
+            radius="full"
+            className="ml-auto p-0"
+            isIconOnly
+            disableAnimation
+            disableRipple
+            variant="light"
+          >
+            <IoChevronForwardOutline size={20} />
+          </Button>
         </div>
       </div>
-    </Link>
+    </Button>
   );
 }
