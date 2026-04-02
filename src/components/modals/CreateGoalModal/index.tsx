@@ -16,11 +16,12 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { CgAddR } from 'react-icons/cg';
 
 export default function CreateGoalModal() {
+  const queryClient = useQueryClient();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [title, setTitle] = useState<string>();
   const [detail, setDetail] = useState<string>();
@@ -53,6 +54,8 @@ export default function CreateGoalModal() {
         title: '목표가 등록되었습니다',
         description: `"${title}" 목표가 성공적으로 생성되었습니다`,
       });
+      queryClient.invalidateQueries({ queryKey: ['goals'] });
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
     },
     onError: () => {
       addToast({
