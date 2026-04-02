@@ -19,7 +19,7 @@ export default function TodayTotalTime() {
     return;
   }
   return (
-    <Card>
+    <Card className="animate-fadeIn">
       <div className="flex flex-col p-6 gap-4">
         <div className="flex gap-4">
           <Button

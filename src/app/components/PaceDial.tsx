@@ -29,33 +29,19 @@ const PACE_WARNING = [
 ];
 
 export default function PaceDial() {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isError } = useQuery({
     queryKey: ['paceRisk'],
     queryFn: fetchRiskData,
   });
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center w-full bg-white p-6 rounded-lg shadow-sm mb-4 h-48">
-        <Spinner color="danger" size="lg" />
-      </div>
-    );
-  }
-
   if (isError || !data?.data) {
-    return (
-      <div className="flex flex-col items-center justify-center w-full bg-white p-6 rounded-lg shadow-sm mb-4 h-48">
-        <span className="text-red-500 font-bold">
-          페이스 정보를 불러올 수 없습니다.
-        </span>
-      </div>
-    );
+    return;
   }
 
   const { level } = data.data;
 
   return (
-    <Card>
+    <Card className="animate-fadeIn">
       <CardBody className="p-0">
         <div className="flex items-center p-6 gap-4">
           <div>{PACE_LEVEL_INFO[level].icon}</div>

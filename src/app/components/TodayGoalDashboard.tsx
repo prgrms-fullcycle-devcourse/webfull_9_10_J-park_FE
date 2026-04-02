@@ -21,7 +21,7 @@ export default function TodayGoalDashboard() {
   const { todayGoals } = data;
 
   return (
-    <Card>
+    <Card className="animate-fadeIn">
       <div>
         {todayGoals.length > 0 ? (
           todayGoals.map((goal) => <TodayGoalItem key={goal.id} goal={goal} />)

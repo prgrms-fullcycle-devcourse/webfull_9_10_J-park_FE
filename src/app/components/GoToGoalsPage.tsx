@@ -3,7 +3,7 @@ import { IoChevronForwardOutline } from 'react-icons/io5';
 
 export default function GoToGoalsPage() {
   return (
-    <Card>
+    <Card className="animate-fadeIn">
       <Button
         as={Link}
         variant="light"
