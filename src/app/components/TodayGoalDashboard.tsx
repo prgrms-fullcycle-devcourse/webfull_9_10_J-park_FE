@@ -2,19 +2,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Card } from '@heroui/react';
+import { useQuery } from '@tanstack/react-query';
 import TodayGoalItem from './TodayGoalItem';
-import GoalSubmitModal from './GoalSubmitModal';
+import GoalSubmitModal from '@/app/components/GoalSubmitModal';
 import { TodayGoal as GoalType } from '@/types/goal';
-
 import { useTodayGoalController } from '@/hooks/useTodayGoalController';
-
-const GOAL_COLORS = [
-  'bg-red-500',
-  'bg-orange-400',
-  'bg-green-400',
-  'bg-blue-400',
-  'bg-purple-400',
-];
+import { fetchGoalDetail } from '@/api/goalApi';
 
 export default function TodayGoalDashboard() {
   const {
@@ -35,7 +28,20 @@ export default function TodayGoalDashboard() {
     setLocalGoals(goals);
   }, [goals]);
 
+  const totalCount = localGoals.length;
+  const completedCount = localGoals.filter((g) => g.completed).length;
+
   const playingGoal = localGoals.find((g) => g.id === playingId);
+
+  const { data: detailData } = useQuery({
+    queryKey: ['goalDetail', playingId],
+    queryFn: () => fetchGoalDetail(playingId!),
+    enabled: isModalOpen && playingId !== null,
+  });
+
+  const fetchedTotalAmount = detailData?.data?.progress?.targetAmount || 0;
+  const fetchedCurrentTotalAmount =
+    detailData?.data?.progress?.currentAmount || 0;
 
   const handleDragStart = (e: React.DragEvent, position: number) => {
     dragItem.current = position;
@@ -61,7 +67,12 @@ export default function TodayGoalDashboard() {
   return (
     <>
       <Card className="w-full p-5 bg-white shadow-md border-none" radius="lg">
-        <h2 className="text-lg font-bold mb-4 text-gray-800">오늘의 목표</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-gray-800">오늘의 목표</h2>
+          <span className="text-sm font-semibold text-green-500 bg-green-50 px-3 py-1 rounded-full">
+            {completedCount}/{totalCount} 달성!
+          </span>
+        </div>
 
         <div className="flex flex-col rounded-md border border-gray-200 overflow-hidden">
           {localGoals.length > 0 ? (
@@ -69,8 +80,7 @@ export default function TodayGoalDashboard() {
               <TodayGoalItem
                 key={goal.id}
                 goal={goal}
-                colorClass={GOAL_COLORS[index % GOAL_COLORS.length]}
-                isPlaying={playingId === goal.id}
+                isPlaying={playingId === goal.id && !isModalOpen}
                 onPlayClick={handlePlayClick}
                 onDragStart={(e) => handleDragStart(e, index)}
                 onDragEnter={(e) => handleDragEnter(e, index)}
@@ -90,7 +100,9 @@ export default function TodayGoalDashboard() {
           isOpen={isModalOpen}
           onClose={closeAndClearModal}
           onSubmit={(amount: number) => endMutation.mutate(amount)}
-          targetAmount={playingGoal.targetAmount}
+          totalTargetAmount={fetchedTotalAmount}
+          dailyTargetAmount={playingGoal.targetAmount}
+          currentAmount={fetchedCurrentTotalAmount || playingGoal.currentAmount}
           unit={playingGoal.unit}
           isPending={endMutation.isPending}
           goalTitle={playingGoal.title}

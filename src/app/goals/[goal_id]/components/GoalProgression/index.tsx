@@ -1,6 +1,11 @@
 'use client';
-import { Card, CardBody, Progress } from '@heroui/react';
+import { Button } from '@heroui/react';
 import { useEffect, useState } from 'react';
+import { FcPositiveDynamic } from 'react-icons/fc';
+import { FcCalendar } from 'react-icons/fc';
+import { FcClock } from 'react-icons/fc';
+import { FcInspection } from 'react-icons/fc';
+
 interface Props {
   progress: {
     rate: number; // 진행률
@@ -18,7 +23,7 @@ interface Props {
 
 export default function GoalProgression({ progress, period }: Props) {
   const [value, setValue] = useState(0);
-  const { rate, targetAmount, unit } = progress;
+  const { rate } = progress;
   useEffect(() => {
     const timeout = setTimeout(() => {
       setValue(rate);
@@ -29,37 +34,79 @@ export default function GoalProgression({ progress, period }: Props) {
   }, [rate]);
 
   return (
-    <Card fullWidth id="goal-progression">
-      <CardBody className="pb-12">
-        <div className="flex justify-between">
-          <div>
-            <p className="font-bold">현재 진행도</p>
-            <p>
-              현재 마감 기한까지{' '}
-              <b className="text-success">{period.daysRemaining}</b>일
-              남았습니다.
-            </p>
-          </div>
-          <span>
-            <span className="font-bold text-6xl text-right">{value}</span>
-            <span className="font-bold text-right">%</span>
-          </span>
+    <div>
+      <div className="flex bg-white items-center gap-4 px-6 py-2">
+        <Button
+          radius="full"
+          variant="light"
+          className="p-0 bg-slate-100 hover:cursor-default"
+          isIconOnly
+          disableAnimation
+          disableRipple
+        >
+          <FcCalendar size={24} />
+        </Button>
+        <div>
+          <small className="text-gray-600 -mb-2">목표 기한까지 남은 시간</small>
+          <p className="font-black text-xl">{period.daysRemaining}일</p>
         </div>
-        <Progress color="success" size="lg" value={value} />
-        <div className="relative">
-          <span
-            className="absolute transition-all duration-500 ease-in-out"
-            style={{ left: `${Math.max(0, value - 3)}%` }}
-          >
-            <p className="font-bold -mb-2">{value}</p>
-            <small>{unit}</small>
-          </span>
-          <span className="absolute right-0">
-            <p className="font-bold -mb-2">{targetAmount}</p>
-            <small>{unit}</small>
-          </span>
+      </div>
+      <div className="flex bg-white items-center gap-4 p-6 py-2">
+        <Button
+          radius="full"
+          variant="light"
+          className="p-0 bg-slate-100 hover:cursor-default"
+          isIconOnly
+          disableAnimation
+          disableRipple
+        >
+          <FcPositiveDynamic size={24} />
+        </Button>
+        <div>
+          <small className="text-gray-600 -mb-2">지금까지 진행 완료</small>
+          <p className="font-black text-xl">{value}%</p>
         </div>
-      </CardBody>
-    </Card>
+      </div>
+      <div className="flex bg-white items-center gap-4 p-6 py-2">
+        <Button
+          radius="full"
+          variant="light"
+          className="p-0 bg-slate-100 hover:cursor-default"
+          isIconOnly
+          disableAnimation
+          disableRipple
+        >
+          <FcInspection size={24} />
+        </Button>
+        <div>
+          <small className="text-gray-600 -mb-2">
+            지금까지 완료한 {progress.unit}
+          </small>
+          <p className="font-black text-xl">
+            {progress.currentAmount.toLocaleString()}
+            {progress.unit}
+          </p>
+        </div>
+      </div>
+      <div className="flex bg-white items-center gap-4 p-6 py-2">
+        <Button
+          radius="full"
+          variant="light"
+          className="p-0 bg-slate-100 hover:cursor-default"
+          isIconOnly
+          disableAnimation
+          disableRipple
+        >
+          <FcClock size={24} />
+        </Button>
+        <div>
+          <small className="text-gray-600 -mb-2">총 공부시간</small>
+          <p className="font-black text-xl">
+            {Math.round(progress.totalStudyTime / 60 / 60).toLocaleString()}
+            시간
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

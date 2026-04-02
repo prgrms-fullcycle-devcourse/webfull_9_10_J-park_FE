@@ -6,6 +6,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Divider,
   Input,
   RangeCalendar,
 } from '@heroui/react';
@@ -16,6 +17,7 @@ import { useEffect, useState } from 'react';
 import { GoalDetail, GoalDetailResponse } from '../../types';
 import { api } from '@/lib/axios';
 import { GoalParams } from '@/components/modals/GoalCreateFormModal';
+import { FcSurvey } from 'react-icons/fc';
 
 interface Props {
   goalID: number;
@@ -30,8 +32,7 @@ interface Props {
 
 export default function GoalDetailInformation({
   goalID,
-  title,
-  description,
+  category,
   totalAmount,
   startDate,
   endDate,
@@ -52,14 +53,13 @@ export default function GoalDetailInformation({
   const [newTotalAmount, setNewTotalAmount] = useState(totalAmount.toString());
   const [newStartDate] = useState(() => {
     const s = new Date(startDate);
-
     return new CalendarDate(s.getFullYear(), s.getMonth() + 1, s.getDate());
   });
   const [newEndDate, setNewEndDate] = useState(() => {
     const e = new Date(endDate);
     return new CalendarDate(e.getFullYear(), e.getMonth() + 1, e.getDate());
   });
-
+  const [hasChanged, setHasChanged] = useState(false);
   useEffect(() => {
     if (isSuccess) {
       addToast({
@@ -79,25 +79,31 @@ export default function GoalDetailInformation({
   }, [isSuccess, isError, queryClient]);
 
   return (
-    <Card fullWidth id="goal-information" isDisabled={isPending}>
-      <CardBody className="flex gap-4">
+    <div>
+      <div className="flex justify-between gap-4 p-6">
         <div>
-          <small>{description}</small>
-          <p className="text-xl font-bold">{title}</p>
-        </div>
-        <div className="flex gap-4">
           <Input
-            size="lg"
-            variant="flat"
-            label="총량"
-            labelPlacement="inside"
+            variant="bordered"
             value={newTotalAmount}
-            onValueChange={setNewTotalAmount}
-            endContent={<p className="shrink-0 text-gray-400">{unit}</p>}
+            onValueChange={(v) => {
+              setNewTotalAmount(v);
+              setHasChanged(true);
+            }}
+            classNames={{
+              input: 'font-black text-2xl border-none',
+              inputWrapper: 'border-none shadow-none min-h-8 h-8 p-0',
+            }}
           />
+          <small className='"text-gray-600 -mt-2'>총 분량</small>
         </div>
+        <div className="text-right">
+          <p className="font-black text-xl">{unit}</p>
+          <small className='"text-gray-600 -mt-2'>{category}</small>
+        </div>
+      </div>
+      <div className="flex flex-col justify-center gap-4 px-6">
         <RangeCalendar
-          calendarWidth="full"
+          className="mx-auto"
           classNames={{ content: 'bg-content1' }}
           nextButtonProps={{
             variant: 'bordered',
@@ -108,16 +114,15 @@ export default function GoalDetailInformation({
           value={{ start: newStartDate, end: newEndDate }}
           onChange={(value) => {
             setNewEndDate(value.end);
+            setHasChanged(true);
           }}
         />
-      </CardBody>
-      <CardFooter className="flex justify-end">
         <Button
-          size="lg"
-          color="success"
-          className="text-white"
+          className="ml-auto shrink-0"
+          color="primary"
+          radius="full"
           isLoading={isPending}
-          isDisabled={isPending}
+          isDisabled={isPending || !hasChanged}
           onPress={() =>
             mutate({
               totalAmount: Number(newTotalAmount),
@@ -128,7 +133,7 @@ export default function GoalDetailInformation({
         >
           저장
         </Button>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }

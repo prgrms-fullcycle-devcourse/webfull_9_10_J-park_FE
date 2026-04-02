@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Spinner } from '@heroui/react';
 import NavigationBar from '@/components/navigationBar';
 import TodayGoalDashboard from '@/app/components/TodayGoalDashboard';
-import TodayGoalRatio from '@/app/components/TodayGoalRatio';
+import TodayTotalTime from '@/app/components/TodayStudyTime';
 import PaceDial from './components/PaceDial';
 
 import { fetchTodayGoals } from '@/api/goalApi';
@@ -41,7 +41,7 @@ export default function Home() {
     <>
       <div className="flex-1 p-4 pb-24 flex flex-col gap-6">
         <PaceDial />
-        <TodayGoalRatio />
+        <TodayTotalTime />
         <TodayGoalDashboard />
       </div>
 

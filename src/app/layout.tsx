@@ -41,7 +41,7 @@ export default async function RootLayout({
               <FloatingTimer />
               <main className={`overflow-y-auto scrollbar-hide`}>
                 {children}
-                <div style={{ minHeight: STYLE.NAVBAR_HEIGHT }}></div>
+                {/* <div style={{ minHeight: STYLE.NAVBAR_HEIGHT }}></div> */}
               </main>
               <NavigationBar />
             </div>
@@ -63,7 +63,7 @@ export default async function RootLayout({
                 <FloatingTimer />
                 <main className={`overflow-y-auto scrollbar-hide`}>
                   {children}
-                  <div style={{ minHeight: STYLE.NAVBAR_HEIGHT }}></div>
+                  {/* <div style={{ minHeight: STYLE.NAVBAR_HEIGHT }}></div> */}
                 </main>
                 <NavigationBar />
               </div>

@@ -95,8 +95,8 @@ export default function GoalCreateFormModal() {
   const onSubmit = () => {
     const params = {
       title,
-      detail,
-      totalAmount: totalAmount,
+      detail: detail || `"${title}"를 어떻게든 달성하기`,
+      totalAmount: Number(totalAmount),
       categoryId: Number(category),
       startDate: startDate.toString(),
       endDate: endDate.toString(),

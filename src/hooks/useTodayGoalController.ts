@@ -12,7 +12,12 @@ import { TodayGoal as GoalType } from '@/types/goal';
 export const useTodayGoalController = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { playingId, startTimer: localStartTimer } = useTimerStore();
+  const {
+    playingId,
+    startTimer: localStartTimer,
+    stopTimer: localStopTimer,
+    clearRecordedTime,
+  } = useTimerStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingGoal, setPendingGoal] = useState<{
@@ -30,10 +35,25 @@ export const useTodayGoalController = () => {
   const startMutation = useMutation({
     mutationFn: (variables: { goalId: number; dailyId: number }) =>
       apiStartTimer({ goalId: variables.goalId }),
-    onSuccess: (_, variables) => {
+    onMutate: (variables) => {
       localStartTimer(variables.goalId);
+    },
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       router.push(`/goals/${variables.goalId}/${variables.dailyId}`);
+    },
+    onError: (error: any, variables) => {
+      const isAlreadyRunning =
+        error.response?.status === 409 ||
+        error.response?.data?.error?.code === 'ALREADY_RUNNING';
+
+      if (isAlreadyRunning) {
+        queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+        router.push(`/goals/${variables.goalId}/${variables.dailyId}`);
+      } else {
+        localStopTimer();
+        alert('네트워크 오류로 타이머를 시작하지 못했습니다.');
+      }
     },
   });
 
@@ -45,9 +65,32 @@ export const useTodayGoalController = () => {
         isPaused: false,
       }),
     onSuccess: () => {
+      const stoppedGoalId = playingId;
+      localStopTimer();
+      if (stoppedGoalId) clearRecordedTime(stoppedGoalId);
+
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+
       if (pendingGoal) {
         startMutation.mutate(pendingGoal);
+      } else {
+        router.push('/');
+      }
+      setIsModalOpen(false);
+      setPendingGoal(null);
+    },
+    onError: (error: any) => {
+      console.error('타이머 종료 실패 (상태 강제 동기화 진행):', error);
+      const stoppedGoalId = playingId;
+      localStopTimer();
+      if (stoppedGoalId) clearRecordedTime(stoppedGoalId);
+
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+
+      if (pendingGoal) {
+        startMutation.mutate(pendingGoal);
+      } else {
+        router.push('/');
       }
       setIsModalOpen(false);
       setPendingGoal(null);
@@ -62,8 +105,11 @@ export const useTodayGoalController = () => {
     e.preventDefault();
     e.stopPropagation();
 
+    if (startMutation.isPending || endMutation.isPending) return;
+
     if (playingId === goalId) {
-      router.push(`/goals/${goalId}/${dailyId}`);
+      setPendingGoal(null);
+      setIsModalOpen(true);
     } else if (playingId && playingId !== goalId) {
       setPendingGoal({ goalId, dailyId });
       setIsModalOpen(true);
