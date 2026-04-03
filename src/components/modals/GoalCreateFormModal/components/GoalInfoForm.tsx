@@ -4,7 +4,7 @@ import { useCreateGoalFormStore } from '../stores/useCreateGoalFormStore';
 export default function GoalInfoForm() {
   const { title, detail, setTitle, setDetail } = useCreateGoalFormStore();
   return (
-    <section className="flex flex-col shrink-0 gap-3 min-w-full">
+    <section className="flex flex-col shrink-0 gap-2 min-w-full">
       <Input
         isRequired
         isClearable
