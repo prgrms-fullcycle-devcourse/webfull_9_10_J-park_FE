@@ -17,6 +17,7 @@ export default function DailyGoalList({ goals }: DailyGoalListProps) {
         {goals.map((goal) => (
           <Button
             as={Link}
+            href={`goals/${goal.id}/${goal.dailyId}`}
             radius="none"
             variant="light"
             key={goal.id}
