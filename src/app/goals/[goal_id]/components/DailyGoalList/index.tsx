@@ -6,7 +6,7 @@ import { FcSurvey } from 'react-icons/fc';
 interface Props {
   goalID: number;
   dailyProgress: {
-    dailyId: number;
+    goalLogId: number;
     date: string;
     isCompleted: boolean;
     targetAmount: number;
@@ -39,13 +39,13 @@ export default function DailyGoalList({ goalID, dailyProgress }: Props) {
           completedAmount,
           studyTime,
           isToday,
-          dailyId,
+          goalLogId,
         }) => {
           return (
             <Button
-              key={dailyId}
+              key={goalLogId}
               as={Link}
-              href={`goals/${goalID}/${dailyId}`}
+              href={`goals/${goalID}/${goalLogId}`}
               variant="light"
               radius="none"
               className="w-full h-full flex items-center gap-4 shrink-0 px-6 py-4"

@@ -11,7 +11,7 @@ import { useSyncedTime } from '@/hooks/useSyncedTime';
 interface TodayGoalItemProps {
   goal: GoalType;
   isPlaying: boolean;
-  onPlayClick: (e: React.MouseEvent, goalId: number, dailyId: number) => void;
+  onPlayClick: (e: React.MouseEvent, goalId: number, goalLogId: number) => void;
   onDragStart: (e: React.DragEvent) => void;
   onDragEnter: (e: React.DragEvent) => void;
   onDragEnd: () => void;
@@ -37,7 +37,7 @@ export default function TodayGoalItem({
 
   return (
     <Link
-      href={`/goals/${goal.id}/${goal.dailyId}`}
+      href={`/goals/${goal.id}/${goal.goalLogId}`}
       className="flex w-full bg-white border-b last:border-b-0 border-gray-200 hover:bg-gray-50 transition-colors cursor-grab active:cursor-grabbing text-foreground"
       draggable
       onDragStart={onDragStart}
@@ -70,7 +70,7 @@ export default function TodayGoalItem({
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                onPlayClick(e, goal.id, goal.dailyId);
+                onPlayClick(e, goal.id, goal.goalLogId);
               }}
             />
           </div>

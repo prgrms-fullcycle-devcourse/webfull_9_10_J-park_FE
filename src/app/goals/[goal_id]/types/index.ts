@@ -29,7 +29,7 @@ export type Period = {
 };
 
 export type DailyProgress = {
-  dailyId: number;
+  goalLogId: number;
   date: string;
   targetAmount: number; // 해당 일자의 목표 할당량
   completedAmount: number; // 실제 완료한 분량
