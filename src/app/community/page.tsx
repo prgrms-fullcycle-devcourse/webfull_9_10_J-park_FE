@@ -96,11 +96,17 @@ export default function RankingPage() {
   return (
     <div className="relative flex flex-col gap-4 bg-slate-50 overflow-auto scrollbar-hide min-h-screen max-h-screen">
       {myRankData && (
-        <div className="animate-fadeIn sticky top-0 p-6 pb-0 bg-slate-50 z-30">
-          <Avatar
-            radius="full"
-            className="p-0 hover:cursor-default w-16 h-16 mb-4"
-          />
+        <div className="animate-fadeIn sticky top-0 p-6 pb-0 bg-slate-50 z-30 flex flex-col gap-6">
+          <div className="flex items-center gap-4">
+            <Avatar
+              radius="full"
+              src={myRankData.profileImageUrl || undefined}
+              className="p-0 hover:cursor-default w-16 h-16 bg-gray-200"
+            />
+            <span className="text-2xl font-bold text-gray-900">
+              {myRankData.nickname}
+            </span>
+          </div>
           <div className="flex w-full justify-between">
             <div>
               <p className="font-black text-xl -mb-2">
