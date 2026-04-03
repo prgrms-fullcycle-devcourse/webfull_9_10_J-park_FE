@@ -31,7 +31,7 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
   >({
     mutationFn: (params) =>
       api
-        .post<EndTimerResponse>('/timers/end', { ...params, isPaused: true })
+        .post<EndTimerResponse>('/timers/end', { ...params, isPaused: false })
         .then((res) => res.data),
     onSuccess: (data) => {
       addToast({

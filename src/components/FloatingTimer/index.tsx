@@ -25,7 +25,10 @@ export default function FloatingTimer() {
 
   const initialTimeMS = useMemo(() => {
     if (currentTimer) {
-      const delta = Date.now() - +new Date(currentTimer.timer.startedAt);
+      const delta =
+        Date.now() -
+        +new Date(currentTimer.timer.startedAt) +
+        currentTimer.todayStudyDuration;
       return delta;
     }
   }, [currentTimer]);
