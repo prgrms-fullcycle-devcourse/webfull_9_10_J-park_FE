@@ -140,12 +140,12 @@ export default function DailyGoalTimer({
             <span className="text-gray-100 text-2xl font-light">|</span>
             <span className="flex flex-col w-1/4">
               <div>{minutes}</div>
-              <small className="text-xs text-gray-200">hours</small>
+              <small className="text-xs text-gray-200">minutes</small>
             </span>
             <span className="text-gray-100 text-2xl font-light">|</span>
             <span className="flex flex-col w-1/4">
               <div>{seconds}</div>
-              <small className="text-xs text-gray-200">hours</small>
+              <small className="text-xs text-gray-200">seconds</small>
             </span>
           </div>
         </div>
