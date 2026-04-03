@@ -22,6 +22,7 @@ const config = {
       ping: 'ping 1s ease-in-out infinite',
     },
     fontFamily: {
+      pretendard: ['Pretendard', 'sans-serif'],
       notosan: ['NotoSan', 'sans-serif'],
     },
     extend: {

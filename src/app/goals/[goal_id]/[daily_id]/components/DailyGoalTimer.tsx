@@ -13,6 +13,7 @@ import {
   endTimer as apiEndTimer,
 } from '@/api/timerApi';
 import GoalSubmitModal from '@/app/components/GoalSubmitModal';
+import StudyProgress from './StudyProgress';
 
 interface DailyGoalTimerProps {
   goalId: number;
@@ -117,43 +118,42 @@ export default function DailyGoalTimer({
     },
   });
 
-  const handleToggleTimer = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (startMutation.isPending || endMutation.isPending) return;
+  const percentage = Math.max(
+    Math.round((currentTotalAmount / totalTargetAmount) * 100),
+  );
 
-    if (isPlaying) {
-      setIsModalOpen(true);
-    } else {
-      startMutation.mutate();
-    }
-  };
-
+  const [hours, minutes, seconds] = formatMilliseconds(liveMs).split(':');
   return (
     <>
-      <div className="flex items-center justify-between mb-8 relative">
-        <div className="flex flex-col gap-1">
-          <span className="text-2xl font-bold text-white">{goalTitle}</span>
-          <span className="text-xl font-bold text-white">
-            {targetAmount} {unit}
-          </span>
+      <div className="animate-fadeIn sticky top-0 flex flex-col items-center justify-center mb-6">
+        <div className="flex w-full justify-between p-6">
+          <p className="text-2xl font-bold">{goalTitle}</p>
+          <p className="text-2xl font-bold">no.{goalId}</p>
         </div>
-
-        <div className="text-3xl font-bold text-white tracking-wider">
-          {formatMilliseconds(liveMs)}
+        <div className="flex flex-col items-center justify-center mb-6">
+          <StudyProgress percentage={percentage || 0} />
+          <div className="min-w-30 min-h-4 mt-4 bg-gray-200 rounded-[50%] blur-xs" />
         </div>
-
-        <div
-          className={`ml-4 scale-125 origin-right ${
-            startMutation.isPending || endMutation.isPending ? 'opacity-50' : ''
-          }`}
-        >
-          <GoalPlayButton
-            isPlaying={isPlaying && !isModalOpen}
-            onClick={handleToggleTimer}
-          />
+        <div className="flex flex-col justify-center w-full text-center text-gray-600">
+          <small className="text-gray-600">누적 공부 시간</small>
+          <div className="flex font-pretendard items-center justify-center font-bold text-4xl">
+            <span className="flex flex-col w-1/4">
+              <div>{hours}</div>
+              <small className="text-xs text-gray-200">hours</small>
+            </span>
+            <span className="text-gray-100 text-2xl font-light">|</span>
+            <span className="flex flex-col w-1/4">
+              <div>{minutes}</div>
+              <small className="text-xs text-gray-200">minutes</small>
+            </span>
+            <span className="text-gray-100 text-2xl font-light">|</span>
+            <span className="flex flex-col w-1/4">
+              <div>{seconds}</div>
+              <small className="text-xs text-gray-200">seconds</small>
+            </span>
+          </div>
         </div>
       </div>
-
       <GoalSubmitModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

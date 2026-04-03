@@ -1,44 +1,112 @@
 'use client';
 
-import { use } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import NavigationBar from '@/components/navigationBar';
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import DailyGoalTimer from './components/DailyGoalTimer';
-import TodayGoalDailyDetail from './components/TodayGoalDailyDetail';
 import DailyGoalList from './components/DailyGoalList';
-
 import { fetchTodayGoals, fetchGoalDetail } from '@/api/goalApi';
+import { IoPlay, IoStop } from 'react-icons/io5';
+import { Button, Card } from '@heroui/react';
+import GoalSubmitModal from '@/app/components/GoalSubmitModal';
+import {
+  startTimer as apiStartTimer,
+  endTimer as apiEndTimer,
+} from '@/api/timerApi';
+import { useParams, useRouter } from 'next/navigation';
+import { useTimerStore } from '@/stores/useTimerStore';
+import { TodayGoal } from '@/types/goal';
 
-export default function DailyGoalDetailPage({
-  params,
-}: {
-  params: Promise<{ goal_id: string; daily_id: string }>;
-}) {
-  const resolvedParams = use(params);
-  const currentGoalId = Number(resolvedParams.goal_id);
+export default function DailyGoalDetailPage() {
+  const { goal_id } = useParams();
+  const goalId = Number(goal_id);
 
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const {
-    data: goalData,
-    isLoading,
-    isError,
-  } = useQuery({
+    playingId,
+    stopTimer: localStopTimer,
+    startTimer: localStartTimer,
+    clearRecordedTime,
+  } = useTimerStore();
+
+  const { data: goalData, isError } = useQuery({
     queryKey: ['todayGoals'],
     queryFn: fetchTodayGoals,
   });
 
   const { data: detailData } = useQuery({
-    queryKey: ['goalDetail', currentGoalId],
-    queryFn: () => fetchGoalDetail(currentGoalId),
-    enabled: !!currentGoalId,
+    queryKey: ['goalDetail', goalId],
+    queryFn: () => fetchGoalDetail(goalId),
+    enabled: !!goalId,
   });
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-[#2a2a2a] text-white font-bold">
-        데이터를 불러오는 중입니다...
-      </div>
-    );
-  }
+  const isPlaying = playingId === goalId;
+
+  const startMutation = useMutation({
+    mutationFn: () => apiStartTimer({ goalId }),
+    onMutate: () => {
+      localStartTimer(goalId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+    },
+    onError: (error: any) => {
+      const isAlreadyRunning =
+        error.response?.status === 409 ||
+        error.response?.data?.error?.code === 'ALREADY_RUNNING';
+
+      if (isAlreadyRunning) {
+        queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+        queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+      } else {
+        localStopTimer();
+        alert('네트워크 오류로 타이머를 시작하지 못했습니다.');
+      }
+    },
+  });
+
+  const endMutation = useMutation({
+    mutationFn: (amount: number) =>
+      apiEndTimer({
+        goalId,
+        currentCompletedAmount: amount,
+        isPaused: false,
+      }),
+    onSuccess: () => {
+      localStopTimer();
+      clearRecordedTime(goalId);
+
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+
+      setIsModalOpen(false);
+      router.push('/');
+    },
+    onError: (error: any) => {
+      console.error('타이머 종료 실패 (상태 강제 동기화 진행)');
+
+      localStopTimer();
+      clearRecordedTime(goalId);
+      setIsModalOpen(false);
+
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+
+      router.push('/');
+    },
+  });
+
+  const handleToggleTimer = () => {
+    if (startMutation.isPending || endMutation.isPending) return;
+
+    if (isPlaying) {
+      setIsModalOpen(true);
+    } else {
+      startMutation.mutate();
+    }
+  };
 
   if (isError) {
     return (
@@ -47,22 +115,21 @@ export default function DailyGoalDetailPage({
       </div>
     );
   }
+  if (!goalData) {
+    return;
+  }
+  const totalTargetAmount = detailData?.data?.progress?.targetAmount || 0;
+  const currentTotalAmount = detailData?.data?.progress?.currentAmount || 0;
 
   const todayGoals = goalData?.data?.todayGoals || [];
   const currentGoal =
     todayGoals.find(
-      (g: { id: number; [key: string]: any }) => g.id === currentGoalId,
+      (g: { id: number; [key: string]: any }) => g.id === goalId,
     ) || todayGoals[0];
 
-  const totalTargetAmount = detailData?.data?.progress?.targetAmount || 0;
-  const currentTotalAmount = detailData?.data?.progress?.currentAmount || 0;
-
   return (
-    <div
-      className="min-h-screen w-full flex flex-col overflow-y-auto scrollbar-hide pb-20"
-      style={{ backgroundColor: '#2a2a2a' }}
-    >
-      <div className="flex-1 p-5 flex flex-col gap-6">
+    <>
+      <div className="relative flex flex-col bg-slate-50 overflow-auto scrollbar-hide max-h-screen">
         <DailyGoalTimer
           goalId={currentGoal?.id || 0}
           goalTitle={currentGoal?.title || '목표 없음'}
@@ -70,31 +137,34 @@ export default function DailyGoalDetailPage({
           initialStudyTime={currentGoal?.studyTime || 0}
           targetAmount={currentGoal?.targetAmount || 0}
           unit={currentGoal?.unit || ''}
-          totalTargetAmount={totalTargetAmount}
-          currentTotalAmount={currentTotalAmount}
+          totalTargetAmount={currentGoal?.targetAmount || 0}
+          currentTotalAmount={currentGoal?.currentAmount || 0}
         />
-
-        <hr className="border-gray-500" />
-
-        <TodayGoalDailyDetail
-          currentAmount={currentGoal?.currentAmount || 0}
-          targetAmount={currentGoal?.targetAmount || 0}
-        />
-        {todayGoals.length > 0 ? (
-          <DailyGoalList goals={todayGoals} />
-        ) : (
-          <div className="flex flex-col mt-4">
-            <h3 className="text-base font-bold text-white mb-3">오늘의 목표</h3>
-            <div className="flex flex-col items-center justify-center p-6 bg-gray-800 rounded-xl border border-gray-600">
-              <p className="text-white text-base font-bold">
-                오늘의 목표가 없습니다.
-              </p>
-            </div>
-          </div>
-        )}
+        <div className="animate-fadeIn w-full rounded-t-2xl bg-white min-h-screen z-30">
+          <Card className="relative m-4">
+            <Button
+              color={isPlaying ? 'danger' : 'primary'}
+              variant="flat"
+              startContent={isPlaying ? <IoStop /> : <IoPlay />}
+              onPress={handleToggleTimer}
+            >
+              {isPlaying ? '정지' : '시작'}
+            </Button>
+          </Card>
+          {todayGoals.length > 0 && <DailyGoalList goals={todayGoals} />}
+        </div>
       </div>
-
-      <NavigationBar />
-    </div>
+      <GoalSubmitModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={(amount) => endMutation.mutate(amount)}
+        totalTargetAmount={totalTargetAmount}
+        dailyTargetAmount={currentGoal.targetAmount}
+        currentAmount={currentTotalAmount}
+        unit={currentGoal.unit}
+        isPending={endMutation.isPending}
+        goalTitle={currentGoal.title}
+      />
+    </>
   );
 }
