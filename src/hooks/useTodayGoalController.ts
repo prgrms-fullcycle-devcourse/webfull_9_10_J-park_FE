@@ -22,7 +22,7 @@ export const useTodayGoalController = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingGoal, setPendingGoal] = useState<{
     goalId: number;
-    dailyId: number;
+    goalLogId: number;
   } | null>(null);
 
   const { data, isLoading } = useQuery({
@@ -33,7 +33,7 @@ export const useTodayGoalController = () => {
   const goals: GoalType[] = data?.data?.todayGoals || [];
 
   const startMutation = useMutation({
-    mutationFn: (variables: { goalId: number; dailyId: number }) =>
+    mutationFn: (variables: { goalId: number; goalLogId: number }) =>
       apiStartTimer({ goalId: variables.goalId }),
     onMutate: (variables) => {
       localStartTimer(variables.goalId);
@@ -41,7 +41,7 @@ export const useTodayGoalController = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
-      router.push(`/goals/${variables.goalId}/${variables.dailyId}`);
+      router.push(`/goals/${variables.goalId}/${variables.goalLogId}`);
     },
     onError: (error: any, variables) => {
       const isAlreadyRunning =
@@ -51,7 +51,7 @@ export const useTodayGoalController = () => {
       if (isAlreadyRunning) {
         queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
         queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
-        router.push(`/goals/${variables.goalId}/${variables.dailyId}`);
+        router.push(`/goals/${variables.goalId}/${variables.goalLogId}`);
       } else {
         localStopTimer();
         alert('네트워크 오류로 타이머를 시작하지 못했습니다.');
@@ -106,7 +106,7 @@ export const useTodayGoalController = () => {
   const handlePlayClick = (
     e: React.MouseEvent,
     goalId: number,
-    dailyId: number,
+    goalLogId: number,
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -117,10 +117,10 @@ export const useTodayGoalController = () => {
       setPendingGoal(null);
       setIsModalOpen(true);
     } else if (playingId && playingId !== goalId) {
-      setPendingGoal({ goalId, dailyId });
+      setPendingGoal({ goalId, goalLogId });
       setIsModalOpen(true);
     } else {
-      startMutation.mutate({ goalId, dailyId });
+      startMutation.mutate({ goalId, goalLogId });
     }
   };
 

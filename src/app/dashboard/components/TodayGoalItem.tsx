@@ -15,7 +15,7 @@ export default function TodayGoalItem({ goal }: TodayGoalItemProps) {
     <Button
       as={Link}
       variant="light"
-      href={`/goals/${goal.id}/${goal.dailyId}`}
+      href={`/goals/${goal.id}/${goal.goalLogId}`}
       fullWidth
       className="h-full px-6 py-4"
       draggable
