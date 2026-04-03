@@ -15,6 +15,8 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { useTimerStore } from '@/stores/useTimerStore';
+
 interface Props {
   goalID: number;
   targetAmount: number;
@@ -24,7 +26,10 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [actualAmount, setActualAmount] = useState(() => targetAmount);
-  const { mutate, data } = useMutation<
+
+  const { stopTimer } = useTimerStore();
+
+  const { mutate } = useMutation<
     EndTimer,
     Error,
     { goalId: number; currentCompletedAmount: number }
@@ -34,14 +39,25 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
         .post<EndTimerResponse>('/timers/end', { ...params, isPaused: false })
         .then((res) => res.data),
     onSuccess: (data) => {
+      stopTimer();
+
       addToast({
         title: '공부를 종료합니다',
         description: `총 ${data.goalProgressRate}%만큼 진행하셨습니다.`,
         color: 'success',
       });
+
       queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+    },
+    onError: (error) => {
+      stopTimer();
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
     },
   });
+
   return (
     <>
       <Button

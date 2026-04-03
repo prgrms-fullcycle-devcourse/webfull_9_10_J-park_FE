@@ -1,3 +1,4 @@
+'use client';
 import { formatMilliseconds } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
@@ -5,19 +6,19 @@ interface Props {
   initialTimeMS?: number;
   isMinimized?: boolean;
 }
-export default function Timer({ initialTimeMS, isMinimized }: Props) {
-  const [time, setTime] = useState(() => initialTimeMS || 0);
+
+export default function Timer({ initialTimeMS = 0, isMinimized }: Props) {
+  const [time, setTime] = useState(initialTimeMS);
 
   useEffect(() => {
-    if (initialTimeMS) {
-      setTime(initialTimeMS);
-    }
-  }, [initialTimeMS]);
+    const startTimestamp = Date.now() - initialTimeMS;
 
-  useEffect(() => {
-    const interval = setInterval(() => setTime(time + 1000), 1000);
+    const interval = setInterval(() => {
+      setTime(Date.now() - startTimestamp);
+    }, 1000);
+
     return () => clearInterval(interval);
-  }, [time]);
+  }, [initialTimeMS]);
 
   return (
     <div
