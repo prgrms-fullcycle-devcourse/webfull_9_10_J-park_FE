@@ -8,8 +8,10 @@ import Timer from './components/Timer';
 
 import StopTimerModal from './components/StopTimerModal';
 import { useQuery } from '@tanstack/react-query';
+import { useTimerStore } from '@/stores/useTimerStore';
 
 export default function FloatingTimer() {
+  const { playingId } = useTimerStore();
   const {
     data: currentTimer,
     isLoading,
@@ -38,7 +40,9 @@ export default function FloatingTimer() {
   if (params.goal_id && params.daily_id) {
     return null;
   }
-
+  if (!playingId) {
+    return null;
+  }
   if (!currentTimer || isLoading || isError) {
     return null;
   }
