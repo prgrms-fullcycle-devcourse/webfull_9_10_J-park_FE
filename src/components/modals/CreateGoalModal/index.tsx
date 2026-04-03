@@ -132,7 +132,13 @@ export default function CreateGoalModal() {
       >
         <CgAddR size={28} />
       </Button>
-      <Modal hideCloseButton isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        hideCloseButton
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        shouldBlockScroll={false}
+        scrollBehavior="inside"
+      >
         <ModalContent>
           <ModalBody className="p-4 max-h-1/3">
             <div className="animate-fadeIn bg-slate-50 rounded-2xl p-4">
