@@ -5,7 +5,6 @@ import { userAgent } from 'next/server';
 
 import './globals.css';
 import NavigationBar from '@/components/navigationBar';
-import { STYLE } from '@/constants';
 import FloatingTimer from '@/components/FloatingTimer';
 
 export const metadata: Metadata = {

@@ -1,7 +1,9 @@
 'use client';
 
-import { Link } from '@heroui/react';
+import { Button, Link } from '@heroui/react';
 import { TodayGoal } from '@/types/goal';
+import { IoChevronForwardOutline } from 'react-icons/io5';
+import { FcSurvey } from 'react-icons/fc';
 
 interface DailyGoalListProps {
   goals: TodayGoal[];
@@ -9,31 +11,45 @@ interface DailyGoalListProps {
 
 export default function DailyGoalList({ goals }: DailyGoalListProps) {
   return (
-    <div className="flex flex-col mt-4">
-      <h3 className="text-base font-bold text-white mb-3">오늘의 목표</h3>
-
-      <div className="flex flex-col bg-white overflow-hidden rounded-md">
+    <div className="animate-fadeIn flex flex-col">
+      <small className="text-gray-600 p-6 pb-4">오늘 목표</small>
+      <div className="flex">
         {goals.map((goal) => (
-          <div
+          <Button
+            as={Link}
+            radius="none"
+            variant="light"
             key={goal.id}
-            className="flex w-full bg-white border-b last:border-b-0 border-gray-200 items-center justify-between p-4"
+            className="flex w-full h-full justify-between px-6 py-2"
           >
-            <div className="flex flex-col items-start gap-1">
-              <span className="text-base font-bold text-black">
-                {goal.title}
-              </span>
-              <span className="text-sm text-gray-600">
-                {goal.currentAmount} / {goal.targetAmount} {goal.unit}
+            <div className="flex gap-2">
+              <Button
+                radius="full"
+                className="p-0 hover:cursor-default bg-primary"
+                isIconOnly
+                disableAnimation
+                disableRipple
+              >
+                <FcSurvey size={24} />
+              </Button>
+              <span>
+                <p className="text-xl font-black -mb-1">{goal.title}</p>
+                <small className="text-gray-600">
+                  {goal.currentAmount}/{goal.targetAmount} {goal.unit}
+                </small>
               </span>
             </div>
-
-            <Link
-              href={`/goals/${goal.id}`}
-              className="px-4 py-2 text-sm font-bold text-orange-500 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors"
+            <Button
+              radius="full"
+              className="p-0"
+              isIconOnly
+              disableAnimation
+              disableRipple
+              variant="light"
             >
-              상세보기
-            </Link>
-          </div>
+              <IoChevronForwardOutline className="text-gray-600" size={20} />
+            </Button>
+          </Button>
         ))}
       </div>
     </div>
