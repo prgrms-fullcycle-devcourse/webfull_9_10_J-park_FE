@@ -48,7 +48,7 @@ export default function Goals() {
           top: top,
         }}
       >
-        <p className="p-6 pb-2 font-black text-xl">전제 목표</p>
+        <p className="p-6 pb-2 font-black text-xl">전체 목표</p>
         {data &&
           data.length > 0 &&
           data.map((goal) => (
@@ -86,7 +86,7 @@ export default function Goals() {
                     <p className="font-black text-xl -mb-2">
                       {goal.progressRate}%
                     </p>
-                    <small className="text-gray-600">진행율</small>
+                    <small className="text-gray-600">진행률</small>
                   </div>
                 </div>
               </Button>

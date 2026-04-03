@@ -55,7 +55,7 @@ export default async function RootLayout({
                 </p>
                 <div className="text-gray-500">
                   <p className="text-right font-extrabold">J-park</p>
-                  <p className="text-right">애리, 장현, 상호, 영식, 중훈</p>
+                  <p className="text-right">애리, 정현, 상호, 영식, 중훈</p>
                 </div>
               </div>
               <div className={desktopClasses}>
