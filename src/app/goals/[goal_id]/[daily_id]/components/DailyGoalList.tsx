@@ -13,7 +13,7 @@ export default function DailyGoalList({ goals }: DailyGoalListProps) {
   return (
     <div className="animate-fadeIn flex flex-col">
       <small className="text-gray-600 p-6 pb-4">오늘 목표</small>
-      <div className="flex">
+      <div className="flex flex-col">
         {goals.map((goal) => (
           <Button
             as={Link}
