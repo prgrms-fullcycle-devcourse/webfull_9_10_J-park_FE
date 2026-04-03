@@ -30,7 +30,7 @@ export default function DailyGoalDetailPage() {
     clearRecordedTime,
   } = useTimerStore();
 
-  const { data: goalData, isError } = useQuery<TodayGoal>({
+  const { data: goalData, isError } = useQuery({
     queryKey: ['todayGoals'],
     queryFn: fetchTodayGoals,
   });
