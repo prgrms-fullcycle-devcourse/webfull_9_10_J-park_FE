@@ -40,6 +40,7 @@ export const useTodayGoalController = () => {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       router.push(`/goals/${variables.goalId}/${variables.dailyId}`);
     },
     onError: (error: any, variables) => {
@@ -49,6 +50,7 @@ export const useTodayGoalController = () => {
 
       if (isAlreadyRunning) {
         queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+        queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
         router.push(`/goals/${variables.goalId}/${variables.dailyId}`);
       } else {
         localStopTimer();
@@ -69,7 +71,9 @@ export const useTodayGoalController = () => {
       localStopTimer();
       if (stoppedGoalId) clearRecordedTime(stoppedGoalId);
 
-      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] }); // 미니 타이머 제거용
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] }); // 리스트 시간 최신화
+      queryClient.invalidateQueries({ queryKey: ['todayProgress'] }); // 오늘 총 공부 시간 최신화
 
       if (pendingGoal) {
         startMutation.mutate(pendingGoal);
@@ -85,7 +89,9 @@ export const useTodayGoalController = () => {
       localStopTimer();
       if (stoppedGoalId) clearRecordedTime(stoppedGoalId);
 
+      queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
 
       if (pendingGoal) {
         startMutation.mutate(pendingGoal);

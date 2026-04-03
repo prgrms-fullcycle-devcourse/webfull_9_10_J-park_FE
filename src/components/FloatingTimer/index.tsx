@@ -24,20 +24,27 @@ export default function FloatingTimer() {
   const [isMinimized, setIsMinimized] = useState(false);
 
   const initialTimeMS = useMemo(() => {
-    if (currentTimer) {
-      const delta = Date.now() - +new Date(currentTimer.timer.startedAt);
-      return delta;
+    if (currentTimer?.timer?.startedAt) {
+      const accumulatedTime = currentTimer.todayStudyDuration || 0;
+
+      const sessionDelta =
+        Date.now() - new Date(currentTimer.timer.startedAt).getTime();
+
+      return accumulatedTime + sessionDelta;
     }
-  }, [currentTimer]);
+    return 0;
+  }, [currentTimer?.timer?.startedAt, currentTimer?.todayStudyDuration]);
 
   if (params.goal_id && params.daily_id) {
-    return;
+    return null;
   }
 
   if (!currentTimer || isLoading || isError) {
-    return;
+    return null;
   }
+
   const { goalId, goalTitle } = currentTimer;
+
   return (
     <div
       className="absolute flex justify-center transition-all top-8 left-0 w-full z-40"

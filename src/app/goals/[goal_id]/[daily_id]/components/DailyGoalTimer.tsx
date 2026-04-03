@@ -64,6 +64,7 @@ export default function DailyGoalTimer({
       localStartTimer(goalId);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
     },
@@ -73,6 +74,7 @@ export default function DailyGoalTimer({
         error.response?.data?.error?.code === 'ALREADY_RUNNING';
 
       if (isAlreadyRunning) {
+        queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
         queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
         queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
       } else {
@@ -93,6 +95,7 @@ export default function DailyGoalTimer({
       localStopTimer();
       clearRecordedTime(goalId);
 
+      queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
 
@@ -106,6 +109,7 @@ export default function DailyGoalTimer({
       clearRecordedTime(goalId);
       setIsModalOpen(false);
 
+      queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
 
