@@ -68,7 +68,8 @@ export default function DailyGoalList({ goalID, dailyProgress }: Props) {
                     })}
                   </p>
                   <small className="text-gray-600">
-                    {Math.round(studyTime / 60 / 60).toLocaleString()}시간
+                    {Math.round(studyTime / 1000 / 60 / 60).toLocaleString()}
+                    시간
                   </small>
                 </div>
                 <div className="text-right">
