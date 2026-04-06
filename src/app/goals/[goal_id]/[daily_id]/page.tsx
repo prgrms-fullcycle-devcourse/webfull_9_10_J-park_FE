@@ -14,10 +14,10 @@ import {
 } from '@/api/timerApi';
 import { useParams, useRouter } from 'next/navigation';
 import { useTimerStore } from '@/stores/useTimerStore';
-import { TodayGoal } from '@/types/goal';
 
 export default function DailyGoalDetailPage() {
-  const { goal_id } = useParams();
+  const { goal_id, daily_id } = useParams();
+  const dailyId = Number(daily_id) || null;
   const goalId = Number(goal_id);
 
   const router = useRouter();
@@ -142,15 +142,22 @@ export default function DailyGoalDetailPage() {
         />
         <div className="animate-fadeIn w-full rounded-t-2xl bg-white min-h-screen z-30">
           <Card className="relative m-4">
-            <Button
-              color={isPlaying ? 'danger' : 'primary'}
-              variant="flat"
-              startContent={isPlaying ? <IoStop /> : <IoPlay />}
-              onPress={handleToggleTimer}
-            >
-              {isPlaying ? '정지' : '시작'}
-            </Button>
+            {dailyId !== null ? (
+              <Button
+                color={isPlaying ? 'danger' : 'primary'}
+                variant="flat"
+                startContent={isPlaying ? <IoStop /> : <IoPlay />}
+                onPress={handleToggleTimer}
+              >
+                {isPlaying ? '정지' : '시작'}
+              </Button>
+            ) : (
+              <Button color="warning" variant="flat" isDisabled={true}>
+                오늘 진행할 수 있는 데일리 목표가 아닙니다
+              </Button>
+            )}
           </Card>
+
           {todayGoals.length > 0 && <DailyGoalList goals={todayGoals} />}
         </div>
       </div>
