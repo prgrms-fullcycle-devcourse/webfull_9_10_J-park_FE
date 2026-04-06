@@ -45,7 +45,7 @@ export default function DailyGoalList({ goalID, dailyProgress }: Props) {
             <Button
               key={goalLogId}
               as={Link}
-              href={`goals/${goalID}/${goalLogId}`}
+              href={`/goals/${goalID}/${goalLogId}`}
               variant="light"
               radius="none"
               className="w-full h-full flex items-center gap-4 shrink-0 px-6 py-4"
