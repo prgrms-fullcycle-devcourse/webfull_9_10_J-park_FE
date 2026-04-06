@@ -6,6 +6,7 @@ import { api } from '@/lib/axios';
 import { Goal, GoalsResponse } from '@/types/api';
 
 import GoalItemSwipeable from './components/GoalItemSwipeable';
+import { FcDown } from 'react-icons/fc';
 
 export default function Goals() {
   const [top, setTop] = useState(0);
@@ -51,6 +52,12 @@ export default function Goals() {
         {data &&
           data.length > 0 &&
           data.map((goal) => <GoalItemSwipeable key={goal.id} goal={goal} />)}
+        {!data ||
+          (data.length === 0 && (
+            <div>
+              <p className="p-6 text-gray-400">등록한 목표가 없습니다</p>
+            </div>
+          ))}
       </div>
     </div>
   );
