@@ -1,12 +1,12 @@
 'use client';
-import { Button, Link } from '@heroui/react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { api } from '@/lib/axios';
 import { Goal, GoalsResponse } from '@/types/api';
 
-import { useEffect, useState } from 'react';
-import { FcSurvey } from 'react-icons/fc';
+import GoalItemSwipeable from './components/GoalItemSwipeable';
+import { FcDown } from 'react-icons/fc';
 
 export default function Goals() {
   const [top, setTop] = useState(0);
@@ -51,45 +51,11 @@ export default function Goals() {
         <p className="p-6 pb-2 font-black text-xl">전체 목표</p>
         {data &&
           data.length > 0 &&
-          data.map((goal) => (
-            <div key={goal.id}>
-              <small className="px-6">
-                {new Date(goal.endDate).toLocaleDateString('ko-kr', {
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </small>
-              <Button
-                as={Link}
-                href={`goals/${goal.id}`}
-                variant="light"
-                radius="none"
-                className="w-full h-full flex items-center gap-4 px-6 py-4"
-              >
-                <Button
-                  radius="full"
-                  className="p-0 hover:cursor-default bg-primary"
-                  isIconOnly
-                  disableAnimation
-                  disableRipple
-                >
-                  <FcSurvey size={24} />
-                </Button>
-                <div className="flex w-full justify-between">
-                  <div>
-                    <p className="truncate max-w-full font-black text-xl -mb-2">
-                      {goal.title}
-                    </p>
-                    <small className="text-gray-600">{goal.description}</small>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-black text-xl -mb-2">
-                      {goal.progressRate}%
-                    </p>
-                    <small className="text-gray-600">진행률</small>
-                  </div>
-                </div>
-              </Button>
+          data.map((goal) => <GoalItemSwipeable key={goal.id} goal={goal} />)}
+        {!data ||
+          (data.length === 0 && (
+            <div>
+              <p className="p-6 text-gray-400">등록한 목표가 없습니다</p>
             </div>
           ))}
       </div>
