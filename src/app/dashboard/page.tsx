@@ -16,8 +16,8 @@ export default function Home() {
         <PaceDial />
         <TodayTotalTime />
         <UserRankingInfoCard />
-        <GoToGoalsPage />
         <TodayGoalDashboard />
+        <GoToGoalsPage />
       </div>
       <NavigationBar />
     </>

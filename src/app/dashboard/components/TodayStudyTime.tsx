@@ -8,6 +8,7 @@ import { FcApproval } from 'react-icons/fc';
 
 import { fetchTodayProgress } from '@/api/goalApi';
 import { Button, Card } from '@heroui/react';
+import TotalProgression from './TotalProgression';
 
 export default function TodayTotalTime() {
   const { data: progressData } = useQuery({
@@ -20,61 +21,64 @@ export default function TodayTotalTime() {
   }
   return (
     <Card className="animate-fadeIn">
-      <div className="flex flex-col p-6 gap-4">
-        <div className="flex gap-4">
-          <Button
-            className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
-            isIconOnly
-            disableAnimation
-            disableRipple
-          >
-            <FcClock size={24} />
-          </Button>
-          <div className="flex w-full justify-between">
-            <div>
-              <p className="truncate font-black text-xl -mb-2">
-                {progressData.data.totalTime}시간
-              </p>
-              <small className="text-gray-600">누적 공부시간</small>
+      <div className="flex items-center justify-between p-6">
+        <div className="flex flex-col gap-4">
+          <div className="flex gap-4">
+            <Button
+              className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
+              isIconOnly
+              disableAnimation
+              disableRipple
+            >
+              <FcClock size={24} />
+            </Button>
+            <div className="flex w-full justify-between">
+              <div>
+                <p className="truncate font-black text-xl -mb-2">
+                  {progressData.data.totalTime.toLocaleString()}시간
+                </p>
+                <small className="text-gray-600">누적 공부시간</small>
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <Button
+              className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
+              isIconOnly
+              disableAnimation
+              disableRipple
+            >
+              <FcKindle size={24} />
+            </Button>
+            <div className="flex w-full justify-between">
+              <div>
+                <p className="truncate font-black text-xl -mb-2">
+                  {progressData.data.totalGoals}개
+                </p>
+                <small className="text-gray-600">총 목표</small>
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <Button
+              className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
+              isIconOnly
+              disableAnimation
+              disableRipple
+            >
+              <FcApproval size={24} />
+            </Button>
+            <div className="flex w-full justify-between">
+              <div>
+                <p className="truncate font-black text-xl -mb-2">
+                  {progressData.data.completedGoals.toLocaleString()}개
+                </p>
+                <small className="text-gray-600">완료한 목표</small>
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex gap-4">
-          <Button
-            className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
-            isIconOnly
-            disableAnimation
-            disableRipple
-          >
-            <FcKindle size={24} />
-          </Button>
-          <div className="flex w-full justify-between">
-            <div>
-              <p className="truncate font-black text-xl -mb-2">
-                {progressData.data.totalGoals}개
-              </p>
-              <small className="text-gray-600">총 목표</small>
-            </div>
-          </div>
-        </div>
-        <div className="flex gap-4">
-          <Button
-            className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
-            isIconOnly
-            disableAnimation
-            disableRipple
-          >
-            <FcApproval size={24} />
-          </Button>
-          <div className="flex w-full justify-between">
-            <div>
-              <p className="truncate font-black text-xl -mb-2">
-                {progressData.data.completedGoals}개
-              </p>
-              <small className="text-gray-600">완료한 목표</small>
-            </div>
-          </div>
-        </div>
+        <TotalProgression />
       </div>
     </Card>
   );

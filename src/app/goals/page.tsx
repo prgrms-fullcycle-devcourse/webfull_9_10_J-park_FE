@@ -6,7 +6,8 @@ import { api } from '@/lib/axios';
 import { Goal, GoalsResponse } from '@/types/api';
 
 import GoalItemSwipeable from './components/GoalItemSwipeable';
-import { FcDown } from 'react-icons/fc';
+
+import GoalsBarChart from './components/GoalsBarChart';
 
 export default function Goals() {
   const [top, setTop] = useState(0);
@@ -19,7 +20,7 @@ export default function Goals() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setTop(80);
+      setTop(168);
     }, 500);
     return () => clearTimeout(timeout);
   }, []);
@@ -41,7 +42,20 @@ export default function Goals() {
         <p className="truncate max-w-full font-black text-2xl -mb-2">
           {data?.length}개
         </p>
+        <small className="text-gray-600">평균 진행률</small>
+        <p className="truncate max-w-full font-black text-2xl -mb-2">
+          {data?.length}%
+        </p>
+        <small className="text-gray-600">누적 진행</small>
+        <p className="truncate max-w-full font-black text-2xl -mb-2">
+          {data?.length}장
+        </p>
+        <small className="text-gray-600">누적 시간</small>
+        <p className="truncate max-w-full font-black text-2xl -mb-2">
+          {data?.length}장
+        </p>
       </div>
+
       <div
         className="absolute transition-all duration-500 ease-in-out min-h-full w-full bg-white rounded-t-2xl"
         style={{

@@ -36,7 +36,8 @@ export default function TodayGoalItem({ goal }: TodayGoalItemProps) {
           <div className="flex flex-col w-2/3">
             <p className="truncate font-black text-xl">{goal.title}</p>
             <small className="text-gray-600 ">
-              {goal.currentAmount} / {goal.targetAmount}
+              {goal.currentAmount.toLocaleString()} /{' '}
+              {goal.targetAmount.toLocaleString()}
               {goal.unit}
             </small>
           </div>
