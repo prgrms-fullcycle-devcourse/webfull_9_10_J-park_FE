@@ -46,13 +46,10 @@ export default function GoalSubmitModal({
     }
   }, [isOpen, currentAmount]);
 
-  // 💡 슬라이더의 최대값을 '할당량'과 '현재 입력값' 중 더 큰 값으로 설정합니다.
-  // 이렇게 하면 기본적으로 할당량까지만 보이다가, + 버튼으로 숫자를 키우면 범위가 자동으로 늘어납니다.
   const dynamicMax = useMemo(() => {
     return Math.max(dailyTargetAmount, inputValue);
   }, [dailyTargetAmount, inputValue]);
 
-  // 숫자 조작 함수 (제한 없이 계속 늘어납니다)
   const handleMinus = (amount: number) => {
     setInputValue((prev) => Math.max(0, prev - amount));
   };
@@ -148,7 +145,6 @@ export default function GoalSubmitModal({
                     </div>
                   </div>
 
-                  {/* 💡 aria-label을 추가하여 접근성 경고를 해결했습니다. */}
                   <Slider
                     size="md"
                     step={1}

@@ -99,7 +99,7 @@ export default function TodayGoalDashboard() {
         <GoalSubmitModal
           isOpen={isModalOpen}
           onClose={closeAndClearModal}
-          onSubmit={(amount: number) => endMutation.mutate(amount)}
+          onSubmit={(amount: number) => endMutation.mutateAsync(amount)}
           totalTargetAmount={fetchedTotalAmount}
           dailyTargetAmount={playingGoal.targetAmount}
           currentAmount={fetchedCurrentTotalAmount || playingGoal.currentAmount}
