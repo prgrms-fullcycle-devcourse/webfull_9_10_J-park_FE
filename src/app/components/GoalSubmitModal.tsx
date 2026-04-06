@@ -7,8 +7,7 @@ import {
   ModalBody,
   Button,
   addToast,
-  Select,
-  SelectItem,
+  Slider,
 } from '@heroui/react';
 import { FcSurvey } from 'react-icons/fc';
 
@@ -37,7 +36,7 @@ export default function GoalSubmitModal({
   isPending,
   goalTitle,
 }: GoalSubmitModalProps) {
-  const [inputValue, setInputValue] = useState<number | undefined>(undefined);
+  const [inputValue, setInputValue] = useState<number>(currentAmount);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -47,15 +46,23 @@ export default function GoalSubmitModal({
     }
   }, [isOpen, currentAmount]);
 
-  const amountOptions = useMemo(() => {
-    return Array.from({ length: dailyTargetAmount + 1 }, (_, i) => ({
-      label: String(i),
-      value: String(i),
-    }));
-  }, [dailyTargetAmount]);
+  // 💡 슬라이더의 최대값을 '할당량'과 '현재 입력값' 중 더 큰 값으로 설정합니다.
+  // 이렇게 하면 기본적으로 할당량까지만 보이다가, + 버튼으로 숫자를 키우면 범위가 자동으로 늘어납니다.
+  const dynamicMax = useMemo(() => {
+    return Math.max(dailyTargetAmount, inputValue);
+  }, [dailyTargetAmount, inputValue]);
+
+  // 숫자 조작 함수 (제한 없이 계속 늘어납니다)
+  const handleMinus = (amount: number) => {
+    setInputValue((prev) => Math.max(0, prev - amount));
+  };
+
+  const handlePlus = (amount: number) => {
+    setInputValue((prev) => prev + amount);
+  };
 
   const handleSubmit = async () => {
-    if (isPending || isSubmitting || inputValue === undefined) return;
+    if (isPending || isSubmitting) return;
 
     setIsSubmitting(true);
     try {
@@ -73,7 +80,8 @@ export default function GoalSubmitModal({
         },
         icon: (
           <div className="text-2xl text-emerald-600">
-            <FcSurvey />
+            {' '}
+            <FcSurvey />{' '}
           </div>
         ),
       });
@@ -81,7 +89,6 @@ export default function GoalSubmitModal({
       onClose();
     } catch (error) {
       console.error('제출 실패:', error);
-
       addToast({
         title: '제출 실패',
         description: '공부량 저장에 실패했습니다. 다시 시도해 주세요.',
@@ -94,9 +101,6 @@ export default function GoalSubmitModal({
     }
   };
 
-  const isSubmitDisabled =
-    isPending || isSubmitting || inputValue === undefined;
-
   return (
     <Modal
       isOpen={isOpen}
@@ -105,6 +109,7 @@ export default function GoalSubmitModal({
       }}
       hideCloseButton
       placement="center"
+      shouldBlockScroll={true}
       classNames={{
         base: 'w-[380px] max-w-[380px] bg-transparent shadow-none',
         backdrop: 'bg-black/60',
@@ -128,39 +133,75 @@ export default function GoalSubmitModal({
                   총 목표량: {totalTargetAmount} {unit}
                 </span>
 
-                <div className="flex flex-col items-center justify-center gap-2 text-black mt-2 w-full">
-                  <Select
-                    label="진행한 공부량"
-                    labelPlacement="outside"
-                    placeholder="얼마나 진행하셨나요?"
-                    variant="bordered"
-                    selectedKeys={
-                      inputValue !== undefined
-                        ? new Set([String(inputValue)])
-                        : new Set()
-                    }
-                    onSelectionChange={(keys) => {
-                      const selected = Array.from(keys)[0];
-                      if (selected !== undefined) {
-                        setInputValue(Number(selected));
-                      }
-                    }}
+                <div className="flex flex-col gap-4 w-full mt-2 bg-gray-50 p-5 rounded-xl border border-gray-100">
+                  <div className="flex items-end justify-between w-full mb-2">
+                    <span className="text-sm font-bold text-gray-500">
+                      진행한 공부량
+                    </span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-extrabold text-orange-500">
+                        {inputValue}
+                      </span>
+                      <span className="text-lg font-bold text-gray-400">
+                        / {dailyTargetAmount} {unit}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* 💡 aria-label을 추가하여 접근성 경고를 해결했습니다. */}
+                  <Slider
+                    size="md"
+                    step={1}
+                    color="warning"
+                    maxValue={dynamicMax}
+                    minValue={0}
+                    value={inputValue}
+                    onChange={(val) => setInputValue(val as number)}
+                    aria-label="공부량 조절 슬라이더"
+                    className="max-w-md w-full"
                     classNames={{
-                      base: 'w-full',
-                      trigger: 'h-14',
-                      label: 'text-lg font-bold text-gray-900 pb-1.5',
-                      value: 'text-xl font-bold text-gray-800',
+                      track: 'bg-gray-200',
+                      filler: 'bg-orange-400',
+                      thumb: 'w-6 h-6 bg-white border-2 border-orange-500',
                     }}
-                  >
-                    {amountOptions.map((opt) => (
-                      <SelectItem key={opt.value} textValue={opt.label}>
-                        <div className="flex justify-between items-center w-full">
-                          <span className="text-lg font-bold">{opt.label}</span>
-                          <span className="text-gray-400 text-sm">{unit}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </Select>
+                  />
+
+                  <div className="flex justify-between gap-2 mt-1">
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      className="bg-gray-200 font-bold text-gray-700 min-w-12"
+                      onPress={() => handleMinus(1)}
+                    >
+                      -1
+                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="flat"
+                        className="bg-orange-100 font-bold text-orange-600 min-w-12"
+                        onPress={() => handlePlus(1)}
+                      >
+                        +1
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="flat"
+                        className="bg-orange-100 font-bold text-orange-600 min-w-12"
+                        onPress={() => handlePlus(5)}
+                      >
+                        +5
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="flat"
+                        className="bg-orange-100 font-bold text-orange-600 min-w-12"
+                        onPress={() => handlePlus(10)}
+                      >
+                        +10
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -168,8 +209,7 @@ export default function GoalSubmitModal({
                 <Button
                   onPress={handleSubmit}
                   isLoading={isPending || isSubmitting}
-                  disabled={isSubmitDisabled}
-                  className="flex-[3] h-14 bg-orange-500 text-white font-extrabold rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base"
+                  className="flex-[3] h-14 bg-orange-500 text-white font-extrabold rounded-lg hover:bg-orange-600 transition-colors text-base"
                 >
                   제출하고 종료하기
                 </Button>
