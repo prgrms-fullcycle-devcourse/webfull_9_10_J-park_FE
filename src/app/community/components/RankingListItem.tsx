@@ -25,8 +25,10 @@ export default function RankingListItem({
     return;
   };
   const timeDiffMS = item.totalTime - myTotalTime;
-  const itemTimeHours = Math.round(item.totalTime / 60 / 60).toLocaleString();
-  const diffHours = Math.round(timeDiffMS / 60 / 60);
+  const itemTimeHours = Math.round(
+    item.totalTime / 1000 / 60 / 60,
+  ).toLocaleString();
+  const diffHours = Math.round(timeDiffMS / 1000 / 60 / 60);
 
   return (
     <div

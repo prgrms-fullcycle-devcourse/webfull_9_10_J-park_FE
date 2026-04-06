@@ -102,7 +102,9 @@ export default function GoalProgression({ progress, period }: Props) {
         <div>
           <small className="text-gray-600 -mb-2">총 공부시간</small>
           <p className="font-black text-xl">
-            {Math.round(progress.totalStudyTime / 60 / 60).toLocaleString()}
+            {Math.round(
+              progress.totalStudyTime / 1000 / 60 / 60,
+            ).toLocaleString()}
             시간
           </p>
         </div>
