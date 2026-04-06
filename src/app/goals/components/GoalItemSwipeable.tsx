@@ -41,10 +41,6 @@ export default function GoalItemSwipeable({ goal }: Props) {
     mutation.mutate();
   };
 
-  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
   const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     const currentX = e.touches[0].clientX;
     const diff = currentX - touchStartX.current;
@@ -58,6 +54,25 @@ export default function GoalItemSwipeable({ goal }: Props) {
 
   const onTouchEnd = () => {
     if (position < -maxSwipe / 2) {
+      setPosition(-maxSwipe);
+      setIsSwiped(true);
+    } else {
+      setPosition(0);
+      setIsSwiped(false);
+    }
+  };
+  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
+    touchStartX.current = e.clientX;
+  };
+
+  const onDragEnd = (e: React.MouseEvent<HTMLDivElement>) => {
+    const currentX = e.clientX;
+
+    const diff = currentX - touchStartX.current;
+    if (diff < 0 && diff < -maxSwipe / 2) {
       setPosition(-maxSwipe);
       setIsSwiped(true);
     } else {
@@ -85,6 +100,9 @@ export default function GoalItemSwipeable({ goal }: Props) {
         style={{
           transform: `translateX(${position}px)`,
         }}
+        draggable
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
