@@ -54,8 +54,10 @@ export default function CreateGoalModal() {
         size={isMobile ? 'full' : 'lg'}
         hideCloseButton
         isOpen={isOpen}
-        onOpenChange={onOpenChange}
+        placement="auto"
         className="overflow-hidden"
+        onOpenChange={onOpenChange}
+        shouldBlockScroll={false}
         scrollBehavior="inside"
       >
         <ModalContent>
