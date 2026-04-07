@@ -11,7 +11,7 @@ export default function UserInfoCard() {
       api.get<MyProfileResponse>('/users/me').then((res) => res.data),
   });
 
-  if (!userInfo.data) {
+  if (!userInfo.data || userInfo.isError || userInfo.isLoading) {
     return;
   }
   const { nickname, createdAt } = userInfo.data;

@@ -8,18 +8,18 @@ import { FcBarChart } from 'react-icons/fc';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 
 export default function UserRankingInfo() {
-  const { data, isLoading } = useQuery<Ranking>({
+  const { data, isLoading, isError } = useQuery<Ranking>({
     queryKey: ['rankings'],
     queryFn: () =>
       api.get<RankingsResponse>('rankings?limit=1').then((res) => res.data),
   });
 
-  if (!data) {
+  if (!data || isLoading || isError) {
     return;
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 pt-4">
       <Button
         as={Link}
         href="/community"

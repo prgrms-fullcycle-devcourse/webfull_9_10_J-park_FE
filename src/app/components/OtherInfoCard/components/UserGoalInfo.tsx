@@ -20,7 +20,7 @@ export default function UserGoalInfo() {
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 pb-4">
       <Button
         as={Link}
         href="/goals"
