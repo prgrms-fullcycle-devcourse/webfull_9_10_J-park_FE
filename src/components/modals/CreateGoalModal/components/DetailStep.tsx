@@ -6,7 +6,7 @@ import CreateGoalTextarea from './CreateGoalTextarea';
 
 export default function DetailStep() {
   const ref = useRef<HTMLTextAreaElement>(null);
-  const { detail, step, setDetail, next } = useLocalCreateGoal();
+  const { detail, setDetail, next } = useLocalCreateGoal();
 
   useEffect(() => {
     if (ref.current) {
@@ -15,10 +15,6 @@ export default function DetailStep() {
       ref.current.setSelectionRange(value.length, value.length);
     }
   }, []);
-
-  if (step !== 1) {
-    return;
-  }
 
   return (
     <div className="animate-fadeIn h-full flex flex-col bg-white">

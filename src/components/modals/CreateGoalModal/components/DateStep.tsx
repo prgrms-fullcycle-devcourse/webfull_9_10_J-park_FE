@@ -19,7 +19,6 @@ export default function DateStep({ onClose }: Props) {
     totalAmount,
     startDate,
     endDate,
-    step,
     setStartDate,
     setEndDate,
     reset,
@@ -68,10 +67,6 @@ export default function DateStep({ onClose }: Props) {
       endDate: endDate.toString(),
     });
   }, [title, detail, category, totalAmount, startDate, endDate, mutate]);
-
-  if (step !== 3) {
-    return;
-  }
 
   return (
     <div className="animate-fadeIn h-full flex flex-col bg-white">

@@ -51,26 +51,27 @@ export default function CreateGoalModal() {
         <CgAddR size={28} />
       </Button>
       <Modal
-        size={isMobile ? 'full' : 'lg'}
         hideCloseButton
+        size={isMobile ? '5xl' : 'sm'}
         isOpen={isOpen}
-        placement="auto"
+        placement="center"
         className="overflow-hidden"
         onOpenChange={onOpenChange}
-        shouldBlockScroll={false}
-        scrollBehavior="inside"
+        classNames={{
+          base: `${isMobile ? 'h-full rounded-none m-0 p-0' : ''}`,
+        }}
       >
         <ModalContent>
-          <ModalBody className="p-0 scrollbar-hide ">
-            <div className="w-full flex justify-between bg-gray-50 px-4 py-2 ">
+          <ModalBody className="p-0">
+            <div className="w-full flex justify-between bg-gray-50 px-4 py-2">
               <Button variant="light" isIconOnly onPress={handleOnBack}>
                 <IoChevronBackOutline size={24} />
               </Button>
             </div>
-            <TitleStep />
-            <DetailStep />
-            <TotalAmountStep />
-            <DateStep onClose={onClose} />
+            {step === 0 && <TitleStep />}
+            {step === 1 && <DetailStep />}
+            {step === 2 && <TotalAmountStep />}
+            {step === 3 && <DateStep onClose={onClose} />}
           </ModalBody>
         </ModalContent>
       </Modal>
