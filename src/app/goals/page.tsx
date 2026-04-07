@@ -8,7 +8,7 @@ import { api } from '@/lib/axios';
 import { Goal, GoalsResponse } from '@/types/api';
 import GoalItemSwipeable from './components/GoalItemSwipeable';
 import { MyProfileResponse, User } from '@/types/user';
-import PaceDial from '../dashboard/components/PaceDial';
+import PaceDial from '../dashboard/components/PaceIndicatorCard';
 
 export default function Goals() {
   const { data, isError } = useQuery<Goal[]>({

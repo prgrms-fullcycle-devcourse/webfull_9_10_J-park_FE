@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardBody, Spinner } from '@heroui/react';
+import { Card, CardBody } from '@heroui/react';
 
 import { fetchRiskData } from '@/api/riskApi';
 import { FcHighPriority } from 'react-icons/fc';
@@ -28,7 +28,7 @@ const PACE_WARNING = [
   '현재 페이스를 개선하지 않으면 목표 달설하기가 힘듭니다!',
 ];
 
-export default function PaceDial() {
+export default function PaceIndicatorCard() {
   const { data, isError, isLoading } = useQuery({
     queryKey: ['paceRisk'],
     queryFn: fetchRiskData,
@@ -42,11 +42,7 @@ export default function PaceDial() {
     return;
   }
 
-  const { level, score } = data.data;
-  console.log(score);
-  if (score > 70) {
-    return;
-  }
+  const { level } = data.data;
 
   return (
     <Card className="animate-fadeIn">

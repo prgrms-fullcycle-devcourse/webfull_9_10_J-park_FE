@@ -8,9 +8,9 @@ import { FcApproval } from 'react-icons/fc';
 
 import { fetchTodayProgress } from '@/api/goalApi';
 import { Button, Card } from '@heroui/react';
-import TotalProgression from './TotalProgression';
+import TotalProgression from './components/TotalProgression';
 
-export default function TodayTotalTime() {
+export default function TodayStudyInfoCard() {
   const { data: progressData } = useQuery({
     queryKey: ['todayProgress'],
     queryFn: fetchTodayProgress,
@@ -37,7 +37,7 @@ export default function TodayTotalTime() {
                 <p className="truncate font-black text-xl -mb-2">
                   {progressData.data.totalTime.toLocaleString()}시간
                 </p>
-                <small className="text-gray-600">누적 공부시간</small>
+                <small className="text-gray-600">오늘 총 공부시간</small>
               </div>
             </div>
           </div>
@@ -55,7 +55,7 @@ export default function TodayTotalTime() {
                 <p className="truncate font-black text-xl -mb-2">
                   {progressData.data.totalGoals}개
                 </p>
-                <small className="text-gray-600">총 목표</small>
+                <small className="text-gray-600">오늘 총 데일리 목표</small>
               </div>
             </div>
           </div>
@@ -73,7 +73,7 @@ export default function TodayTotalTime() {
                 <p className="truncate font-black text-xl -mb-2">
                   {progressData.data.completedGoals.toLocaleString()}개
                 </p>
-                <small className="text-gray-600">완료한 목표</small>
+                <small className="text-gray-600">오늘 완료한 데일리 목표</small>
               </div>
             </div>
           </div>

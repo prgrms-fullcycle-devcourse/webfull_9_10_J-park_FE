@@ -1,6 +1,6 @@
 import { api } from '@/lib/axios';
 import { MyProfileResponse, User } from '@/types/user';
-import { Button, Card } from '@heroui/react';
+import { Button, Card, Link } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
 import { FcReading } from 'react-icons/fc';
 
@@ -19,6 +19,8 @@ export default function UserInfoCard() {
   return (
     <Card>
       <Button
+        as={Link}
+        href="/me"
         isIconOnly
         variant="light"
         className="flex w-full h-full justify-between px-6 py-4"
