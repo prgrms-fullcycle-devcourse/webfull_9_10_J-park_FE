@@ -66,7 +66,7 @@ export default function RankingPage() {
     const rawRanking = rankingData?.pages[0]?.data?.myRanking;
     if (!rawRanking) return null;
     if (typeof rawRanking === 'object') {
-      return (rawRanking as Ranking).myRanking || null;
+      return rawRanking.myRanking || null;
     }
     return rawRanking;
   }, [rankingData]);
