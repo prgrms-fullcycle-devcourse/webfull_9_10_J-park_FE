@@ -57,10 +57,9 @@ export default function CreateGoalModal() {
         placement="auto"
         className="overflow-hidden"
         onOpenChange={onOpenChange}
-        shouldBlockScroll={false}
         scrollBehavior="inside"
       >
-        <ModalContent>
+        <ModalContent className="h-dvh">
           <ModalBody className="p-0 scrollbar-hide ">
             <div className="w-full flex justify-between bg-gray-50 px-4 py-2 ">
               <Button variant="light" isIconOnly onPress={handleOnBack}>
