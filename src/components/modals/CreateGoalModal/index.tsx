@@ -14,10 +14,20 @@ import DetailStep from './components/DetailStep';
 import TotalAmountStep from './components/TotalAmountStep';
 import DateStep from './components/DateStep';
 import { IoChevronBackOutline } from 'react-icons/io5';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocalCreateGoal } from './local-store/useLocalCreateGoal';
 
 export default function CreateGoalModal() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    (() => {
+      const userAgent = navigator.userAgent || '';
+      const mobile = /android|iphone|ipad|ipod/i.test(userAgent.toLowerCase());
+      setIsMobile(mobile);
+    })();
+  }, []);
+
   const { step, prev } = useLocalCreateGoal();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
@@ -41,14 +51,15 @@ export default function CreateGoalModal() {
         <CgAddR size={28} />
       </Button>
       <Modal
-        size="full"
+        size={isMobile ? 'full' : 'lg'}
         hideCloseButton
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        className="overflow-hidden"
         scrollBehavior="inside"
       >
         <ModalContent>
-          <ModalBody className="p-0">
+          <ModalBody className="p-0 scrollbar-hide ">
             <div className="w-full flex justify-between bg-gray-50 px-4 py-2 ">
               <Button variant="light" isIconOnly onPress={handleOnBack}>
                 <IoChevronBackOutline size={24} />
