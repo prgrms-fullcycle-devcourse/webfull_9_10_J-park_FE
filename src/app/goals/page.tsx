@@ -8,7 +8,6 @@ import { api } from '@/lib/axios';
 import { Goal, GoalsResponse } from '@/types/api';
 import GoalItemSwipeable from './components/GoalItemSwipeable';
 import { MyProfileResponse, User } from '@/types/user';
-import PaceDial from '../dashboard/components/PaceIndicatorCard';
 
 export default function Goals() {
   const { data, isError } = useQuery<Goal[]>({
@@ -36,7 +35,6 @@ export default function Goals() {
   return (
     <div className="relative flex flex-col h-full bg-slate-50 gap-4 min-h-screen max-h-screen">
       <div className="sticky top-0 w-full p-6">
-        <PaceDial />
         <div className="w-full h-full flex flex-col mt-6">
           <div className="flex gap-4">
             <Button
