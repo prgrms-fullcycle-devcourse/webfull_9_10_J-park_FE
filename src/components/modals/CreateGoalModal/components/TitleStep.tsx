@@ -5,7 +5,7 @@ import { useLocalCreateGoal } from '../local-store/useLocalCreateGoal';
 
 export default function TitleStep() {
   const ref = useRef<HTMLInputElement>(null);
-  const { title, step, setTitle, next } = useLocalCreateGoal();
+  const { title, setTitle, next } = useLocalCreateGoal();
 
   useEffect(() => {
     if (ref.current) {
@@ -15,12 +15,8 @@ export default function TitleStep() {
     }
   }, []);
 
-  if (step !== 0) {
-    return;
-  }
-
   return (
-    <div className="animate-fadeIn h-full flex flex-col bg-white">
+    <div className="animate-fadeIn flex flex-col h-full justify-between bg-white">
       <div className="p-6">
         <h1 className="font-bold text-2xl mb-4">
           목표 이름을 무엇으로 할까요?
@@ -40,7 +36,6 @@ export default function TitleStep() {
         radius="none"
         size="lg"
         color="primary"
-        className="mt-auto"
         isDisabled={title.trim() === '' || !title}
         onPress={next}
       >

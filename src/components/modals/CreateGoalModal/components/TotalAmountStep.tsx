@@ -6,7 +6,7 @@ import { CATEGORIES } from '@/constants';
 
 export default function TotalAmountStep() {
   const ref = useRef<HTMLInputElement>(null);
-  const { totalAmount, category, step, setTotalAmount, setCategory, next } =
+  const { totalAmount, category, setTotalAmount, setCategory, next } =
     useLocalCreateGoal();
 
   useEffect(() => {
@@ -16,10 +16,6 @@ export default function TotalAmountStep() {
       ref.current.setSelectionRange(value.length, value.length);
     }
   }, []);
-
-  if (step !== 2) {
-    return;
-  }
 
   return (
     <div className="animate-fadeIn h-full flex flex-col bg-white">
