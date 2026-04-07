@@ -17,7 +17,7 @@ export default function TodayGoalItem({ goal }: TodayGoalItemProps) {
       variant="light"
       href={`/goals/${goal.id}/${goal.goalLogId}`}
       fullWidth
-      className="h-full px-6 py-4"
+      className="h-full px-6 py-2"
       draggable
       radius="none"
       onDragOver={(e) => e.preventDefault()}
@@ -34,9 +34,10 @@ export default function TodayGoalItem({ goal }: TodayGoalItemProps) {
             <FcSurvey size={24} />
           </Button>
           <div className="flex flex-col w-2/3">
-            <p className="truncate font-black text-xl">{goal.title}</p>
+            <p className="truncate font-bold text-lg">{goal.title}</p>
             <small className="text-gray-600 ">
-              {goal.currentAmount} / {goal.targetAmount}
+              {goal.currentAmount.toLocaleString()} /{' '}
+              {goal.targetAmount.toLocaleString()}
               {goal.unit}
             </small>
           </div>

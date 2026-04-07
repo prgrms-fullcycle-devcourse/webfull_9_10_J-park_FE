@@ -1,50 +1,23 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { Spinner } from '@heroui/react';
 import NavigationBar from '@/components/navigationBar';
-import TodayGoalDashboard from '@/app/components/TodayGoalDashboard';
-import TodayTotalTime from '@/app/components/TodayStudyTime';
-import PaceDial from './components/PaceDial';
 
-import { fetchTodayGoals } from '@/api/goalApi';
+import PaceIndicatorCard from './components/PaceIndicatorCard';
+import TodayDailyGoalsCard from './components/TodayDailyGoalsCard';
+import TodayStudyInfoCard from './components/TodayStudyInfoCard';
+import OtherInfoCard from './components/OtherInfoCard';
+import UserInfoCard from './components/UserInfoCard';
 
-export default function Home() {
-  const {
-    data: goalData,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ['todayGoals'],
-    queryFn: fetchTodayGoals,
-  });
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Spinner color="warning" size="lg" />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-500 font-bold">
-        데이터를 불러오는 중 오류가 발생했습니다.
-      </div>
-    );
-  }
-
-  const todayGoals = goalData?.data.todayGoals || [];
-
+export default function DashboardPage() {
   return (
     <>
-      <div className="flex-1 p-4 pb-24 flex flex-col gap-6">
-        <PaceDial />
-        <TodayTotalTime />
-        <TodayGoalDashboard />
+      <div className="w-full flex-1 p-4 pb-24 flex flex-col gap-4">
+        <UserInfoCard />
+        <PaceIndicatorCard />
+        <TodayStudyInfoCard />
+        <OtherInfoCard />
+        <TodayDailyGoalsCard />
       </div>
-
       <NavigationBar />
     </>
   );
