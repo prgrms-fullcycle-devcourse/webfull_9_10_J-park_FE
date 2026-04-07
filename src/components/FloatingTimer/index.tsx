@@ -26,16 +26,8 @@ export default function FloatingTimer() {
   const [isMinimized, setIsMinimized] = useState(false);
 
   const initialTimeMS = useMemo(() => {
-    if (currentTimer?.timer?.startedAt) {
-      const accumulatedTime = currentTimer.todayStudyDuration || 0;
-
-      const sessionDelta =
-        Date.now() - new Date(currentTimer.timer.startedAt).getTime();
-
-      return accumulatedTime + sessionDelta;
-    }
-    return 0;
-  }, [currentTimer?.timer?.startedAt, currentTimer?.todayStudyDuration]);
+    return currentTimer?.todayStudyDuration || 0;
+  }, [currentTimer?.todayStudyDuration]);
 
   if (params.goal_id && params.daily_id) {
     return null;
