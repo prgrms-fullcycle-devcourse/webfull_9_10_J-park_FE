@@ -29,7 +29,7 @@ const PACE_WARNING = [
 ];
 
 export default function PaceDial() {
-  const { data, isError } = useQuery({
+  const { data, isError, isLoading } = useQuery({
     queryKey: ['paceRisk'],
     queryFn: fetchRiskData,
   });
@@ -38,7 +38,15 @@ export default function PaceDial() {
     return;
   }
 
-  const { level } = data.data;
+  if (isLoading) {
+    return;
+  }
+
+  const { level, score } = data.data;
+  console.log(score);
+  if (score > 70) {
+    return;
+  }
 
   return (
     <Card className="animate-fadeIn">

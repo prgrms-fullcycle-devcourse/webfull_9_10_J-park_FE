@@ -1,31 +1,29 @@
 'use client';
-import { useEffect, useState } from 'react';
+
 import { useQuery } from '@tanstack/react-query';
+import { Button, Link } from '@heroui/react';
+import { FcClock, FcSurvey } from 'react-icons/fc';
 
 import { api } from '@/lib/axios';
 import { Goal, GoalsResponse } from '@/types/api';
-
 import GoalItemSwipeable from './components/GoalItemSwipeable';
-
-import GoalsBarChart from './components/GoalsBarChart';
+import { MyProfileResponse, User } from '@/types/user';
+import PaceDial from '../dashboard/components/PaceDial';
 
 export default function Goals() {
-  const [top, setTop] = useState(0);
-
   const { data, isError } = useQuery<Goal[]>({
     queryKey: ['goals'],
     queryFn: () =>
       api.get<GoalsResponse>('goals').then((res) => res.data.goals),
   });
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setTop(168);
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, []);
+  const userInfo = useQuery<User>({
+    queryKey: ['users', 'me'],
+    queryFn: () =>
+      api.get<MyProfileResponse>('/users/me').then((res) => res.data),
+  });
 
-  if (isError) {
+  if (isError || userInfo.isError) {
     return (
       <div className="flex items-center justify-center w-full min-h-200 rounded-2xl bg-slate-50">
         <h1 className="text-lg text-slate-400">
@@ -37,31 +35,50 @@ export default function Goals() {
 
   return (
     <div className="relative flex flex-col h-full bg-slate-50 gap-4 min-h-screen max-h-screen">
-      <div className="w-full h-full p-6 flex flex-col">
-        <small className="text-gray-600">등록된 목표들</small>
-        <p className="truncate max-w-full font-black text-2xl -mb-2">
-          {data?.length}개
-        </p>
-        <small className="text-gray-600">평균 진행률</small>
-        <p className="truncate max-w-full font-black text-2xl -mb-2">
-          {data?.length}%
-        </p>
-        <small className="text-gray-600">누적 진행</small>
-        <p className="truncate max-w-full font-black text-2xl -mb-2">
-          {data?.length}장
-        </p>
-        <small className="text-gray-600">누적 시간</small>
-        <p className="truncate max-w-full font-black text-2xl -mb-2">
-          {data?.length}장
-        </p>
+      <div className="sticky top-0 w-full p-6">
+        <PaceDial />
+        <div className="w-full h-full flex flex-col mt-6">
+          <div className="flex gap-4">
+            <Button
+              className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
+              as={Link}
+              isIconOnly
+              disableAnimation
+              disableRipple
+            >
+              <FcClock size={24} />
+            </Button>
+            <div className="flex w-full justify-between">
+              <div>
+                <p className="truncate font-black text-xl -mb-2">
+                  {userInfo.data?.totalTime.toLocaleString()}시간
+                </p>
+                <small className="text-gray-600">누적 공부시간</small>
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <Button
+              className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
+              isIconOnly
+              disableAnimation
+              disableRipple
+            >
+              <FcSurvey size={24} />
+            </Button>
+            <div className="flex w-full justify-between">
+              <div>
+                <p className="truncate font-black text-xl -mb-2">
+                  {data?.length.toLocaleString()}개
+                </p>
+                <small className="text-gray-600">총 목표</small>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div
-        className="absolute transition-all duration-500 ease-in-out min-h-full w-full bg-white rounded-t-2xl"
-        style={{
-          top: top,
-        }}
-      >
+      <div className="animate-fadeIn transition-all duration-500 ease-in-out min-h-screen w-full bg-white rounded-t-2xl">
         <p className="p-6 pb-2 font-black text-xl">전체 목표</p>
         {data &&
           data.length > 0 &&

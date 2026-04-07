@@ -1,8 +1,8 @@
 import { api } from '@/lib/axios';
 import { MyProfileResponse, User } from '@/types/user';
-import { Button, Card, CardBody } from '@heroui/react';
+import { Button, Card } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
-import { FcApproval } from 'react-icons/fc';
+import { FcReading } from 'react-icons/fc';
 
 export default function UserInfoCard() {
   const userInfo = useQuery<User>({
@@ -29,7 +29,7 @@ export default function UserInfoCard() {
           disableAnimation
           disableRipple
         >
-          <FcApproval size={24} />
+          <FcReading size={24} />
         </Button>
         <div className="w-full text-left">
           <small className="text-sm">내 정보 확인하기</small>
