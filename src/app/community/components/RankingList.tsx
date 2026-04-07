@@ -22,9 +22,8 @@ export default function RankingList({
   bottomRef,
   isFetchingNextPage,
 }: Props) {
-  // if (true) {
   if (status === 'pending') {
-    return;
+    return null;
   }
 
   if (status === 'error') {
@@ -39,11 +38,13 @@ export default function RankingList({
     <div className="animate-fadeIn rounded-t-2xl w-full min-h-dvh bg-white z-20 pt-6">
       <small className="text-gray-600 p-6">공부시간 랭킹</small>
       {allRanks.map((item, index) => {
+        const prevTotalTime = index > 0 ? allRanks[index - 1].totalTime : null;
         return (
           <RankingListItem
             key={`rank-${item.rank}-${index}`}
             item={item}
             myTotalTime={myTotalTime}
+            prevTotalTime={prevTotalTime}
             isMyRank={item.rank === myRanking}
           />
         );

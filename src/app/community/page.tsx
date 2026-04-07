@@ -8,8 +8,23 @@ import { RankingsResponse, MyProfileResponse, Ranking } from '@/types/user';
 import RankingList from './components/RankingList';
 
 import { api } from '@/lib/axios';
+import { formatMilliseconds } from '@/lib/utils';
 
 import { Avatar } from '@heroui/react';
+
+const formatMyStudyTime = (ms: number) => {
+  if (!ms || ms <= 0) return '0초';
+
+  const timeString = formatMilliseconds(ms);
+  const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+  const parts = [];
+  if (hours > 0) parts.push(`${hours}시간`);
+  if (minutes > 0) parts.push(`${minutes}분`);
+  if (seconds > 0) parts.push(`${seconds}초`);
+
+  return parts.length > 0 ? parts.join(' ') : '0초';
+};
 
 const fetchRankings = async ({
   pageParam = 1,
@@ -31,7 +46,7 @@ const fetchMyProfile = async (): Promise<MyProfileResponse> => {
 };
 
 export default function RankingPage() {
-  const { ref, inView } = useInView({ threshold: 0.5 });
+  const { ref, inView } = useInView({ threshold: 0.1 });
 
   const {
     data: rankingData,
@@ -53,7 +68,10 @@ export default function RankingPage() {
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      const timer = setTimeout(() => {
+        fetchNextPage();
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
@@ -89,9 +107,7 @@ export default function RankingPage() {
       rank: myRanking,
       nickname: me.nickname ? String(me.nickname) : '이름 없음',
       profileImageUrl: me.profileImageUrl || null,
-      totalTime: me.totalTime
-        ? Math.round(Number(me.totalTime) / 1000 / 60 / 60)
-        : 0,
+      totalTime: me.totalTime ? Number(me.totalTime) : 0,
     };
   }, [myRanking, profileData]);
 
@@ -109,15 +125,17 @@ export default function RankingPage() {
               {myRankData.nickname}
             </span>
           </div>
-          <div className="flex w-full justify-between">
+          <div className="flex w-full justify-between items-end">
             <div>
-              <p className="font-black text-xl -mb-2">
-                {myRankData?.totalTime}시간
+              <p className="font-black text-2xl text-gray-900 -mb-1">
+                {formatMyStudyTime(myRankData?.totalTime)}
               </p>
-              <small className="text-gray-600">내가 공부한 시간</small>
+              <span className="text-blue-500 font-bold text-lg">
+                내가 공부한 시간
+              </span>
             </div>
             <div className="text-right">
-              <p className="truncate font-black text-2xl -mb-2">
+              <p className="truncate font-black text-4xl -mb-1">
                 {myRankData?.rank}위
               </p>
             </div>
@@ -134,8 +152,6 @@ export default function RankingPage() {
           isFetchingNextPage={isFetchingNextPage}
         />
       )}
-
-      {/* <MyRankingBar myRankData={myRankData} /> */}
     </div>
   );
 }
