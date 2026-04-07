@@ -89,7 +89,9 @@ export default function RankingPage() {
       rank: myRanking,
       nickname: me.nickname ? String(me.nickname) : '이름 없음',
       profileImageUrl: me.profileImageUrl || null,
-      totalTime: me.totalTime ? Math.round(Number(me.totalTime) / 60 / 60) : 0,
+      totalTime: me.totalTime
+        ? Math.round(Number(me.totalTime) / 1000 / 60 / 60)
+        : 0,
     };
   }, [myRanking, profileData]);
 

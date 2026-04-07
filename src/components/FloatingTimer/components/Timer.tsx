@@ -1,24 +1,34 @@
 'use client';
+
 import { formatMilliseconds } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useTimerStore } from '@/stores/useTimerStore';
+import { useSyncedTime } from '@/hooks/useSyncedTime';
 
 interface Props {
   initialTimeMS?: number;
   isMinimized?: boolean;
+  goalId?: number;
 }
 
-export default function Timer({ initialTimeMS = 0, isMinimized }: Props) {
-  const [time, setTime] = useState(initialTimeMS);
+export default function Timer({
+  initialTimeMS = 0,
+  isMinimized,
+  goalId,
+}: Props) {
+  const { playingId, startTime, recordedTimes } = useTimerStore();
+  const currentGlobalTime = useSyncedTime();
 
-  useEffect(() => {
-    const startTimestamp = Date.now() - initialTimeMS;
+  const targetId = goalId || playingId;
 
-    const interval = setInterval(() => {
-      setTime(Date.now() - startTimestamp);
-    }, 1000);
+  const isPlaying = playingId === targetId && targetId !== null;
 
-    return () => clearInterval(interval);
-  }, [initialTimeMS]);
+  const baseTime =
+    initialTimeMS + (targetId ? recordedTimes[targetId] || 0 : 0);
+
+  const liveMs =
+    isPlaying && startTime
+      ? baseTime + (currentGlobalTime - startTime)
+      : baseTime;
 
   return (
     <div
@@ -27,7 +37,7 @@ export default function Timer({ initialTimeMS = 0, isMinimized }: Props) {
     ${isMinimized ? 'text-sm' : 'text-2xl'}
     `}
     >
-      {formatMilliseconds(time)}
+      {formatMilliseconds(liveMs)}
     </div>
   );
 }
