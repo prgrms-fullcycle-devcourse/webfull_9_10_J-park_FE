@@ -46,7 +46,7 @@ const fetchMyProfile = async (): Promise<MyProfileResponse> => {
 };
 
 export default function RankingPage() {
-  const { ref, inView } = useInView({ threshold: 0.5 });
+  const { ref, inView } = useInView({ threshold: 0.1 });
 
   const {
     data: rankingData,
@@ -68,7 +68,10 @@ export default function RankingPage() {
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      const timer = setTimeout(() => {
+        fetchNextPage();
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
@@ -127,9 +130,12 @@ export default function RankingPage() {
               <p className="font-black text-2xl text-gray-900 -mb-1">
                 {formatMyStudyTime(myRankData?.totalTime)}
               </p>
+              <span className="text-blue-500 font-bold text-lg">
+                내가 공부한 시간
+              </span>
             </div>
             <div className="text-right">
-              <p className="truncate font-black text-2xl -mb-1">
+              <p className="truncate font-black text-4xl -mb-1">
                 {myRankData?.rank}위
               </p>
             </div>

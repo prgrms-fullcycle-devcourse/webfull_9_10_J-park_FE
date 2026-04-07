@@ -23,7 +23,7 @@ export default function RankingList({
   isFetchingNextPage,
 }: Props) {
   if (status === 'pending') {
-    return;
+    return null;
   }
 
   if (status === 'error') {
