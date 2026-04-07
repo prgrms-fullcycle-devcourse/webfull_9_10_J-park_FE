@@ -164,7 +164,7 @@ export default function DailyGoalDetailPage() {
       <GoalSubmitModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={(amount) => endMutation.mutate(amount)}
+        onSubmit={(amount) => endMutation.mutateAsync(amount)}
         totalTargetAmount={totalTargetAmount}
         dailyTargetAmount={currentGoal.targetAmount}
         currentAmount={currentTotalAmount}
