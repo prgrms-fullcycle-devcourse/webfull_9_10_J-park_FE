@@ -14,7 +14,7 @@ export interface RankingsResponse {
   data: Ranking;
 }
 export interface Ranking {
-  myRanking: number;
+  myRanking: { myRanking: number };
   topRankings: RankingItem[];
   ranks: RankingItem[];
 }
