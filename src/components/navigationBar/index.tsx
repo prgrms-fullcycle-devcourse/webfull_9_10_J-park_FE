@@ -7,7 +7,6 @@ import { FaRankingStar } from 'react-icons/fa6';
 import { FaUserCircle } from 'react-icons/fa';
 
 import { ROUTE, STYLE } from '@/constants';
-import GoalCreateFormModal from '../modals/GoalCreateFormModal';
 import CreateGoalModal from '../modals/CreateGoalModal';
 
 const selectedStyle = 'border-success-400 border-t-3 text-success-400';

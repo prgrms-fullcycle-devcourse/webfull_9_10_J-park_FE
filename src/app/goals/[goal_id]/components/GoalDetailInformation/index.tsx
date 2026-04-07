@@ -1,23 +1,12 @@
 'use client';
 
-import {
-  addToast,
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Divider,
-  Input,
-  RangeCalendar,
-} from '@heroui/react';
+import { addToast, Button, Input, RangeCalendar } from '@heroui/react';
 import { CalendarDate } from '@internationalized/date';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useEffect, useState } from 'react';
 import { GoalDetail, GoalDetailResponse } from '../../types';
 import { api } from '@/lib/axios';
-import { GoalParams } from '@/components/modals/GoalCreateFormModal';
-import { FcSurvey } from 'react-icons/fc';
 
 interface Props {
   goalID: number;
@@ -41,7 +30,11 @@ export default function GoalDetailInformation({
   const { mutate, isSuccess, isPending, isError } = useMutation<
     GoalDetail,
     Error,
-    Partial<GoalParams>
+    {
+      totalAmount: number;
+      startDate: string;
+      endDate: string;
+    }
   >({
     mutationKey: ['patch', 'goal'],
     mutationFn: (params) =>
