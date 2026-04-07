@@ -36,8 +36,8 @@ export default function TotalAmountStep() {
           />
         </div>
         <Select
+          inert
           fullWidth
-          aria-label="category"
           label="어떤 분류의 목표인가요?"
           labelPlacement="outside-top"
           isRequired
@@ -47,6 +47,11 @@ export default function TotalAmountStep() {
             key: n.id,
             label: n.name,
           }))}
+          onClose={() => {
+            if (document.activeElement instanceof HTMLElement) {
+              document.activeElement.blur();
+            }
+          }}
           placeholder="카테고리"
           classNames={{
             value: 'font-black text-2xl text-gray-300',
