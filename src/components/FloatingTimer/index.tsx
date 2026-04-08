@@ -65,6 +65,7 @@ export default function FloatingTimer() {
           <>
             <div className="w-1/3">
               <Timer initialTimeMS={initialTimeMS} />
+
               <StopTimerModal
                 goalID={goalId}
                 targetAmount={currentTimer.todayTargetAmount}
