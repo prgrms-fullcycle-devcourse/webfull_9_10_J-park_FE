@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CreateGoalResponse } from '@/types/api';
 import { useCallback } from 'react';
 import { api } from '@/lib/axios';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   onClose: () => void;
@@ -11,6 +12,7 @@ interface Props {
 
 export default function DateStep({ onClose }: Props) {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const {
     title,
@@ -44,8 +46,13 @@ export default function DateStep({ onClose }: Props) {
         title: '목표가 등록되었습니다',
         description: `"${title}" 목표가 성공적으로 생성되었습니다`,
       });
+
       queryClient.invalidateQueries({ queryKey: ['goals'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+
+      queryClient.invalidateQueries({ queryKey: ['today', 'goals'] });
+      router.refresh();
+
       reset();
     },
     onError: () => {
