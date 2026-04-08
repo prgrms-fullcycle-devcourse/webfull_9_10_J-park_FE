@@ -69,7 +69,7 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
       queryClient.invalidateQueries({ queryKey: ['goalDetail', goalID] });
-
+      queryClient.invalidateQueries({ queryKey: ['today', 'goals'] });
       setIsOpen(false);
     },
     onError: (error) => {
