@@ -26,7 +26,7 @@ export default function TotalAmountStep() {
             ref={ref}
             value={totalAmount}
             onValueChange={setTotalAmount}
-            label="종 분량"
+            label="총 분량"
             errorMessage="총 분량을 입력해주세요"
             isRequired
           />
