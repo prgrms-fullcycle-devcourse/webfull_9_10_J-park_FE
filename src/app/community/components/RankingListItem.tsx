@@ -33,9 +33,14 @@ export default function RankingListItem({
   const diffString = (() => {
     if (prevTotalTime === null) return null;
 
-    const timeDiffMS = prevTotalTime - item.totalTime;
-    if (timeDiffMS <= 0) return null;
-    return formatStudyTime(timeDiffMS);
+    const prevSeconds = Math.floor(prevTotalTime / 1000);
+    const itemSeconds = Math.floor(item.totalTime / 1000);
+
+    const diffSeconds = prevSeconds - itemSeconds;
+
+    if (diffSeconds <= 0) return null; // 차이가 없거나 마이너스면 숨김
+
+    return formatStudyTime(diffSeconds * 1000);
   })();
 
   return (
