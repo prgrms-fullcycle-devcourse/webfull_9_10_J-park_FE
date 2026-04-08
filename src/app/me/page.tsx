@@ -9,6 +9,7 @@ import { FcClock } from 'react-icons/fc';
 import { MdModeEdit } from 'react-icons/md';
 import IconCropperModal from '@/components/modals/ProfileImageCropModal';
 import MyInformationEdit from './components/MyInformationEdit';
+import { formatStudyTime } from '@/lib/utils';
 
 const DEFAULT_PROFILE_IMG_URL = 'https://picsum.photos/id/237/200/300';
 export default function MePage() {
@@ -58,7 +59,7 @@ export default function MePage() {
           <div>
             <small className="text-gray-600">지금까지 진행한 총 시간</small>
             <p className="font-black text-xl">
-              {totalTime.toLocaleString()} 시간
+              {formatStudyTime(Number(totalTime || 0))}
             </p>
           </div>
         </div>

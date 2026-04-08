@@ -9,6 +9,7 @@ import { FcApproval } from 'react-icons/fc';
 import { fetchTodayProgress } from '@/api/goalApi';
 import { Button, Card } from '@heroui/react';
 import TotalProgression from './components/TotalProgression';
+import { formatStudyTime } from '@/lib/utils';
 
 export default function TodayStudyInfoCard() {
   const { data: progressData } = useQuery({
@@ -35,7 +36,7 @@ export default function TodayStudyInfoCard() {
             <div className="flex w-full justify-between">
               <div>
                 <p className="truncate font-black text-xl -mb-2">
-                  {progressData.data.totalTime.toLocaleString()}시간
+                  {formatStudyTime(progressData.data.totalTime)}
                 </p>
                 <small className="text-gray-600">오늘 총 공부시간</small>
               </div>

@@ -8,6 +8,7 @@ import { api } from '@/lib/axios';
 import { Goal, GoalsResponse } from '@/types/api';
 import GoalItemSwipeable from './components/GoalItemSwipeable';
 import { MyProfileResponse, User } from '@/types/user';
+import { formatStudyTime } from '@/lib/utils';
 
 export default function Goals() {
   const { data, isError } = useQuery<Goal[]>({
@@ -49,7 +50,7 @@ export default function Goals() {
             <div className="flex w-full justify-between">
               <div>
                 <p className="truncate font-black text-xl -mb-2">
-                  {userInfo.data?.totalTime.toLocaleString()}시간
+                  {formatStudyTime(Number(userInfo.data?.totalTime || 0))}
                 </p>
                 <small className="text-gray-600">누적 공부시간</small>
               </div>
