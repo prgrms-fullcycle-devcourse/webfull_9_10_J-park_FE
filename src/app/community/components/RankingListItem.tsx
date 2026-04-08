@@ -3,7 +3,7 @@
 import { Avatar } from '@heroui/react';
 import { FaTrophy, FaMedal } from 'react-icons/fa';
 import { RankingItem } from '@/types/user';
-import { formatMilliseconds } from '@/lib/utils';
+import { formatStudyTime } from '@/lib/utils';
 
 interface Props {
   item: RankingItem;
@@ -25,34 +25,17 @@ export default function RankingListItem({
       return <FaMedal className="text-2xl text-gray-400 drop-shadow-sm" />;
     if (rank === 3)
       return <FaMedal className="text-2xl text-amber-600 drop-shadow-sm" />;
-    return;
+    return null;
   };
 
-  const formattedItemTime = (() => {
-    const timeString = formatMilliseconds(item.totalTime);
-    const [hours, minutes] = timeString.split(':').map(Number);
-
-    const parts = [];
-    if (hours > 0) parts.push(`${hours}시간`);
-    if (minutes > 0) parts.push(`${minutes}분`);
-
-    return parts.length > 0 ? parts.join(' ') : '0분';
-  })();
+  const formattedItemTime = formatStudyTime(item.totalTime);
 
   const diffString = (() => {
     if (prevTotalTime === null) return null;
 
     const timeDiffMS = prevTotalTime - item.totalTime;
-    const timeString = formatMilliseconds(timeDiffMS);
-    const [hours, minutes] = timeString.split(':').map(Number);
-
-    if (hours === 0 && minutes === 0) return null;
-
-    const parts = [];
-    if (hours > 0) parts.push(`${hours}시간`);
-    if (minutes > 0) parts.push(`${minutes}분`);
-
-    return parts.join(' ');
+    if (timeDiffMS <= 0) return null;
+    return formatStudyTime(timeDiffMS);
   })();
 
   return (

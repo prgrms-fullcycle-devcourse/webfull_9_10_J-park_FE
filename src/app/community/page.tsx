@@ -3,28 +3,13 @@
 import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-import { RankingsResponse, MyProfileResponse, Ranking } from '@/types/user';
+import { RankingsResponse, MyProfileResponse } from '@/types/user';
 
 import RankingList from './components/RankingList';
 
 import { api } from '@/lib/axios';
-import { formatMilliseconds } from '@/lib/utils';
-
+import { formatStudyTime } from '@/lib/utils';
 import { Avatar } from '@heroui/react';
-
-const formatMyStudyTime = (ms: number) => {
-  if (!ms || ms <= 0) return '0초';
-
-  const timeString = formatMilliseconds(ms);
-  const [hours, minutes, seconds] = timeString.split(':').map(Number);
-
-  const parts = [];
-  if (hours > 0) parts.push(`${hours}시간`);
-  if (minutes > 0) parts.push(`${minutes}분`);
-  if (seconds > 0) parts.push(`${seconds}초`);
-
-  return parts.length > 0 ? parts.join(' ') : '0초';
-};
 
 const fetchRankings = async ({
   pageParam = 1,
@@ -84,7 +69,7 @@ export default function RankingPage() {
     const rawRanking = rankingData?.pages[0]?.data?.myRanking;
     if (!rawRanking) return null;
     if (typeof rawRanking === 'object') {
-      return rawRanking.myRanking || null;
+      return (rawRanking as any).myRanking || null;
     }
     return rawRanking;
   }, [rankingData]);
@@ -128,7 +113,7 @@ export default function RankingPage() {
           <div className="flex w-full justify-between items-end">
             <div>
               <p className="font-black text-2xl text-gray-900 -mb-1">
-                {formatMyStudyTime(myRankData?.totalTime)}
+                {formatStudyTime(myRankData.totalTime)}
               </p>
               <span className="text-blue-500 font-bold text-lg">
                 내가 공부한 시간
@@ -136,7 +121,7 @@ export default function RankingPage() {
             </div>
             <div className="text-right">
               <p className="truncate font-black text-4xl -mb-1">
-                {myRankData?.rank}위
+                {myRankData.rank}위
               </p>
             </div>
           </div>
