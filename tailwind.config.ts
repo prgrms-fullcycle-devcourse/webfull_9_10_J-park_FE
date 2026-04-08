@@ -9,6 +9,12 @@ const config = {
   ],
   theme: {
     keyframes: {
+      colorCycle: {
+        '0%, 100%': {
+          backgroundPosition: '0% 50%',
+        },
+        '50%': { backgroundPosition: '100% 50%' },
+      },
       ping: {
         '75%, 100%': { transform: 'scale(1.2)', opacity: '0' },
       },
@@ -18,6 +24,7 @@ const config = {
       },
     },
     animation: {
+      bgCycle: 'colorCycle 12s ease infinite',
       fadeIn: 'fadeIn 0.5s ease-out forwards',
       ping: 'ping 1s ease-in-out infinite',
     },

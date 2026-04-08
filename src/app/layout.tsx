@@ -38,14 +38,15 @@ export default async function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
         />
       </head>
-      <body className="font-notosan antialiased">
+      <body
+        className={`font-notosan antialiased animate-bgCycle ${isMobile ? '' : 'bg-linear-to-r from-rose-100 via-sky-200 to-teal-100 bg-[length:200%_200%]'}`}
+      >
         <Providers>
           {isMobile ? (
             <div className={mobileClasses}>
               <FloatingTimer />
               <main className={`overflow-y-auto scrollbar-hide`}>
                 {children}
-                {/* <div style={{ minHeight: STYLE.NAVBAR_HEIGHT }}></div> */}
               </main>
               <NavigationBar />
             </div>
