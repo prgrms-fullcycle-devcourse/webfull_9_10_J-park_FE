@@ -17,6 +17,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.20",
     "framer-motion": "^12.36.0",
+    "js-cookie": "^3.0.5",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-circular-progressbar": "^2.2.0",
