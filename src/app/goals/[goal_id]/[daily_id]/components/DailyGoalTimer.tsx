@@ -24,6 +24,7 @@ interface DailyGoalTimerProps {
   unit?: string;
   totalTargetAmount: number;
   currentTotalAmount: number;
+  currentDailyAmount: number;
 }
 
 export default function DailyGoalTimer({
@@ -34,6 +35,7 @@ export default function DailyGoalTimer({
   targetAmount = 0,
   unit = '',
   totalTargetAmount,
+  currentDailyAmount,
   currentTotalAmount,
 }: DailyGoalTimerProps) {
   const router = useRouter();
@@ -160,7 +162,7 @@ export default function DailyGoalTimer({
         onSubmit={(amount) => endMutation.mutateAsync(amount)}
         totalTargetAmount={totalTargetAmount}
         dailyTargetAmount={targetAmount}
-        currentAmount={currentTotalAmount}
+        currentAmount={currentDailyAmount}
         unit={unit}
         isPending={endMutation.isPending}
         goalTitle={goalTitle}

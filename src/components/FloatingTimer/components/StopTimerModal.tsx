@@ -13,21 +13,33 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useTimerStore } from '@/stores/useTimerStore';
 
 interface Props {
   goalID: number;
   targetAmount: number;
+  currentDailyAmount: number;
 }
 
-export default function StopTimerModal({ goalID, targetAmount }: Props) {
+export default function StopTimerModal({
+  goalID,
+  targetAmount,
+  currentDailyAmount,
+}: Props) {
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const [actualAmount, setActualAmount] = useState(() => targetAmount);
+
+  const [actualAmount, setActualAmount] = useState(() => currentDailyAmount);
 
   const { stopTimer } = useTimerStore();
+
+  useEffect(() => {
+    if (isOpen) {
+      setActualAmount(currentDailyAmount);
+    }
+  }, [isOpen, currentDailyAmount]);
 
   const { mutate } = useMutation<
     EndTimer,
@@ -83,7 +95,7 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
               size="lg"
               hideStepper
               variant="bordered"
-              defaultValue={actualAmount}
+              value={actualAmount}
               onValueChange={setActualAmount}
               endContent={<span className="font-bold">/{targetAmount}</span>}
             />
