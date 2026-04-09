@@ -24,6 +24,7 @@ interface DailyGoalTimerProps {
   unit?: string;
   totalTargetAmount: number;
   currentTotalAmount: number;
+  currentDailyAmount: number;
 }
 
 export default function DailyGoalTimer({
@@ -34,6 +35,7 @@ export default function DailyGoalTimer({
   targetAmount = 0,
   unit = '',
   totalTargetAmount,
+  currentDailyAmount,
   currentTotalAmount,
 }: DailyGoalTimerProps) {
   const router = useRouter();
@@ -59,6 +61,8 @@ export default function DailyGoalTimer({
       ? baseTime + (currentGlobalTime - startTime)
       : baseTime;
 
+  const previousAccumulatedAmount = currentTotalAmount - currentDailyAmount;
+
   const startMutation = useMutation({
     mutationFn: () => apiStartTimer({ goalId }),
     onMutate: () => {
@@ -68,6 +72,7 @@ export default function DailyGoalTimer({
       queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+      queryClient.invalidateQueries({ queryKey: ['today', 'goals'] });
     },
     onError: (error: any) => {
       const isAlreadyRunning =
@@ -78,6 +83,7 @@ export default function DailyGoalTimer({
         queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
         queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
         queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+        queryClient.invalidateQueries({ queryKey: ['today', 'goals'] });
       } else {
         localStopTimer();
         alert('네트워크 오류로 타이머를 시작하지 못했습니다.');
@@ -99,21 +105,25 @@ export default function DailyGoalTimer({
       queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+      queryClient.invalidateQueries({ queryKey: ['goalDetail', goalId] });
+      queryClient.invalidateQueries({ queryKey: ['today', 'goals'] });
 
+      router.refresh();
       setIsModalOpen(false);
       router.push('/');
     },
     onError: (error: any) => {
-      console.error('타이머 종료 실패 (상태 강제 동기화 진행)');
-
       localStopTimer();
       clearRecordedTime(goalId);
-      setIsModalOpen(false);
 
       queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+      queryClient.invalidateQueries({ queryKey: ['goalDetail', goalId] });
+      queryClient.invalidateQueries({ queryKey: ['today', 'goals'] });
 
+      router.refresh();
+      setIsModalOpen(false);
       router.push('/');
     },
   });
@@ -123,6 +133,7 @@ export default function DailyGoalTimer({
   );
 
   const [hours, minutes, seconds] = formatMilliseconds(liveMs).split(':');
+
   return (
     <>
       <div className="animate-fadeIn sticky top-0 flex flex-col items-center justify-center mb-6">
@@ -157,10 +168,13 @@ export default function DailyGoalTimer({
       <GoalSubmitModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={(amount) => endMutation.mutateAsync(amount)}
+        onSubmit={async (amount) => {
+          const finalAmount = previousAccumulatedAmount + amount;
+          await endMutation.mutateAsync(finalAmount);
+        }}
         totalTargetAmount={totalTargetAmount}
         dailyTargetAmount={targetAmount}
-        currentAmount={currentTotalAmount}
+        currentAmount={currentDailyAmount}
         unit={unit}
         isPending={endMutation.isPending}
         goalTitle={goalTitle}

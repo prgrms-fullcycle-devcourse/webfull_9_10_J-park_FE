@@ -66,3 +66,18 @@ export function getUnitFromCategory(category: string) {
       return '강';
   }
 }
+export const formatStudyTime = (ms: number): string => {
+  if (!ms || ms <= 0) return '0초';
+
+  const timeString = formatMilliseconds(ms);
+
+  const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+  const parts: string[] = [];
+
+  if (hours > 0) parts.push(`${hours}시간`);
+  if (minutes > 0) parts.push(`${minutes}분`);
+  if (seconds > 0) parts.push(`${seconds}초`);
+
+  return parts.length > 0 ? parts.join(' ') : '0초';
+};

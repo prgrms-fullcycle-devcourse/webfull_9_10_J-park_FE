@@ -81,6 +81,8 @@ export default function DailyGoalDetailPage() {
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
 
+      queryClient.invalidateQueries({ queryKey: ['goalDetail', goalId] });
+
       setIsModalOpen(false);
       router.push('/');
     },
@@ -93,7 +95,7 @@ export default function DailyGoalDetailPage() {
 
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
-
+      queryClient.invalidateQueries({ queryKey: ['goalDetail', goalId] });
       router.push('/');
     },
   });
@@ -127,6 +129,9 @@ export default function DailyGoalDetailPage() {
       (g: { id: number; [key: string]: any }) => g.id === goalId,
     ) || todayGoals[0];
 
+  const previousAccumulatedAmount =
+    currentTotalAmount - (currentGoal?.currentAmount || 0);
+
   return (
     <>
       <div className="relative flex flex-col bg-slate-50 overflow-auto scrollbar-hide max-h-screen">
@@ -137,8 +142,9 @@ export default function DailyGoalDetailPage() {
           initialStudyTime={currentGoal?.studyTime || 0}
           targetAmount={currentGoal?.targetAmount || 0}
           unit={currentGoal?.unit || ''}
-          totalTargetAmount={currentGoal?.targetAmount || 0}
-          currentTotalAmount={currentGoal?.currentAmount || 0}
+          totalTargetAmount={totalTargetAmount}
+          currentTotalAmount={currentTotalAmount}
+          currentDailyAmount={currentGoal.currentAmount}
         />
         <div className="animate-fadeIn w-full rounded-t-2xl bg-white min-h-screen z-30">
           <Card className="relative m-4">
@@ -161,13 +167,17 @@ export default function DailyGoalDetailPage() {
           {todayGoals.length > 0 && <DailyGoalList goals={todayGoals} />}
         </div>
       </div>
+
       <GoalSubmitModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={(amount) => endMutation.mutateAsync(amount)}
+        onSubmit={(amount) => {
+          const finalAmount = previousAccumulatedAmount + amount;
+          return endMutation.mutateAsync(finalAmount);
+        }}
         totalTargetAmount={totalTargetAmount}
         dailyTargetAmount={currentGoal.targetAmount}
-        currentAmount={currentTotalAmount}
+        currentAmount={currentGoal.currentAmount}
         unit={currentGoal.unit}
         isPending={endMutation.isPending}
         goalTitle={currentGoal.title}

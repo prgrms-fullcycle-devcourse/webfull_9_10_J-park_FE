@@ -112,6 +112,7 @@ export default function GoalItemSwipeable({ goal }: Props) {
             month: 'long',
             day: 'numeric',
           })}
+          까지
         </small>
         <Button
           as={Link}
