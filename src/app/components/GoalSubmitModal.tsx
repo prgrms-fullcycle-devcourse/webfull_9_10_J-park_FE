@@ -8,6 +8,7 @@ import {
   Button,
   addToast,
   Slider,
+  Input,
 } from '@heroui/react';
 import { FcSurvey } from 'react-icons/fc';
 
@@ -135,10 +136,19 @@ export default function GoalSubmitModal({
                     <span className="text-sm font-bold text-gray-500">
                       진행한 공부량
                     </span>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-extrabold text-orange-500">
-                        {inputValue}
-                      </span>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number"
+                        variant="underlined"
+                        value={String(inputValue)}
+                        onChange={(e) => setInputValue(Number(e.target.value))}
+                        className="w-20"
+                        classNames={{
+                          input:
+                            'text-2xl font-extrabold text-orange-500 text-right',
+                          inputWrapper: 'border-orange-200 after:bg-orange-500',
+                        }}
+                      />
                       <span className="text-lg font-bold text-gray-400">
                         / {dailyTargetAmount} {unit}
                       </span>
