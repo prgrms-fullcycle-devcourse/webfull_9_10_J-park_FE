@@ -2,7 +2,7 @@
 
 import { api } from '@/lib/axios';
 import { EndTimer, EndTimerResponse } from '@/types/timer';
-import { addToast, Button } from '@heroui/react';
+import { Button } from '@heroui/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { IoStop } from 'react-icons/io5';
@@ -59,11 +59,7 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
         .then((res) => res.data as unknown as EndTimer),
     onSuccess: (data) => {
       stopTimer();
-      addToast({
-        title: '공부를 종료합니다',
-        description: `총 ${data.goalProgressRate}%만큼 진행하셨습니다.`,
-        color: 'success',
-      });
+
       queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
