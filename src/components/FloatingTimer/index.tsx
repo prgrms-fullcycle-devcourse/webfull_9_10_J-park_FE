@@ -49,10 +49,10 @@ export default function FloatingTimer() {
       className={`fixed z-50 transition-all duration-500 ease-in-out
         ${
           isMinimized
-            ? 'top-8 right-8 w-28 h-12 rounded-full shadow-lg cursor-pointer'
+            ? 'top-8 right-8 w-32 h-12 rounded-full shadow-lg cursor-pointer' // 💡 글자가 커졌으므로 w-28 -> w-32로 살짝 넓힘
             : 'top-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md h-16 rounded-2xl shadow-2xl'
         }
-        bg-gray-900/70 backdrop-blur-md border border-white/10 text-white flex items-center overflow-hidden
+        bg-gray-900/80 backdrop-blur-md border border-white/10 text-white flex items-center overflow-hidden
       `}
     >
       {isMinimized ? (
@@ -60,7 +60,7 @@ export default function FloatingTimer() {
           className="flex items-center justify-center w-full h-full"
           onClick={() => setIsMinimized(false)}
         >
-          <div className="text-emerald-400 font-mono text-base font-medium [font-variant-numeric:tabular-nums]">
+          <div className="text-emerald-400 font-mono text-lg font-medium [font-variant-numeric:tabular-nums]">
             <Timer initialTimeMS={initialTimeMS} isMinimized={true} />
           </div>
         </div>
@@ -70,14 +70,14 @@ export default function FloatingTimer() {
             className="flex-1 min-w-0 cursor-pointer"
             onClick={handleNavigate}
           >
-            <p className="font-bold text-base truncate tracking-tight">
+            <p className="font-bold text-lg truncate tracking-tight">
               {goalTitle}
             </p>
           </div>
 
           <div className="flex items-center shrink-0 ml-4">
             <div
-              className="text-emerald-400 font-mono text-base font-medium [font-variant-numeric:tabular-nums] cursor-pointer mr-8"
+              className="text-emerald-400 font-mono text-lg font-medium [font-variant-numeric:tabular-nums] cursor-pointer mr-8"
               onClick={handleNavigate}
             >
               <Timer initialTimeMS={initialTimeMS} />
@@ -96,7 +96,7 @@ export default function FloatingTimer() {
                 onClick={() => setIsMinimized(true)}
                 className="p-1 hover:bg-white/10 rounded-full transition-colors text-gray-400 cursor-pointer"
               >
-                <IoRemove size={22} />
+                <IoRemove size={24} />
               </button>
             </div>
           </div>

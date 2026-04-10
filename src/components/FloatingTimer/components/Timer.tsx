@@ -31,12 +31,7 @@ export default function Timer({
       : baseTime;
 
   return (
-    <div
-      className={`col-span-1 justify-center 
-    items-center font-bold z-20 rounded-l-2xl text-success-400
-    ${isMinimized ? 'text-base' : 'text-base'}
-    `}
-    >
+    <div className="col-span-1 justify-center items-center font-bold z-20 rounded-l-2xl text-success-400 text-lg">
       {formatMilliseconds(liveMs)}
     </div>
   );
