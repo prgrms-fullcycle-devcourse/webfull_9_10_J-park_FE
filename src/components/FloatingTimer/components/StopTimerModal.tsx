@@ -5,6 +5,7 @@ import { EndTimer, EndTimerResponse } from '@/types/timer';
 import { addToast, Button } from '@heroui/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { IoStop } from 'react-icons/io5';
 
 import { useTimerStore } from '@/stores/useTimerStore';
 import { fetchGoalDetail, fetchTodayGoals } from '@/api/goalApi';
@@ -58,13 +59,11 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
         .then((res) => res.data as unknown as EndTimer),
     onSuccess: (data) => {
       stopTimer();
-
       addToast({
         title: '공부를 종료합니다',
         description: `총 ${data.goalProgressRate}%만큼 진행하셨습니다.`,
         color: 'success',
       });
-
       queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
@@ -72,11 +71,8 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
       queryClient.invalidateQueries({ queryKey: ['today', 'goals'] });
       setIsOpen(false);
     },
-    onError: (error) => {
+    onError: () => {
       stopTimer();
-      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
-      queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
-      queryClient.invalidateQueries({ queryKey: ['goalDetail', goalID] });
       setIsOpen(false);
     },
   });
@@ -89,22 +85,21 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
     detailData?.data?.title || currentGoal?.title || '목표 없음';
   const unit = currentGoal?.unit || detailData?.data?.unit || '';
   const safeDailyAmount = currentGoal?.currentAmount || 0;
-
   const totalTargetAmount = detailData?.data?.progress?.targetAmount || 0;
   const currentTotalAmount = detailData?.data?.progress?.currentAmount || 0;
-
   const previousAccumulatedAmount = currentTotalAmount - safeDailyAmount;
 
   return (
     <>
       <Button
+        isIconOnly
         onPress={handleOpenSync}
         isLoading={isRefetching}
-        className="shrink-0"
+        className="shrink-0 bg-rose-500 text-white shadow-lg shadow-rose-500/20"
         radius="full"
-        color="danger"
+        size="sm"
       >
-        종료
+        <IoStop size={18} />
       </Button>
 
       <GoalSubmitModal
