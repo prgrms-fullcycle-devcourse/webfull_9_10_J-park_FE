@@ -1,7 +1,8 @@
 'use client';
+
 import { api } from '@/lib/axios';
 import { useMemo, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import { RunningTimerData, RunningTimerResponse } from '@/types/timer';
 import Timer from './components/Timer';
@@ -9,9 +10,12 @@ import Timer from './components/Timer';
 import StopTimerModal from './components/StopTimerModal';
 import { useQuery } from '@tanstack/react-query';
 import { useTimerStore } from '@/stores/useTimerStore';
+import { IoRemove } from 'react-icons/io5';
 
 export default function FloatingTimer() {
+  const router = useRouter();
   const { playingId } = useTimerStore();
+
   const {
     data: currentTimer,
     isLoading,
@@ -20,6 +24,7 @@ export default function FloatingTimer() {
     queryKey: ['goals', 'timer'],
     queryFn: () =>
       api.get<RunningTimerResponse>('/timers').then((res) => res.data),
+    enabled: !!playingId,
   });
 
   const params = useParams();
@@ -29,75 +34,74 @@ export default function FloatingTimer() {
     return currentTimer?.todayStudyDuration || 0;
   }, [currentTimer?.todayStudyDuration]);
 
-  if (params.goal_id && params.daily_id) {
-    return null;
-  }
-  if (!playingId) {
-    return null;
-  }
-  if (!currentTimer || isLoading || isError) {
-    return null;
-  }
+  if (params.goal_id && params.daily_id) return null;
+  if (!playingId || !currentTimer || isLoading || isError) return null;
 
-  const { goalId, goalTitle } = currentTimer;
+  const { goalId, goalTitle, todayTargetAmount, goalLogId } = currentTimer;
+
+  const handleNavigate = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    router.push(`/goals/${goalId}/${goalLogId}`);
+  };
 
   return (
     <div
-      className="absolute flex justify-center transition-all top-8 left-0 w-full z-40"
-      style={{
-        top: `${isMinimized ? '0' : '2rem'}`,
-      }}
+      className={`fixed z-50 transition-all duration-500 ease-in-out
+        ${
+          isMinimized
+            ? 'top-8 right-8 w-28 h-12 rounded-full shadow-lg cursor-pointer'
+            : 'top-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md h-16 rounded-2xl shadow-2xl'
+        }
+        bg-gray-900/70 backdrop-blur-md border border-white/10 text-white flex items-center overflow-hidden
+      `}
     >
-      <div
-        className="flex transition-all items-center w-full bg-gray-600 text-white shadow-lg rounded-2xl"
-        style={{
-          width: `${isMinimized ? '20%' : '100%'}`,
-          height: `${isMinimized ? '32px' : 'auto'}`,
-          padding: `${isMinimized ? '0rem' : '1rem'}`,
-          justifyContent: `${isMinimized ? 'center' : 'space-between'}`,
-        }}
-      >
-        {isMinimized ? (
-          <div onClick={() => setIsMinimized((prev) => !prev)}>
-            <Timer initialTimeMS={initialTimeMS} isMinimized={isMinimized} />
+      {isMinimized ? (
+        <div
+          className="flex items-center justify-center w-full h-full"
+          onClick={() => setIsMinimized(false)}
+        >
+          <div className="text-emerald-400 font-mono text-base font-medium [font-variant-numeric:tabular-nums]">
+            <Timer initialTimeMS={initialTimeMS} isMinimized={true} />
           </div>
-        ) : (
-          <>
-            <div className="w-1/3">
-              <Timer initialTimeMS={initialTimeMS} />
+        </div>
+      ) : (
+        <div className="flex items-center px-6 h-full w-full">
+          <div
+            className="flex-1 min-w-0 cursor-pointer"
+            onClick={handleNavigate}
+          >
+            <p className="font-bold text-base truncate tracking-tight">
+              {goalTitle}
+            </p>
+          </div>
 
+          <div className="flex items-center shrink-0 ml-4">
+            <div
+              className="text-emerald-400 font-mono text-base font-medium [font-variant-numeric:tabular-nums] cursor-pointer mr-8"
+              onClick={handleNavigate}
+            >
+              <Timer initialTimeMS={initialTimeMS} />
+            </div>
+
+            <div
+              className="flex items-center gap-4"
+              onClick={(e) => e.stopPropagation()}
+            >
               <StopTimerModal
                 goalID={goalId}
-                targetAmount={currentTimer.todayTargetAmount}
+                targetAmount={todayTargetAmount}
               />
+
+              <button
+                onClick={() => setIsMinimized(true)}
+                className="p-1 hover:bg-white/10 rounded-full transition-colors text-gray-400 cursor-pointer"
+              >
+                <IoRemove size={22} />
+              </button>
             </div>
-            <div
-              className="flex flex-col min-w-2/3 max-w-2/3justify-between col-start-2 col-span-2 px-0"
-              onClick={() => setIsMinimized((prev) => !prev)}
-            >
-              <div className="overflow-hidden font-bold text-lg w-full">
-                <p
-                  className="text-nowrap animate-slide-loop text-xl font-black"
-                  style={{
-                    width: `${goalTitle.length > 24 ? goalTitle.length * 12 : 0}px`,
-                  }}
-                >
-                  {goalTitle}
-                </p>
-              </div>
-              <div className="flex items-center text-slate-200 gap-2 text-sm">
-                <span>할당량</span>
-                <span className="flex items-baseline">
-                  <b className="text-white mr-1">
-                    {currentTimer.todayTargetAmount}
-                  </b>
-                  <span>페이지</span>
-                </span>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

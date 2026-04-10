@@ -34,7 +34,7 @@ export default function Timer({
     <div
       className={`col-span-1 justify-center 
     items-center font-bold z-20 rounded-l-2xl text-success-400
-    ${isMinimized ? 'text-sm' : 'text-2xl'}
+    ${isMinimized ? 'text-base' : 'text-base'}
     `}
     >
       {formatMilliseconds(liveMs)}

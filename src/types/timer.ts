@@ -3,6 +3,7 @@ import { ApiResponse } from './api';
 /** 실행 중인 타이머 정보 조회 (GET /timers) */
 export interface RunningTimerData {
   goalId: number;
+  goalLogId: number;
   goalTitle: string;
   todayStudyDuration: number;
   todayProgressRate: number;
