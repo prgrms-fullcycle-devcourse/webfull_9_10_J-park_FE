@@ -38,7 +38,7 @@ export default function RankingListItem({
 
     const diffSeconds = prevSeconds - itemSeconds;
 
-    if (diffSeconds <= 0) return null; // 차이가 없거나 마이너스면 숨김
+    if (diffSeconds <= 0) return null;
 
     return formatStudyTime(diffSeconds * 1000);
   })();
@@ -47,10 +47,13 @@ export default function RankingListItem({
     <div
       className={`flex items-center gap-3 px-6 py-2 ${isMyRank ? 'bg-slate-50' : 'bg-white'}`}
     >
-      <span className="text-primary font-black text-base">{item.rank}위</span>
+      <span className="w-12 shrink-0 text-center text-primary font-black text-base">
+        {item.rank}위
+      </span>
+
       <Avatar
         src={item.profileImageUrl || undefined}
-        className="w-9 h-9 bg-gray-100 "
+        className="w-9 h-9 bg-gray-100 shrink-0"
       />
 
       <span className="flex-1 min-w-0">
