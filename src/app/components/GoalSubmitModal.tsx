@@ -145,7 +145,7 @@ export default function GoalSubmitModal({
                         className="w-20"
                         classNames={{
                           input:
-                            'text-2xl font-extrabold text-orange-500 text-right',
+                            'text-2xl font-extrabold text-orange-500 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
                           inputWrapper: 'border-orange-200 after:bg-orange-500',
                         }}
                       />
