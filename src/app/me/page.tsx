@@ -4,14 +4,15 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { MyProfileResponse, User } from '@/types/user';
 import { addToast, Button, Link, useDisclosure } from '@heroui/react';
-import { FcSurvey } from 'react-icons/fc';
-import { FcClock } from 'react-icons/fc';
+import { FcSurvey, FcClock } from 'react-icons/fc';
 import { MdModeEdit } from 'react-icons/md';
 import IconCropperModal from '@/components/modals/ProfileImageCropModal';
 import MyInformationEdit from './components/MyInformationEdit';
+import KakaoLoginCard from './components/KakaoLoginCard';
 import { formatStudyTime } from '@/lib/utils';
 
 const DEFAULT_PROFILE_IMG_URL = 'https://picsum.photos/id/237/200/300';
+
 export default function MePage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const userInfo = useQuery<User>({
@@ -21,10 +22,10 @@ export default function MePage() {
   });
 
   if (!userInfo.data || userInfo.isError) {
-    return;
+    return null;
   }
 
-  const { totalTime, goals } = userInfo.data;
+  const { totalTime, goals, kakaoEmail } = userInfo.data;
 
   return (
     <div
@@ -44,9 +45,11 @@ export default function MePage() {
       >
         <MdModeEdit className="text-white" size={24} />
       </Button>
+
       <div className="animate-fadeIn mt-80 rounded-t-2xl w-full min-h-dvh bg-white z-20">
         <MyInformationEdit userInfo={{ ...userInfo.data }} />
-        <div className="flex bg-white mb-4 items-center gap-4 p-6 pt-0">
+
+        <div className="flex bg-white mb-2 items-center gap-4 px-6 pt-4">
           <Button
             radius="full"
             className="p-0 hover:cursor-default"
@@ -63,9 +66,16 @@ export default function MePage() {
             </p>
           </div>
         </div>
-        <div className="bg-white py-6">
+
+        {!kakaoEmail && (
+          <div className="px-6 py-2">
+            <KakaoLoginCard />
+          </div>
+        )}
+
+        <div className="bg-white py-4">
           <div className="text-sm text-gray-600 mb-4 mx-6">
-            오늘해야 할 목표들
+            오늘 해야 할 목표들
           </div>
           {goals.length > 0 &&
             goals.map((goal) => (
@@ -104,6 +114,7 @@ export default function MePage() {
             ))}
         </div>
       </div>
+
       <IconCropperModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
