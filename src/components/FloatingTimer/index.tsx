@@ -14,28 +14,38 @@ import { IoRemove } from 'react-icons/io5';
 
 export default function FloatingTimer() {
   const router = useRouter();
+  const params = useParams();
   const { playingId } = useTimerStore();
+  const [isMinimized, setIsMinimized] = useState(false);
 
   const {
     data: currentTimer,
     isLoading,
     isError,
-  } = useQuery<RunningTimerData>({
+  } = useQuery<RunningTimerData | null>({
     queryKey: ['goals', 'timer'],
     queryFn: () =>
-      api.get<RunningTimerResponse>('/timers').then((res) => res.data),
+      api
+        .get<RunningTimerResponse>('/timers')
+        .then((res) => res.data)
+        .catch((error) => {
+          if (error.response?.status === 404) {
+            return null;
+          }
+          throw error;
+        }),
     enabled: !!playingId,
+    retry: false,
+    gcTime: 0,
   });
-
-  const params = useParams();
-  const [isMinimized, setIsMinimized] = useState(false);
 
   const initialTimeMS = useMemo(() => {
     return currentTimer?.todayStudyDuration || 0;
   }, [currentTimer?.todayStudyDuration]);
 
+  if (!playingId) return null;
   if (params.goal_id && params.daily_id) return null;
-  if (!playingId || !currentTimer || isLoading || isError) return null;
+  if (isLoading || isError || !currentTimer) return null;
 
   const { goalId, goalTitle, todayTargetAmount, goalLogId } = currentTimer;
 
@@ -49,7 +59,7 @@ export default function FloatingTimer() {
       className={`fixed z-50 transition-all duration-500 ease-in-out
         ${
           isMinimized
-            ? 'top-8 right-8 w-32 h-12 rounded-full shadow-lg cursor-pointer' // 💡 글자가 커졌으므로 w-28 -> w-32로 살짝 넓힘
+            ? 'top-8 right-8 w-32 h-12 rounded-full shadow-lg cursor-pointer'
             : 'top-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md h-16 rounded-2xl shadow-2xl'
         }
         bg-gray-900/80 backdrop-blur-md border border-white/10 text-white flex items-center overflow-hidden

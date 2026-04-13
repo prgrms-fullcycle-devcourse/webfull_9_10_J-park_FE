@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTimerStore } from '@/stores/useTimerStore';
 import { formatMilliseconds } from '@/lib/utils';
-import GoalPlayButton from '@/components/GoalPlayButton';
 import { useSyncedTime } from '@/hooks/useSyncedTime';
 
 import {
@@ -65,10 +64,8 @@ export default function DailyGoalTimer({
 
   const startMutation = useMutation({
     mutationFn: () => apiStartTimer({ goalId }),
-    onMutate: () => {
-      localStartTimer(goalId);
-    },
     onSuccess: () => {
+      localStartTimer(goalId);
       queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
@@ -80,6 +77,7 @@ export default function DailyGoalTimer({
         error.response?.data?.error?.code === 'ALREADY_RUNNING';
 
       if (isAlreadyRunning) {
+        localStartTimer(goalId);
         queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
         queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
         queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
@@ -102,7 +100,7 @@ export default function DailyGoalTimer({
       localStopTimer();
       clearRecordedTime(goalId);
 
-      queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
+      queryClient.removeQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
       queryClient.invalidateQueries({ queryKey: ['goalDetail', goalId] });
@@ -116,7 +114,7 @@ export default function DailyGoalTimer({
       localStopTimer();
       clearRecordedTime(goalId);
 
-      queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
+      queryClient.removeQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
       queryClient.invalidateQueries({ queryKey: ['goalDetail', goalId] });

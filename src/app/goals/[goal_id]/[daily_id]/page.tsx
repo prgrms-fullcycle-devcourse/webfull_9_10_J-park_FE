@@ -45,12 +45,11 @@ export default function DailyGoalDetailPage() {
 
   const startMutation = useMutation({
     mutationFn: () => apiStartTimer({ goalId }),
-    onMutate: () => {
-      localStartTimer(goalId);
-    },
     onSuccess: () => {
+      localStartTimer(goalId);
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+      queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
     },
     onError: (error: any) => {
       const isAlreadyRunning =
@@ -58,8 +57,10 @@ export default function DailyGoalDetailPage() {
         error.response?.data?.error?.code === 'ALREADY_RUNNING';
 
       if (isAlreadyRunning) {
+        localStartTimer(goalId);
         queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
         queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+        queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
       } else {
         localStopTimer();
         alert('네트워크 오류로 타이머를 시작하지 못했습니다.');
@@ -78,21 +79,20 @@ export default function DailyGoalDetailPage() {
       localStopTimer();
       clearRecordedTime(goalId);
 
+      queryClient.removeQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
-
       queryClient.invalidateQueries({ queryKey: ['goalDetail', goalId] });
 
       setIsModalOpen(false);
       router.push('/');
     },
     onError: (error: any) => {
-      console.error('타이머 종료 실패 (상태 강제 동기화 진행)');
-
       localStopTimer();
       clearRecordedTime(goalId);
       setIsModalOpen(false);
 
+      queryClient.removeQueries({ queryKey: ['goals', 'timer'] });
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
       queryClient.invalidateQueries({ queryKey: ['goalDetail', goalId] });
@@ -118,8 +118,9 @@ export default function DailyGoalDetailPage() {
     );
   }
   if (!goalData) {
-    return;
+    return null;
   }
+
   const totalTargetAmount = detailData?.data?.progress?.targetAmount || 0;
   const currentTotalAmount = detailData?.data?.progress?.currentAmount || 0;
 

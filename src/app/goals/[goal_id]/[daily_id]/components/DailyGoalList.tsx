@@ -14,13 +14,13 @@ export default function DailyGoalList({ goals }: DailyGoalListProps) {
     <div className="animate-fadeIn flex flex-col">
       <small className="text-gray-600 p-6 pb-4">오늘 목표</small>
       <div className="flex flex-col">
-        {goals.map((goal) => (
+        {goals.map((goal, index) => (
           <Button
             as={Link}
             href={`/goals/${goal.id}/${goal.goalLogId}`}
             radius="none"
             variant="light"
-            key={goal.id}
+            key={goal.id ?? `daily-goal-${index}`}
             className="flex w-full h-full justify-between px-6 py-2"
           >
             <div className="flex gap-2">
@@ -33,7 +33,7 @@ export default function DailyGoalList({ goals }: DailyGoalListProps) {
               >
                 <FcSurvey size={24} />
               </Button>
-              <span>
+              <span className="text-left">
                 <p className="text-xl font-black -mb-1">{goal.title}</p>
                 <small className="text-gray-600">
                   {goal.currentAmount}/{goal.targetAmount} {goal.unit}
