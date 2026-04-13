@@ -22,11 +22,21 @@ export default function FloatingTimer() {
     data: currentTimer,
     isLoading,
     isError,
-  } = useQuery<RunningTimerData>({
+  } = useQuery<RunningTimerData | null>({
     queryKey: ['goals', 'timer'],
     queryFn: () =>
-      api.get<RunningTimerResponse>('/timers').then((res) => res.data),
+      api
+        .get<RunningTimerResponse>('/timers')
+        .then((res) => res.data)
+        .catch((error) => {
+          if (error.response?.status === 404) {
+            return null;
+          }
+          throw error;
+        }),
     enabled: !!playingId,
+    retry: false,
+    gcTime: 0,
   });
 
   const initialTimeMS = useMemo(() => {

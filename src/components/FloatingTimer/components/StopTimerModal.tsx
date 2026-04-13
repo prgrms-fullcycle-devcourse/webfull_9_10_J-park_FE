@@ -60,15 +60,24 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
     onSuccess: (data) => {
       stopTimer();
 
-      queryClient.invalidateQueries({ queryKey: ['goals', 'timer'] });
+      queryClient.removeQueries({ queryKey: ['goals', 'timer'] });
+
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
       queryClient.invalidateQueries({ queryKey: ['goalDetail', goalID] });
       queryClient.invalidateQueries({ queryKey: ['today', 'goals'] });
+
       setIsOpen(false);
     },
     onError: () => {
       stopTimer();
+
+      queryClient.removeQueries({ queryKey: ['goals', 'timer'] });
+      queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
+      queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
+      queryClient.invalidateQueries({ queryKey: ['goalDetail', goalID] });
+      queryClient.invalidateQueries({ queryKey: ['today', 'goals'] });
+
       setIsOpen(false);
     },
   });
