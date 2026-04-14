@@ -17,7 +17,7 @@ export default function DesktopLayout({ children }: React.PropsWithChildren) {
 
       <div className="relative flex min-w-[400px] max-w-[400px] h-dvh max-h-[850px] m-auto flex-col shadow-2xl rounded-4xl bg-white overflow-hidden">
         <FloatingTimer />
-        <main className="overflow-y-auto scrollbar-hide">{children}</main>
+        <main className="overflow-y-auto">{children}</main>
         <NavigationBar />
       </div>
     </div>
