@@ -1,11 +1,5 @@
 'use client';
-import {
-  Button,
-  Link,
-  Modal,
-  ModalContent,
-  useDisclosure,
-} from '@heroui/react';
+import { Button, Modal, ModalContent, useDisclosure } from '@heroui/react';
 import { useRef, useState } from 'react';
 import { FcFullTrash } from 'react-icons/fc';
 import { FcSurvey } from 'react-icons/fc';
@@ -13,6 +7,7 @@ import { FcSurvey } from 'react-icons/fc';
 import { Goal } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
+import Link from 'next/link';
 
 interface Props {
   goal: Goal;
@@ -114,12 +109,9 @@ export default function GoalItemSwipeable({ goal }: Props) {
           })}
           까지
         </small>
-        <Button
-          as={Link}
-          href={`goals/${goal.id}`}
-          variant="light"
-          radius="none"
-          className="w-full h-full flex items-center gap-4 px-6 py-4"
+        <Link
+          href={`/goals/${goal.id}`}
+          className="w-full h-full flex items-center gap-4 px-6 py-4 hover:bg-blend-darken"
         >
           <Button
             radius="full"
@@ -142,7 +134,7 @@ export default function GoalItemSwipeable({ goal }: Props) {
               <small className="text-gray-600">진행률</small>
             </div>
           </div>
-        </Button>
+        </Link>
       </div>
       <Modal
         size="xs"

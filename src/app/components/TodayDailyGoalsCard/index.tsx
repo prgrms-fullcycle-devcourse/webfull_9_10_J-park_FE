@@ -21,7 +21,7 @@ export default function TodayDailyGoalsCard() {
   const { todayGoals } = data;
 
   return (
-    <Card className="animate-fadeIn py-6">
+    <Card className="animate-fadeIn p-6">
       <div>
         {todayGoals.length > 0 ? (
           todayGoals.map((goal) => <TodayGoalItem key={goal.id} goal={goal} />)
