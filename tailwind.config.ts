@@ -26,11 +26,13 @@ const config = {
     animation: {
       bgCycle: 'colorCycle 12s ease infinite',
       fadeIn: 'fadeIn 0.5s ease-out forwards',
+      fadeInSlow: 'fadeIn 3s ease-out forwards',
       ping: 'ping 1s ease-in-out infinite',
     },
     fontFamily: {
       pretendard: ['Pretendard', 'sans-serif'],
       notosan: ['NotoSan', 'sans-serif'],
+      korean: ['Korean'],
     },
     extend: {
       keyframes: {
