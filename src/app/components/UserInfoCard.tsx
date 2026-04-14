@@ -1,7 +1,8 @@
 import { api } from '@/lib/axios';
 import { MyProfileResponse, User } from '@/types/user';
-import { Button, Card, Link } from '@heroui/react';
+import { Button, Card } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 import { FcReading } from 'react-icons/fc';
 
 export default function UserInfoCard() {
@@ -18,12 +19,9 @@ export default function UserInfoCard() {
 
   return (
     <Card>
-      <Button
-        as={Link}
+      <Link
         href="/me"
-        isIconOnly
-        variant="light"
-        className="flex w-full h-full justify-between px-6 py-4"
+        className="flex w-full h-full items-center justify-between px-6 py-4"
       >
         <Button
           className="rounded-2xl p-0 hover:cursor-default bg-gray-100 mr-4"
@@ -38,7 +36,7 @@ export default function UserInfoCard() {
           <p className="font-black text-xl -mb-2">{nickname}</p>
           <small className="text-gray-600">{createdAt}</small>
         </div>
-      </Button>
+      </Link>
     </Card>
   );
 }

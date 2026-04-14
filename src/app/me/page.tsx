@@ -3,13 +3,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { MyProfileResponse, User } from '@/types/user';
-import { addToast, Button, Link, useDisclosure } from '@heroui/react';
+import { addToast, Button, useDisclosure } from '@heroui/react';
 import { FcSurvey, FcClock } from 'react-icons/fc';
 import { MdModeEdit } from 'react-icons/md';
 import IconCropperModal from '@/components/modals/ProfileImageCropModal';
 import MyInformationEdit from './components/MyInformationEdit';
 import KakaoLoginCard from './components/KakaoLoginCard';
 import { formatStudyTime } from '@/lib/utils';
+import Link from 'next/link';
 
 const DEFAULT_PROFILE_IMG_URL = 'https://picsum.photos/id/237/200/300';
 
@@ -79,12 +80,9 @@ export default function MePage() {
           </div>
           {goals.length > 0 &&
             goals.map((goal) => (
-              <Button
+              <Link
                 key={goal.id}
-                as={Link}
                 href={`goals/${goal.id}`}
-                variant="light"
-                radius="none"
                 className="w-full h-full flex items-center gap-4 shrink-0 px-6 py-4"
               >
                 <Button
@@ -110,7 +108,7 @@ export default function MePage() {
                     <small className="text-gray-600">할당량</small>
                   </div>
                 </div>
-              </Button>
+              </Link>
             ))}
         </div>
       </div>
