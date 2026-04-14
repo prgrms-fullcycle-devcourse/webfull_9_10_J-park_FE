@@ -97,7 +97,7 @@ export default function RankingPage() {
   }, [myRanking, profileData]);
 
   return (
-    <div className="relative flex flex-col gap-4 bg-slate-50 overflow-auto scrollbar-hide min-h-screen max-h-screen">
+    <div className="relative flex flex-col gap-4 bg-slate-50 overflow-hidden max-h-full">
       {myRankData && (
         <div className="animate-fadeIn sticky top-0 p-6 pb-0 bg-slate-50 z-30 flex flex-col gap-6">
           <div className="flex items-center gap-4">
