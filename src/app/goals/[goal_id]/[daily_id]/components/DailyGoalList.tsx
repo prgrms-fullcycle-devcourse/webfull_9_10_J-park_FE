@@ -1,9 +1,10 @@
 'use client';
 
-import { Button, Link } from '@heroui/react';
+import { Button } from '@heroui/react';
 import { TodayGoal } from '@/types/goal';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 import { FcSurvey } from 'react-icons/fc';
+import Link from 'next/link';
 
 interface DailyGoalListProps {
   goals: TodayGoal[];
@@ -15,13 +16,10 @@ export default function DailyGoalList({ goals }: DailyGoalListProps) {
       <small className="text-gray-600 p-6 pb-4">오늘 목표</small>
       <div className="flex flex-col">
         {goals.map((goal, index) => (
-          <Button
-            as={Link}
+          <Link
             href={`/goals/${goal.id}/${goal.goalLogId}`}
-            radius="none"
-            variant="light"
             key={goal.id ?? `daily-goal-${index}`}
-            className="flex w-full h-full justify-between px-6 py-2"
+            className="flex w-full h-full justify-between px-6 py-2 hover:bg-blend-darken"
           >
             <div className="flex gap-2">
               <Button
@@ -50,7 +48,7 @@ export default function DailyGoalList({ goals }: DailyGoalListProps) {
             >
               <IoChevronForwardOutline className="text-gray-600" size={20} />
             </Button>
-          </Button>
+          </Link>
         ))}
       </div>
     </div>
