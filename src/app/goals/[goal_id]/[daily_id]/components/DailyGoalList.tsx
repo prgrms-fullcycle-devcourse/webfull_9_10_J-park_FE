@@ -19,7 +19,7 @@ export default function DailyGoalList({ goals }: DailyGoalListProps) {
           <Link
             href={`/goals/${goal.id}/${goal.goalLogId}`}
             key={goal.id ?? `daily-goal-${index}`}
-            className="flex w-full h-full justify-between px-6 py-2 hover:bg-blend-darken"
+            className="flex w-full h-full justify-between px-6 py-2"
           >
             <div className="flex gap-2">
               <Button
