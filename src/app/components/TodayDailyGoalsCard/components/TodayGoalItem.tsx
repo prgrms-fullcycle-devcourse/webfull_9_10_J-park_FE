@@ -1,10 +1,11 @@
 'use client';
 
-import { Button, Link } from '@heroui/react';
+import { Button } from '@heroui/react';
 import { FcSurvey } from 'react-icons/fc';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 
 import { TodayGoal as GoalType } from '@/types/goal';
+import Link from 'next/link';
 
 interface TodayGoalItemProps {
   goal: GoalType;
@@ -12,14 +13,10 @@ interface TodayGoalItemProps {
 
 export default function TodayGoalItem({ goal }: TodayGoalItemProps) {
   return (
-    <Button
-      as={Link}
-      variant="light"
+    <Link
       href={`/goals/${goal.id}/${goal.goalLogId}`}
-      fullWidth
       className="h-full px-6 py-2"
       draggable
-      radius="none"
       onDragOver={(e) => e.preventDefault()}
     >
       <div className="flex w-full pointer-events-none">
@@ -54,6 +51,6 @@ export default function TodayGoalItem({ goal }: TodayGoalItemProps) {
           </Button>
         </div>
       </div>
-    </Button>
+    </Link>
   );
 }
