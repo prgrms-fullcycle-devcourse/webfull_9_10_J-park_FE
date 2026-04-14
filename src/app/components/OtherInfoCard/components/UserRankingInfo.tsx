@@ -2,8 +2,9 @@
 import { api } from '@/lib/axios';
 
 import { Ranking, RankingsResponse } from '@/types/user';
-import { Button, Link } from '@heroui/react';
+import { Button } from '@heroui/react';
 import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 import { FcBarChart } from 'react-icons/fc';
 import { IoChevronForwardOutline } from 'react-icons/io5';
 
@@ -20,12 +21,9 @@ export default function UserRankingInfo() {
 
   return (
     <div className="flex gap-4 pt-4">
-      <Button
-        as={Link}
+      <Link
         href="/community"
-        radius="none"
-        className="px-6 py-2 h-full w-full"
-        variant="light"
+        className="flex items-center gap-2 px-6 py-2 h-full w-full"
       >
         <Button
           className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
@@ -53,7 +51,7 @@ export default function UserRankingInfo() {
         >
           <IoChevronForwardOutline size={20} />
         </Button>
-      </Button>
+      </Link>
     </div>
   );
 }
