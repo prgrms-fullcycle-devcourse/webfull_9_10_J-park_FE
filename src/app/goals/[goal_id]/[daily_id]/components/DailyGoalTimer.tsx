@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTimerStore } from '@/stores/useTimerStore';
 import { formatMilliseconds } from '@/lib/utils';
@@ -38,6 +38,7 @@ export default function DailyGoalTimer({
   currentTotalAmount,
 }: DailyGoalTimerProps) {
   const router = useRouter();
+  const params = useParams();
   const queryClient = useQueryClient();
 
   const {
@@ -108,7 +109,10 @@ export default function DailyGoalTimer({
 
       router.refresh();
       setIsModalOpen(false);
-      router.push('/');
+
+      if (params.daily_id) {
+        router.replace(`/goals/${goalId}/${params.daily_id}`);
+      }
     },
     onError: (error: any) => {
       localStopTimer();
@@ -122,7 +126,10 @@ export default function DailyGoalTimer({
 
       router.refresh();
       setIsModalOpen(false);
-      router.push('/');
+
+      if (params.daily_id) {
+        router.replace(`/goals/${goalId}/${params.daily_id}`);
+      }
     },
   });
 
