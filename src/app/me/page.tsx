@@ -10,6 +10,7 @@ import IconCropperModal from '@/components/modals/ProfileImageCropModal';
 import MyInformationEdit from './components/MyInformationEdit';
 import KakaoLoginCard from './components/KakaoLoginCard';
 import { formatStudyTime } from '@/lib/utils';
+import NavbarFiller from '@/components/ui/NavbarFiller';
 
 const DEFAULT_PROFILE_IMG_URL = 'https://picsum.photos/id/237/200/300';
 
@@ -29,7 +30,7 @@ export default function MePage() {
 
   return (
     <div
-      className="relative flex flex-col gap-4 bg-slate-50 overflow-auto scrollbar-hide max-h-screen"
+      className="relative flex flex-col gap-4 bg-white scrollbar-hide"
       style={{
         backgroundImage: `url(${DEFAULT_PROFILE_IMG_URL})`,
         backgroundRepeat: 'no-repeat',
@@ -46,7 +47,7 @@ export default function MePage() {
         <MdModeEdit className="text-white" size={24} />
       </Button>
 
-      <div className="animate-fadeIn mt-80 rounded-t-2xl w-full min-h-dvh bg-white z-20">
+      <div className="animate-fadeIn mt-80 rounded-t-2xl w-full min-h-full bg-white z-20">
         <MyInformationEdit userInfo={{ ...userInfo.data }} />
 
         <div className="flex bg-white mb-2 items-center gap-4 px-6 pt-4">
@@ -114,7 +115,7 @@ export default function MePage() {
             ))}
         </div>
       </div>
-
+      <NavbarFiller />
       <IconCropperModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
