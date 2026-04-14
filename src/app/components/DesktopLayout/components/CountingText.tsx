@@ -31,13 +31,15 @@ export default function CountingText({
 
   return (
     <div className="w-full text-right">
-      <span className="font-pretendard text-gray-800 text-4xl mr-4">
+      <div className="font-pretendard text-gray-800 text-xl mr-4">
         {startText}
-      </span>
-      <span className="font-pretendard text-gray-800 text-4xl">
-        {count.toLocaleString()}
-      </span>
-      <span className="font-pretendard text-gray-800 text-4xl">{endText}</span>
+      </div>
+      <div>
+        <span className="font-pretendard font-bold text-gray-800 text-4xl">
+          {count.toLocaleString()}
+        </span>
+        <span className="font-pretendard text-gray-800 text-xl">{endText}</span>
+      </div>
     </div>
   );
 }
