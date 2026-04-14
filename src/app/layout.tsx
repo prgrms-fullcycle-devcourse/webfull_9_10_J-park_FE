@@ -39,7 +39,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`font-notosan antialiased animate-bgCycle ${isMobile ? '' : 'bg-linear-to-r from-rose-100 via-sky-200 to-teal-100 bg-[length:200%_200%]'}`}
+        className={`font-notosan antialiased animate-bgCycle ${isMobile ? '' : 'bg-linear-to-r from-rose-100 via-indigo-200 to-teal-100 bg-[length:200%_200%]'}`}
       >
         <Providers>
           {isMobile ? (
