@@ -32,7 +32,6 @@ const config = {
     fontFamily: {
       pretendard: ['Pretendard', 'sans-serif'],
       notosan: ['NotoSan', 'sans-serif'],
-      korean: ['Korean'],
     },
     extend: {
       keyframes: {
