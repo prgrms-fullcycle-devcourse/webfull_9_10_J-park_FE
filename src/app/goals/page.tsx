@@ -45,7 +45,7 @@ export default function Goals() {
           backgroundPositionX: '-10px',
         }}
       >
-        <div className="w-full h-full flex flex-col backdrop-blur-xs">
+        <div className="w-full h-full flex flex-col backdrop-blur-sm">
           <div className="flex gap-4 mx-6 mt-6 my-2">
             <Button
               className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
@@ -65,7 +65,7 @@ export default function Goals() {
               </div>
             </div>
           </div>
-          <div className="flex gap-4  mx-6 my-2">
+          <div className="flex gap-4 mx-6 mb-6 my-2">
             <Button
               className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
               isIconOnly
@@ -85,7 +85,7 @@ export default function Goals() {
           </div>
         </div>
       </div>
-      <div className="animate-fadeIn transition-all duration-500 ease-in-out min-h-screen w-full bg-white rounded-t-2xl">
+      <div className="animate-fadeIn transition-all duration-500 ease-in-out min-h-screen w-full bg-white rounded-t-2xl -mt-4">
         <p className="p-6 pb-2 font-black text-xl">전체 목표</p>
         {data &&
           data.length > 0 &&
