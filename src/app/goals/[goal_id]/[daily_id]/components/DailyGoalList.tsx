@@ -19,8 +19,9 @@ export default function DailyGoalList({ goals }: DailyGoalListProps) {
     <div className="animate-fadeIn flex flex-col">
       <small className="text-gray-600 p-6 pb-4">오늘 목표</small>
       <div className="flex flex-col">
-        {goals.map((goal, index) =>
-          goalID !== goal.id ? (
+        {goals
+          .filter((goal) => goal.id !== goalID)
+          .map((goal, index) => (
             <Link
               href={`/goals/${goal.id}/${goal.goalLogId}`}
               key={goal.id ?? `daily-goal-${index}`}
@@ -54,10 +55,7 @@ export default function DailyGoalList({ goals }: DailyGoalListProps) {
                 <IoChevronForwardOutline className="text-gray-600" size={20} />
               </Button>
             </Link>
-          ) : (
-            <></>
-          ),
-        )}
+          ))}
       </div>
     </div>
   );
