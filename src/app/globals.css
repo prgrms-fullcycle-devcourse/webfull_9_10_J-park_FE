@@ -1,31 +1,6 @@
 @import 'tailwindcss';
 @config "../../tailwind.config.ts";
 
-@font-face {
-  font-family: 'Korean';
-  src:
-    url('./fonts/korean/OTF_saeron/koreanR.otf') format('opentype'),
-    url('./fonts/korean/TTF_saeron/koreanL.ttf') format('truetype');
-  font-weight: 200;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Korean';
-  src:
-    url('./fonts/korean/OTF_saeron/koreanR.otf') format('opentype'),
-    url('./fonts/korean/TTF_saeron/koreanR.ttf') format('truetype');
-  font-weight: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Korean';
-  src:
-    url('./fonts/korean/OTF_saeron/koreanSB.otf') format('opentype'),
-    url('./fonts/korean/TTF_saeron/koreanSB.ttf') format('truetype');
-  font-weight: 700;
-  font-display: swap;
-}
-
 body {
   display: flex;
   align-items: center;
