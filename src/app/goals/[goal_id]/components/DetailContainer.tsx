@@ -25,19 +25,31 @@ export default function DetailContainer({ goalID }: Props) {
 
   return (
     <div className="relative flex flex-col overflow-auto scrollbar-hide max-h-screen bg-slate-50">
-      <div className="sticky top-0 flex flex-col gap-4 p-6">
-        <Button
-          radius="full"
-          className="hover:cursor-default bg-primary  w-16 h-16 "
-          isIconOnly
-          disableAnimation
-          disableRipple
-        >
-          <FcSurvey size={48} className="shrink-0" />
-        </Button>
-        <div>
-          <small className="text-gray-600">{data?.description}</small>
-          <p className="font-black text-2xl">{data?.title}</p>
+      <div
+        className="sticky top-0 flex flex-col"
+        style={{
+          backgroundImage: 'url("/bg-goal.png")',
+          backgroundSize: '110% auto',
+          backgroundRepeat: 'no-repeat',
+          backgroundPositionY: '-200px',
+          backgroundPositionX: '-10px',
+        }}
+      >
+        <div className="w-full h-full flex flex-col backdrop-blur-sm">
+          <Button
+            radius="full"
+            className="w-16 h-16 mx-6 my-2 mt-6 hover:cursor-default bg-primary"
+            isIconOnly
+            disableAnimation
+            disableRipple
+          >
+            <FcSurvey size={48} className="shrink-0" />
+          </Button>
+          <div className="mx-6 my-2 mb-6">
+            {/* 💡 클래스명 오타 수정: '"text-gray-600"' -> "text-gray-600" */}
+            <small className="text-gray-600">{data?.description}</small>
+            <p className="font-black text-2xl">{data?.title}</p>
+          </div>
         </div>
       </div>
 
