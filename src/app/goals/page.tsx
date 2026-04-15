@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Button, Link } from '@heroui/react';
+import { Button, Image, Link } from '@heroui/react';
 import { FcClock, FcSurvey } from 'react-icons/fc';
 
 import { api } from '@/lib/axios';
@@ -34,10 +34,19 @@ export default function Goals() {
   }
 
   return (
-    <div className="relative flex flex-col h-full bg-slate-50 gap-4 min-h-screen max-h-screen">
-      <div className="sticky top-0 w-full p-6">
-        <div className="w-full h-full flex flex-col mt-6">
-          <div className="flex gap-4">
+    <div className="relative flex flex-col h-full bg-slate-50 min-h-screen max-h-screen">
+      <div
+        className="sticky top-0 w-full"
+        style={{
+          backgroundImage: 'url("/bg-goal-manage.png")',
+          backgroundSize: '110% auto',
+          backgroundRepeat: 'no-repeat',
+          backgroundPositionY: '-200px',
+          backgroundPositionX: '-10px',
+        }}
+      >
+        <div className="w-full h-full flex flex-col backdrop-blur-xs">
+          <div className="flex gap-4 mx-6 mt-6 my-2">
             <Button
               className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
               as={Link}
@@ -56,7 +65,7 @@ export default function Goals() {
               </div>
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4  mx-6 my-2">
             <Button
               className="rounded-2xl p-0 hover:cursor-default bg-gray-100"
               isIconOnly
@@ -76,7 +85,6 @@ export default function Goals() {
           </div>
         </div>
       </div>
-
       <div className="animate-fadeIn transition-all duration-500 ease-in-out min-h-screen w-full bg-white rounded-t-2xl">
         <p className="p-6 pb-2 font-black text-xl">전체 목표</p>
         {data &&
