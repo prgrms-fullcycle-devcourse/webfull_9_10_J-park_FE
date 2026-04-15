@@ -17,7 +17,7 @@ export default function DesktopLayout({ children }: React.PropsWithChildren) {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % contents.length);
-    }, 10000);
+    }, 15000);
     return () => {
       clearInterval(interval);
     };

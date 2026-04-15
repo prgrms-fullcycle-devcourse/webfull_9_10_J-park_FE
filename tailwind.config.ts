@@ -22,11 +22,15 @@ const config = {
         '0%': { opacity: '0', transform: 'translateY(10px)' },
         '100%': { opacity: '1', transform: 'translateY(0)' },
       },
+      fadeInOut: {
+        '0%, 100%': { opacity: '0' },
+        '20%, 90%': { opacity: '1' },
+      },
     },
     animation: {
       bgCycle: 'colorCycle 12s ease infinite',
       fadeIn: 'fadeIn 0.5s ease-out forwards',
-      fadeInSlow: 'fadeIn 3s ease-out forwards',
+      fadeInOut: 'fadeInOut 15s ease-out forwards',
       ping: 'ping 1s ease-in-out infinite',
     },
     fontFamily: {

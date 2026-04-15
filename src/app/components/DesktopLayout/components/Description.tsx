@@ -1,6 +1,6 @@
 export default function Description() {
   return (
-    <div className="animate-fadeInSlow flex flex-col p-6 gap-3 max-w-[430px] max-h-dvh content-center align-middle justify-center">
+    <div className="animate-fadeInOut not-last:flex flex-col p-6 gap-3 max-w-[430px] max-h-dvh content-center align-middle justify-center">
       <h1 className="font-bold text-4xl">모든 목표 계획은</h1>
       <h1 className="font-bold text-4xl">
         <span>등불</span>에서 미루지 않고, 쉽게
