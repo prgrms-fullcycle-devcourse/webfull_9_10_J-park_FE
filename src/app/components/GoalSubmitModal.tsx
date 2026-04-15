@@ -213,18 +213,17 @@ export default function GoalSubmitModal({
 
               <div className="w-full flex gap-3 mt-4">
                 <Button
+                  onPress={onClose}
+                  className="flex-[2] h-14 bg-gray-400 text-white font-extrabold rounded-lg hover:bg-gray-500 transition-colors text-lg"
+                >
+                  취소
+                </Button>
+                <Button
                   onPress={handleSubmit}
                   isLoading={isPending || isSubmitting}
                   className="flex-[3] h-14 bg-orange-500 text-white font-extrabold rounded-lg hover:bg-orange-600 transition-colors text-base"
                 >
                   제출하고 종료하기
-                </Button>
-
-                <Button
-                  onPress={onClose}
-                  className="flex-[2] h-14 bg-gray-400 text-white font-extrabold rounded-lg hover:bg-gray-500 transition-colors text-lg"
-                >
-                  취소
                 </Button>
               </div>
             </div>

@@ -100,6 +100,7 @@ export default function FloatingTimer() {
               <StopTimerModal
                 goalID={goalId}
                 targetAmount={todayTargetAmount}
+                goalLogId={goalLogId}
               />
 
               <button

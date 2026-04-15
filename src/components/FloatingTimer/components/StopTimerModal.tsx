@@ -6,6 +6,7 @@ import { Button } from '@heroui/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { IoStop } from 'react-icons/io5';
+import { useRouter } from 'next/navigation';
 
 import { useTimerStore } from '@/stores/useTimerStore';
 import { fetchGoalDetail, fetchTodayGoals } from '@/api/goalApi';
@@ -14,10 +15,16 @@ import GoalSubmitModal from '@/app/components/GoalSubmitModal';
 interface Props {
   goalID: number;
   targetAmount: number;
+  goalLogId: number;
 }
 
-export default function StopTimerModal({ goalID, targetAmount }: Props) {
+export default function StopTimerModal({
+  goalID,
+  targetAmount,
+  goalLogId,
+}: Props) {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
 
@@ -68,6 +75,8 @@ export default function StopTimerModal({ goalID, targetAmount }: Props) {
       queryClient.invalidateQueries({ queryKey: ['today', 'goals'] });
 
       setIsOpen(false);
+
+      router.push(`/goals/${goalID}/${goalLogId}`);
     },
     onError: () => {
       stopTimer();

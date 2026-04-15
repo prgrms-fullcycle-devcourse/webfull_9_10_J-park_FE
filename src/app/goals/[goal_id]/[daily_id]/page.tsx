@@ -85,7 +85,10 @@ export default function DailyGoalDetailPage() {
       queryClient.invalidateQueries({ queryKey: ['goalDetail', goalId] });
 
       setIsModalOpen(false);
-      router.push('/');
+
+      if (daily_id) {
+        router.replace(`/goals/${goalId}/${daily_id}`);
+      }
     },
     onError: (error: any) => {
       localStopTimer();
@@ -96,7 +99,11 @@ export default function DailyGoalDetailPage() {
       queryClient.invalidateQueries({ queryKey: ['todayGoals'] });
       queryClient.invalidateQueries({ queryKey: ['todayProgress'] });
       queryClient.invalidateQueries({ queryKey: ['goalDetail', goalId] });
-      router.push('/');
+
+      // 💡 에러 시에도 현재 페이지 유지
+      if (daily_id) {
+        router.replace(`/goals/${goalId}/${daily_id}`);
+      }
     },
   });
 
