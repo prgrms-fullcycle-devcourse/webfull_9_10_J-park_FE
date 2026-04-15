@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import GoalDetailInformation from './GoalDetailInformation';
 import GoalProgression from './GoalProgression';
 import DailyGoalList from './DailyGoalList';
+import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
 import { GoalDetail, GoalDetailResponse } from '../types';
 import { Button } from '@heroui/react';
 import { FcSurvey } from 'react-icons/fc';
@@ -15,7 +16,7 @@ interface Props {
 
 export default function DetailContainer({ goalID }: Props) {
   const { data } = useQuery<GoalDetail>({
-    queryKey: ['goal', 'detail'],
+    queryKey: ['goal', 'detail', goalID],
     queryFn: () =>
       api
         .get<GoalDetailResponse>(`/goals/${goalID}/detail`)
@@ -35,12 +36,13 @@ export default function DetailContainer({ goalID }: Props) {
           <FcSurvey size={48} className="shrink-0" />
         </Button>
         <div>
-          <small className='"text-gray-600"'>{data?.description}</small>
+          <small className="text-gray-600">{data?.description}</small>
           <p className="font-black text-2xl">{data?.title}</p>
         </div>
       </div>
+
       {data && (
-        <div className="animate-fadeIn flex flex-col gap-4 rounded-t-2xl w-full min-h-dvh h-full bg-white z-20">
+        <div className="animate-fadeIn flex flex-col gap-4 rounded-t-2xl w-full min-h-dvh h-full bg-white z-20 pb-12">
           <GoalDetailInformation
             goalID={goalID}
             title={data.title}
@@ -53,6 +55,10 @@ export default function DetailContainer({ goalID }: Props) {
           />
 
           <GoalProgression progress={data.progress} period={data.period} />
+
+          <div className="px-6 my-1">
+            <DeleteConfirmationModal goalTitle={data.title} goalID={goalID} />
+          </div>
 
           <DailyGoalList goalID={goalID} dailyProgress={data.dailyProgress} />
         </div>
