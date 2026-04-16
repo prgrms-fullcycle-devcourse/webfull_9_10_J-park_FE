@@ -3,6 +3,7 @@
 import { Button } from '@heroui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   isLoggedIn?: boolean;
@@ -11,6 +12,7 @@ interface Props {
 
 export default function KakaoLoginCard({ isLoggedIn = false, email }: Props) {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const handleKakaoLogin = () => {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
@@ -18,9 +20,10 @@ export default function KakaoLoginCard({ isLoggedIn = false, email }: Props) {
   };
 
   const logoutMutation = useMutation({
-    mutationFn: () => api.get('/users/logout'),
+    mutationFn: () => api.post('/users/logout'),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
+      queryClient.clear();
+      router.push('/');
     },
     onError: () => {
       alert('로그아웃에 실패했습니다. 다시 시도해 주세요.');
