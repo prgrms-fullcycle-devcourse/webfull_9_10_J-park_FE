@@ -9,6 +9,9 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import { HiOutlineTrash } from 'react-icons/hi';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { api } from '@/lib/axios';
 
 interface Props {
   goalTitle: string;
@@ -17,16 +20,29 @@ interface Props {
 
 export default function DeleteConfirmationModal({ goalTitle, goalID }: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const mutation = useMutation({
+    mutationFn: () => api.delete(`/goals/${goalID}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['goals'] });
+      router.push('/goals');
+    },
+  });
+
   return (
     <>
       <Button
         onPress={onOpen}
-        isIconOnly
-        variant="light"
-        className="text-slate-400 -mr-2"
+        variant="flat"
+        color="danger"
+        className="w-full h-11 flex items-center justify-center gap-2 text-sm font-medium"
       >
-        <HiOutlineTrash size={24} />
+        <HiOutlineTrash size={18} />
+        목표 삭제하기
       </Button>
+
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -45,7 +61,15 @@ export default function DeleteConfirmationModal({ goalTitle, goalID }: Props) {
                 </span>
               </ModalBody>
               <ModalFooter className="flex flex-col">
-                <Button fullWidth variant="flat" color="danger">
+                <Button
+                  fullWidth
+                  variant="flat"
+                  color="danger"
+                  isLoading={mutation.isPending}
+                  onPress={() => {
+                    mutation.mutate();
+                  }}
+                >
                   삭제하기
                 </Button>
                 <Button fullWidth variant="light" onPress={onClose}>

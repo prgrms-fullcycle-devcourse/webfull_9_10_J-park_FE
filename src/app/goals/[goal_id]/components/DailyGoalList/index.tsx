@@ -20,32 +20,26 @@ interface Props {
 export default function DailyGoalList({ goalID, dailyProgress }: Props) {
   const todayRef = useRef<HTMLDivElement | null>(null);
 
-  // useEffect(() => {
-  //   if (todayRef.current) {
-  //     todayRef.current.scrollIntoView({
-  //       behavior: 'smooth',
-  //       block: 'center',
-  //     });
-  //   }
-  // }, []);
-
   return (
     <div className="bg-white">
       <small className="px-6 text-gray-600">데일리 목표</small>
       {dailyProgress.map(
-        ({
-          date,
-          isCompleted,
-          targetAmount,
-          completedAmount,
-          studyTime,
-          isToday,
-          goalLogId,
-        }) => {
+        (
+          {
+            date,
+            isCompleted,
+            targetAmount,
+            completedAmount,
+            studyTime,
+            isToday,
+            goalLogId,
+          },
+          index,
+        ) => {
           return (
             <Link
-              key={goalLogId}
-              href={`/goals/${goalID}/${goalLogId}`}
+              key={goalLogId || `daily-log-${index}`}
+              href={goalLogId ? `/goals/${goalID}/${goalLogId}` : '#'}
               className="w-full h-full flex items-center gap-4 shrink-0 px-6 py-4"
             >
               <Button
