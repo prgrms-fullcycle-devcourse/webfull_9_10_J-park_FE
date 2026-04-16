@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { MyProfileResponse, User } from '@/types/user';
 import { addToast, Button, useDisclosure } from '@heroui/react';
@@ -17,10 +17,33 @@ const DEFAULT_PROFILE_IMG_URL = 'https://picsum.photos/id/237/200/300';
 
 export default function MePage() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const qc = useQueryClient();
   const userInfo = useQuery<User>({
     queryKey: ['users', 'me'],
     queryFn: () =>
       api.get<MyProfileResponse>('/users/me').then((res) => res.data),
+  });
+
+  const profileMutation = useMutation({
+    mutationFn: (params: { formData: FormData }) =>
+      api.patch('/users/profile', params.formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }),
+    onSuccess: () => {
+      addToast({
+        title: '프로필 이미지 변경되었습니다',
+        description: '성공적으로 이비지가 업데이트 되었습니다',
+        color: 'success',
+      });
+      qc.invalidateQueries({ queryKey: ['users', 'me'] });
+    },
+    onError: () => {
+      addToast({
+        title: '프로필 이미지 변경하지 못했습니다',
+        description: '변경중 오류가 발생했습니다',
+        color: 'danger',
+      });
+    },
   });
 
   if (!userInfo.data || userInfo.isError) {
@@ -33,7 +56,7 @@ export default function MePage() {
     <div
       className="relative flex flex-col gap-4 bg-white scrollbar-hide"
       style={{
-        backgroundImage: `url(${DEFAULT_PROFILE_IMG_URL})`,
+        backgroundImage: `url(${userInfo.data.profileImageUrl || DEFAULT_PROFILE_IMG_URL})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'contain',
       }}
@@ -117,12 +140,13 @@ export default function MePage() {
       <IconCropperModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        onConfirm={(blob, url) => {
-          addToast({
-            title: '프로필 이미지 변경합니다',
-            description: '이 기능은 추후 업데이트됩니다',
-            color: 'warning',
+        onConfirm={(blob) => {
+          const formData = new FormData();
+          const imageFile = new File([blob], 'user-image.jpg', {
+            type: blob.type,
           });
+          formData.append('image', imageFile);
+          profileMutation.mutate({ formData });
         }}
       />
     </div>
