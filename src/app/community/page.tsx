@@ -97,32 +97,43 @@ export default function RankingPage() {
   }, [myRanking, profileData]);
 
   return (
-    <div className="relative flex flex-col gap-4 bg-slate-50 overflow-hidden max-h-full">
+    <div className="relative flex flex-col bg-slate-50 overflow-hidden max-h-full">
       {myRankData && (
-        <div className="animate-fadeIn sticky top-0 p-6 pb-0 bg-slate-50 z-30 flex flex-col gap-6">
-          <div className="flex items-center gap-4">
-            <Avatar
-              radius="full"
-              src={myRankData.profileImageUrl || undefined}
-              className="p-0 hover:cursor-default w-16 h-16 bg-gray-200"
-            />
-            <span className="text-2xl font-bold text-gray-900">
-              {myRankData.nickname}
-            </span>
-          </div>
-          <div className="flex w-full justify-between items-end">
-            <div>
-              <p className="font-black text-2xl text-gray-900 -mb-1">
-                {formatStudyTime(myRankData.totalTime)}
-              </p>
-              <span className="text-blue-500 font-bold text-lg">
-                내가 공부한 시간
+        <div
+          className="animate-fadeIn sticky top-0 bg-slate-50 z-30 flex flex-col gap-6"
+          style={{
+            backgroundImage: 'url("/bg-ranking.png")',
+            backgroundSize: '110% auto',
+            backgroundRepeat: 'no-repeat',
+            backgroundPositionY: '-200px',
+            backgroundPositionX: '-10px',
+          }}
+        >
+          <div className="w-full h-full flex flex-col backdrop-blur-sm">
+            <div className="flex items-center gap-4 mx-6 my-2 mt-6 ">
+              <Avatar
+                radius="full"
+                src={myRankData.profileImageUrl || undefined}
+                className="p-0 hover:cursor-default w-16 h-16 bg-gray-200"
+              />
+              <span className="text-2xl font-bold text-gray-900">
+                {myRankData.nickname}
               </span>
             </div>
-            <div className="text-right">
-              <p className="truncate font-black text-4xl -mb-1">
-                {myRankData.rank}위
-              </p>
+            <div className="flex justify-between items-end mx-6 my-2 mb-6">
+              <div>
+                <p className="font-black text-2xl text-gray-900 -mb-1">
+                  {formatStudyTime(myRankData.totalTime)}
+                </p>
+                <span className="text-blue-500 font-bold text-lg">
+                  내가 공부한 시간
+                </span>
+              </div>
+              <div className="text-right">
+                <p className="truncate font-black text-4xl -mb-1">
+                  {myRankData.rank}위
+                </p>
+              </div>
             </div>
           </div>
         </div>
