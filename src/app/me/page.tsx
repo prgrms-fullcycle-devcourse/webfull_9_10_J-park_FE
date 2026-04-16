@@ -142,7 +142,6 @@ export default function MePage() {
         onOpenChange={onOpenChange}
         onConfirm={(blob) => {
           const formData = new FormData();
-          console.log(blob);
           const imageFile = new File([blob], 'user-image.jpg', {
             type: blob.type,
           });
