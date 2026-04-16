@@ -99,16 +99,7 @@ export default function RankingPage() {
   return (
     <div className="relative flex flex-col bg-slate-50 overflow-hidden max-h-full">
       {myRankData && (
-        <div
-          className="animate-fadeIn sticky top-0 bg-slate-50 z-30 flex flex-col gap-6"
-          style={{
-            backgroundImage: 'url("/bg-ranking.png")',
-            backgroundSize: '110% auto',
-            backgroundRepeat: 'no-repeat',
-            backgroundPositionY: '-200px',
-            backgroundPositionX: '-10px',
-          }}
-        >
+        <div className="animate-fadeIn sticky top-0 bg-slate-50 z-30 flex flex-col gap-6">
           <div className="w-full h-full flex flex-col backdrop-blur-sm">
             <div className="flex items-center gap-4 mx-6 my-2 mt-6 ">
               <Avatar

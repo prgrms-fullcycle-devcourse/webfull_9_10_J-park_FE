@@ -25,16 +25,7 @@ export default function DetailContainer({ goalID }: Props) {
 
   return (
     <div className="relative flex flex-col overflow-auto scrollbar-hide max-h-screen bg-slate-50">
-      <div
-        className="sticky top-0 flex flex-col"
-        style={{
-          backgroundImage: 'url("/bg-goal.png")',
-          backgroundSize: '110% auto',
-          backgroundRepeat: 'no-repeat',
-          backgroundPositionY: '-200px',
-          backgroundPositionX: '-10px',
-        }}
-      >
+      <div className="sticky top-0 flex flex-col gap-4">
         <div className="w-full h-full flex flex-col backdrop-blur-sm">
           <Button
             radius="full"
