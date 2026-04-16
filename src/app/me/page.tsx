@@ -32,7 +32,7 @@ export default function MePage() {
     onSuccess: () => {
       addToast({
         title: '프로필 이미지 변경되었습니다',
-        description: '성공적으로 이비지가 업데이트 되었습니다',
+        description: '성공적으로 이미지가 업데이트 되었습니다',
         color: 'success',
       });
       qc.invalidateQueries({ queryKey: ['users', 'me'] });
@@ -50,7 +50,7 @@ export default function MePage() {
     return null;
   }
 
-  const { totalTime, goals, kakaoEmail } = userInfo.data;
+  const { totalTime, goals, loginInfo } = userInfo.data;
 
   return (
     <div
@@ -92,11 +92,12 @@ export default function MePage() {
           </div>
         </div>
 
-        {!kakaoEmail && (
-          <div className="px-6 py-2">
-            <KakaoLoginCard />
-          </div>
-        )}
+        <div className="px-6 py-2">
+          <KakaoLoginCard
+            isLoggedIn={loginInfo?.isLoggedIn}
+            email={loginInfo?.email}
+          />
+        </div>
 
         <div className="bg-white py-4">
           <div className="text-sm text-gray-600 mb-4 mx-6">
