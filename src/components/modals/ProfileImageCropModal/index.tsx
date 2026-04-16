@@ -92,23 +92,16 @@ function useObjectUrl(file?: File | null) {
 }
 
 export type BannerCropperModalProps = {
-  isOpen: boolean; // HeroUI naming
-  onOpenChange?: (open: boolean) => void; // optional: if you prefer controlled open state via onOpenChange
-  /** Initial image: either remote URL or provided File */
+  isOpen: boolean;
+  onOpenChange?: (open: boolean) => void;
   src?: string;
   file?: File | null;
-  /** Fixed aspect ratio. Default 4:1 for a wide banner. */
-  aspect?: number; // width / height
-  /** Exported dimensions matching the aspect. */
+  aspect?: number;
   outWidth?: number;
   outHeight?: number;
-  /** Called with the Blob and a preview ObjectURL */
   onConfirm: (blob: Blob, previewUrl: string) => void;
-  /** Accept attribute for file inputs */
   accept?: string;
-  /** MIME for export */
-  mime?: string; // e.g., 'image/jpeg' | 'image/png'
-  /** Initial zoom (1 = fit) */
+  mime?: string;
   initialZoom?: number;
 };
 
@@ -122,8 +115,8 @@ export default function IconCropperModal({
   src,
   file,
   aspect = 1, // 1:1
-  outWidth = 64,
-  outHeight = 64,
+  outWidth = 200,
+  outHeight = 200,
   onConfirm,
   accept = 'image/*',
   mime = 'image/jpeg',
@@ -183,7 +176,7 @@ export default function IconCropperModal({
       isOpen={isOpen}
       hideCloseButton
       onOpenChange={onOpenChange}
-      size="xl"
+      size="sm"
       backdrop="opaque"
       scrollBehavior="outside"
       classNames={{ base: 'rounded-2xl' }}
@@ -193,16 +186,12 @@ export default function IconCropperModal({
           <>
             <ModalHeader className="flex items-center justify-between">
               <div>
-                <div className="font-semibold">배너 이미지</div>
-                <div className="mt-2 text-xs text-neutral-500">
-                  고정 비율 {aspect.toFixed(2)}:1 (내보내기 {outWidth}×
-                  {outHeight})
-                </div>
+                <div className="font-semibold">프로필 이미지</div>
               </div>
             </ModalHeader>
             <ModalBody>
               <div className="flex flex-col gap-4">
-                <div className="relative h-[50vh] min-h-[320px] w-full overflow-hidden rounded-xl bg-neutral-100">
+                <div className="relative  min-h-[320px] w-full overflow-hidden rounded-xl bg-neutral-100">
                   {localSrc ? (
                     <Cropper
                       image={localSrc}
@@ -215,7 +204,7 @@ export default function IconCropperModal({
                       restrictPosition
                       showGrid={false}
                       objectFit="contain"
-                      cropShape="round"
+                      cropShape="rect"
                       minZoom={1}
                       maxZoom={4}
                       zoomSpeed={0.9}
@@ -229,7 +218,7 @@ export default function IconCropperModal({
                       >
                         <div className="font-medium">이미지를 업로드하세요</div>
                         <div className="mt-1 text-xs text-neutral-500">
-                          PNG/JPG, 최대 10MB
+                          PNG/JPG, 최대 5MB
                         </div>
                       </div>
                       <input
@@ -272,7 +261,7 @@ export default function IconCropperModal({
                 취소
               </Button>
               <Button
-                color="success"
+                color="primary"
                 className="text-white"
                 isDisabled={!localSrc || !areaPixels || busy}
                 isLoading={busy}
