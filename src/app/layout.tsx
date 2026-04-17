@@ -9,8 +9,27 @@ import FloatingTimer from '@/components/FloatingTimer';
 import DesktopLayout from './components/DesktopLayout';
 
 export const metadata: Metadata = {
-  title: 'My App',
-  description: 'Next.js 기반 프로젝트 템플릿',
+  title: '등불:작은 공부 비서',
+  description: '일정을 미루는 것을 막고 동기를 부여해주는 작은 비서',
+  openGraph: {
+    title: '등불',
+    description: '목표 달성을 도와주는 앱',
+    url: process.env.NEXT_PUBLIC_API_URL,
+    siteName: '등불',
+    images: [
+      {
+        url: '/lamp.png',
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'ko_KR',
+    type: 'website',
+  },
+  icons: {
+    icon: '/logo-all.svg',
+    apple: '/logo-all.svg',
+  },
 };
 
 export const viewport: Viewport = {

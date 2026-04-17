@@ -16,7 +16,7 @@ interface Props {
 export default function MyInformationEdit({ userInfo }: Props) {
   const { mutate } = useMutation<User, Error, { name: string }>({
     mutationKey: ['users', 'me'],
-    mutationFn: (params) => api.patch('/users', params),
+    mutationFn: (params) => api.patch('/users/profile', params),
     onSuccess: () => {
       addToast({
         title: '프로필 별명을 수정했습니다',
