@@ -94,8 +94,8 @@ export default function MePage() {
 
         <div className="px-6 py-2">
           <KakaoLoginCard
-            isLoggedIn={loginInfo?.isLoggedIn}
-            email={loginInfo?.email}
+            isLoggedIn={loginInfo?.isLoggedIn ?? false}
+            email={loginInfo?.email ?? ''}
           />
         </div>
 
