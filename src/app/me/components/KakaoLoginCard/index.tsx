@@ -1,31 +1,28 @@
 'use client';
 
 import { Button } from '@heroui/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/lib/axios';
-import { useRouter } from 'next/navigation';
 
 interface Props {
-  isLoggedIn?: boolean;
-  email?: string | null;
+  isLoggedIn: boolean;
+  email: string;
 }
 
-export default function KakaoLoginCard({ isLoggedIn = false, email }: Props) {
-  const queryClient = useQueryClient();
-  const router = useRouter();
-
+export default function KakaoLoginCard({ isLoggedIn, email }: Props) {
   const handleKakaoLogin = () => {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
     window.location.href = `${baseUrl}/users/kakao/start`;
   };
 
-  const logoutMutation = useMutation({
-    mutationFn: () => api.post('/users/logout'),
-    onSuccess: () => {
-      queryClient.clear();
-      router.push('/');
-    },
-  });
+  const handleLogout = () => {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `${baseUrl}/users/logout`;
+
+    document.body.appendChild(form);
+    form.submit();
+  };
 
   const KakaoIcon = () => (
     <svg
@@ -60,16 +57,13 @@ export default function KakaoLoginCard({ isLoggedIn = false, email }: Props) {
           <>
             <div className="flex flex-col min-w-0">
               <small className="text-gray-600">연동된 카카오 아이디</small>
-              <p className="truncate font-black text-base mt-0.5">
-                {email || '이메일 정보 없음'}
-              </p>
+              <p className="truncate font-black text-base mt-0.5">{email}</p>
             </div>
             <Button
               size="sm"
               radius="full"
               className="bg-[#FEE500] hover:bg-[#FEE500]/90 text-black/85 font-bold px-4 shrink-0 shadow-sm"
-              isLoading={logoutMutation.isPending}
-              onPress={() => logoutMutation.mutate()}
+              onPress={handleLogout}
             >
               로그아웃
             </Button>
