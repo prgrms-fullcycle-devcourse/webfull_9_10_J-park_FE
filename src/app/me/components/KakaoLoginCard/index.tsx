@@ -25,9 +25,6 @@ export default function KakaoLoginCard({ isLoggedIn = false, email }: Props) {
       queryClient.clear();
       router.push('/');
     },
-    onError: () => {
-      alert('로그아웃에 실패했습니다. 다시 시도해 주세요.');
-    },
   });
 
   const KakaoIcon = () => (
