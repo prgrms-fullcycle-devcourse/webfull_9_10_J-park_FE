@@ -44,5 +44,8 @@ export type User = {
     title: string;
     todayQuota: number;
   }[];
-  kakaoEmail?: string | null;
+  loginInfo?: {
+    isLoggedIn: boolean;
+    email: string | null;
+  };
 };
